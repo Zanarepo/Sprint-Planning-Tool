@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Online Shop</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* Additional styles for modal */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, 0.5);
+      display: none;
+      justify-content: center;
+      align-items: center;
+    }
+    .modal-content {
+      background-color: white;
+      padding: 20px;
+      max-width: 500px;
+      width: 100%;
+      border-radius: 8px;
+    }
+  </style>
+</head>
+<body class="bg-gray-100 text-gray-900">
+
+  <!-- Header -->
+  <header class="bg-gray-800 text-white py-4">
+    <div class="max-w-screen-xl mx-auto flex justify-between items-center px-4">
+      <div class="text-2xl font-semibold">
+        <h1>Shopify</h1>
+      </div>
+      <nav>
+        <ul class="flex space-x-6">
+          <li><a href="#" class="hover:text-yellow-400">Home</a></li>
+          <li><a href="#" class="hover:text-yellow-400">Shop</a></li>
+          <li><a href="#" class="hover:text-yellow-400">Contact</a></li>
+          <li><a href="#" id="view-cart" class="hover:text-yellow-400">Cart</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="bg-gray-900 text-white py-20">
+    <div class="max-w-screen-lg mx-auto text-center px-4">
+      <h2 class="text-4xl font-bold mb-6">Welcome to the Best Online Store</h2>
+      <p class="text-xl mb-8">Find everything you need at the best prices!</p>
+      <a href="#" class="bg-yellow-500 text-gray-900 py-3 px-8 rounded-full text-lg font-semibold hover:bg-yellow-400 transition duration-300">Shop Now</a>
+    </div>
+  </section>
+
+  <!-- Featured Products Section -->
+  <section class="py-16">
+    <div class="max-w-screen-xl mx-auto text-center px-4">
+      <h2 class="text-3xl font-semibold mb-10">Featured Products</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+        <!-- Product 1 -->
+        <div class="bg-white p-6 shadow-lg rounded-lg transform transition-all hover:scale-105 hover:shadow-xl">
+          <img src="https://via.placeholder.com/300" alt="Product 1" class="w-full h-64 object-cover mb-6 rounded-lg">
+          <h3 class="text-2xl font-semibold mb-2">Product 1</h3>
+          <p class="text-xl text-yellow-500 mb-4">$29.99</p>
+          <button class="bg-yellow-500 text-gray-900 py-2 px-6 rounded-full text-lg font-semibold hover:bg-yellow-400 transition duration-300 buy-button" data-name="Product 1" data-price="29.99">Buy Now</button>
+        </div>
+        <!-- Product 2 -->
+        <div class="bg-white p-6 shadow-lg rounded-lg transform transition-all hover:scale-105 hover:shadow-xl">
+          <img src="https://via.placeholder.com/300" alt="Product 2" class="w-full h-64 object-cover mb-6 rounded-lg">
+          <h3 class="text-2xl font-semibold mb-2">Product 2</h3>
+          <p class="text-xl text-yellow-500 mb-4">$49.99</p>
+          <button class="bg-yellow-500 text-gray-900 py-2 px-6 rounded-full text-lg font-semibold hover:bg-yellow-400 transition duration-300 buy-button" data-name="Product 2" data-price="49.99">Buy Now</button>
+        </div>
+        <!-- Product 3 -->
+        <div class="bg-white p-6 shadow-lg rounded-lg transform transition-all hover:scale-105 hover:shadow-xl">
+          <img src="https://via.placeholder.com/300" alt="Product 3" class="w-full h-64 object-cover mb-6 rounded-lg">
+          <h3 class="text-2xl font-semibold mb-2">Product 3</h3>
+          <p class="text-xl text-yellow-500 mb-4">$19.99</p>
+          <button class="bg-yellow-500 text-gray-900 py-2 px-6 rounded-full text-lg font-semibold hover:bg-yellow-400 transition duration-300 buy-button" data-name="Product 3" data-price="19.99">Buy Now</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-gray-800 text-white py-6">
+    <div class="max-w-screen-xl mx-auto text-center">
+      <p>&copy; 2025 Shopify. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <!-- Modal -->
+  <div id="cart-modal" class="modal-overlay">
+    <div class="modal-content">
+      <h3 class="text-2xl font-semibold mb-4">Your Cart</h3>
+      <div id="cart-content" class="mb-6">
+        <p>Your cart is empty.</p>
+      </div>
+      <button id="close-modal" class="bg-yellow-500 text-gray-900 py-2 px-6 rounded-full text-lg font-semibold hover:bg-yellow-400 transition duration-300">Close</button>
+    </div>
+  </div>
+
+  <script>
+    // Cart storage
+    const cart = [];
+
+    // Add item to cart function
+    function addToCart(productName, productPrice) {
+      const product = { name: productName, price: productPrice };
+      cart.push(product);
+      alert(`${productName} has been added to your cart!`);
+    }
+
+    // Show cart content in the modal
+    function showCart() {
+      const modal = document.getElementById('cart-modal');
+      const cartContent = document.getElementById('cart-content');
+
+      if (cart.length === 0) {
+        cartContent.innerHTML = '<p>Your cart is empty.</p>';
+      } else {
+        let content = '<ul>';
+        cart.forEach(item => {
+          content += `<li>${item.name} - $${item.price}</li>`;
+        });
+        content += '</ul>';
+        cartContent.innerHTML = content;
+      }
+
+      modal.style.display = 'flex';
+    }
+
+    // Close modal
+    document.getElementById('close-modal').addEventListener('click', () => {
+      document.getElementById('cart-modal').style.display = 'none';
+    });
+
+    // Event listener for "Buy Now" buttons
+    document.querySelectorAll('.buy-button').forEach(button => {
+      button.addEventListener('click', (event) => {
+        const productName = event.target.getAttribute('data-name');
+        const productPrice = event.target.getAttribute('data-price');
+        addToCart(productName, productPrice);
+      });
+    });
+
+    // Event listener for "View Cart" button
+    document.getElementById('view-cart').addEventListener('click', showCart);
+  </script>
+
+</body>
+</html>
