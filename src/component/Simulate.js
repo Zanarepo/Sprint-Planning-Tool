@@ -5,8 +5,6 @@ export default function ProductBrainstorming() {
   const [problem, setProblem] = useState("");
   const [uvp, setUvp] = useState("");
   const [features, setFeatures] = useState([]);
-
-
   const [currentFeature, setCurrentFeature] = useState("");
   const [currentChallenge, setCurrentChallenge] = useState("");
   const [currentSolution, setCurrentSolution] = useState("");
@@ -21,103 +19,123 @@ export default function ProductBrainstorming() {
   }, [timer]);
 
   const handleAddFeature = () => {
-    setFeatures([...features, { feature: currentFeature, challenge: currentChallenge, solution: currentSolution }]);
-    setCurrentFeature("");
-    setCurrentChallenge("");
-    setCurrentSolution("");
+    if (currentFeature && currentChallenge && currentSolution) {
+      setFeatures([
+        ...features,
+        { feature: currentFeature, challenge: currentChallenge, solution: currentSolution },
+      ]);
+      setCurrentFeature("");
+      setCurrentChallenge("");
+      setCurrentSolution("");
+    }
   };
 
   return (
-    <div className="p-6 space-y-4">
-      <h1 className="text-xl font-bold">Product Brainstorming</h1>
-      
-      <div className="mb-4">
-        <p>Time Remaining: {Math.floor(timer / 60)}:{String(timer % 60).padStart(2, "0")}</p>
+    <div className="p-6 space-y-6 bg-gray-50 min-h-screen">
+      <h1 className="text-2xl font-bold text-gray-800">Product Brainstorming</h1>
+  
+      {/* Timer */}
+      <div className="mb-4 text-gray-700 font-semibold">
+        Time Remaining: {Math.floor(timer / 60)}:{String(timer % 60).padStart(2, "0")}
       </div>
-
+  
+      {/* Problem Section */}
       <div>
-        <h2 className="text-lg font-semibold">Problem the Product Solves</h2>
+        <h2 className="text-lg font-semibold text-gray-800">Problem the Product Solves</h2>
         <textarea
           value={problem}
           onChange={(e) => setProblem(e.target.value)}
           placeholder="Describe the problem"
-          className="w-full p-2 border rounded"
+          className="w-full p-3 border rounded-md shadow-sm"
         />
       </div>
-
+  
+      {/* UVP Section */}
       <div>
-        <h2 className="text-lg font-semibold">Unique Value Proposition (UVP)</h2>
+        <h2 className="text-lg font-semibold text-gray-800">Unique Value Proposition (UVP)</h2>
         <textarea
           value={uvp}
           onChange={(e) => setUvp(e.target.value)}
           placeholder="Describe the UVP"
-          className="w-full p-2 border rounded"
+          className="w-full p-3 border rounded-md shadow-sm"
         />
       </div>
-
+  
+      {/* Idea Input Fields */}
       <div className="mt-6">
-        <h2 className="text-lg font-semibold">Brainstorming Features, Challenges, and Solutions</h2>
+        <h2 className="text-lg font-semibold text-gray-800">Brainstorming Features, Challenges, and Solutions</h2>
         <div className="space-y-4">
           <input
             type="text"
             value={currentFeature}
             onChange={(e) => setCurrentFeature(e.target.value)}
             placeholder="Feature Name"
-            className="p-2 border rounded w-full"
+            className="p-3 border rounded-md w-full shadow-sm"
           />
           <input
             type="text"
             value={currentChallenge}
             onChange={(e) => setCurrentChallenge(e.target.value)}
             placeholder="Challenge"
-            className="p-2 border rounded w-full"
+            className="p-3 border rounded-md w-full shadow-sm"
           />
           <input
             type="text"
             value={currentSolution}
             onChange={(e) => setCurrentSolution(e.target.value)}
             placeholder="Possible Solution"
-            className="p-2 border rounded w-full"
+            className="p-3 border rounded-md w-full shadow-sm"
           />
           <button
             onClick={handleAddFeature}
-            className="mt-4 p-2 bg-blue-500 text-white rounded"
+            className="mt-4 p-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition"
           >
             Add Idea to Table
           </button>
         </div>
       </div>
-
+  
+      {/* Captured Ideas Table */}
       <div className="mt-6">
-        <h2 className="text-lg font-semibold">Captured Ideas</h2>
-        <table className="min-w-full table-auto border-collapse border">
-          <thead>
-            <tr>
-              <th className="border p-2">Feature</th>
-              <th className="border p-2">Challenge</th>
-              <th className="border p-2">Solution</th>
-            </tr>
-          </thead>
-          <tbody>
-            {features.map((item, index) => (
-              <tr key={index}>
-                <td className="border p-2">{item.feature}</td>
-                <td className="border p-2">{item.challenge}</td>
-                <td className="border p-2">{item.solution}</td>
+        <h2 className="text-lg font-semibold text-gray-800">Captured Ideas</h2>
+        <div className="overflow-x-auto">
+          <table className="min-w-full border-collapse border bg-white shadow-md rounded-lg">
+            <thead className="bg-gray-200 text-gray-800">
+              <tr>
+                <th className="border p-3">#</th>
+                <th className="border p-3">Feature</th>
+                <th className="border p-3">Challenge</th>
+                <th className="border p-3">Solution</th>
+                <th className="border p-3">UVP</th>
+                <th className="border p-3">Problem</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {features.map((item, index) => (
+                <tr key={index} className="text-gray-700 text-center">
+                  <td className="border p-3 font-semibold">{index + 1}</td>
+                  <td className="border p-3">{item.feature}</td>
+                  <td className="border p-3">{item.challenge}</td>
+                  <td className="border p-3">{item.solution}</td>
+                  <td className="border p-3">{uvp}</td>
+                  <td className="border p-3">{problem}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
-
+  
+      {/* End Session Button */}
       <div className="mt-6">
         <button
           onClick={() => setTimer(0)}
-          className="p-2 bg-red-500 text-white rounded"
+          className="p-3 bg-red-600 text-white rounded-md hover:bg-red-700 transition"
         >
           End Session
         </button>
       </div>
     </div>
   );
+  
 }
