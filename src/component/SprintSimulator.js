@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import Simulate from './Simulate';
+import SprintEstimator from './SprintEstimator'
 
 export default function SprintSimulation() {
   const [stage, setStage] = useState("product_backlog");
@@ -108,9 +109,10 @@ export default function SprintSimulation() {
   };
 
   return (
-    <div className="p-6 space-y-6 bg-gray-50 rounded-lg shadow-md">
+    <div className="p-6 space-y-6 bg-gray-50 rounded-lg shadow-md mt-16">
       <Simulate />
-      <h1 className="text-2xl font-bold text-blue-700">Agile Sprint Simulation </h1>
+      <SprintEstimator/>
+      <h1 className="text-2xl font-bold text-blue-700 text-2xl  text-center">Agile Sprint Simulation </h1>
 
       {/* Edit Feature Modal */}
       {showEditModal && (
@@ -160,7 +162,7 @@ export default function SprintSimulation() {
               onClick={handleFeatureCreation}
               className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
             >
-              Add Features
+              Add Features to List
             </button>
             
             {features.length > 0 && (

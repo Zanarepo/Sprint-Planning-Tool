@@ -9,7 +9,7 @@ export default function HowToUseSprintify() {
       setIsVisible(false); // Hide if already seen
     }
   }, []);
-
+  
   const handleClose = () => {
     // Save to localStorage that the user has seen the guide
     localStorage.setItem("howToUseSprintify", "true");
