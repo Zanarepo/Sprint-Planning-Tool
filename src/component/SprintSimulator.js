@@ -110,7 +110,7 @@ export default function SprintSimulation() {
   return (
     <div className="p-6 space-y-6 bg-gray-50 rounded-lg shadow-md">
       <Simulate />
-      <h1 className="text-2xl font-bold text-blue-700">Agile Sprint Simulation</h1>
+      <h1 className="text-2xl font-bold text-blue-700">Agile Sprint Simulation </h1>
 
       {/* Edit Feature Modal */}
       {showEditModal && (
