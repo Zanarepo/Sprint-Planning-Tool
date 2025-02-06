@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import HowToUse from './HowToUse'
+//import HowToUse from './HowToUse'
 export default function ProductBrainstorming() {
   const [timer, setTimer] = useState(5 * 60); // 5 minutes timer
   const [problem, setProblem] = useState("");
@@ -38,7 +38,7 @@ export default function ProductBrainstorming() {
 
   return (
     <div className="p-6 space-y-6 bg-gray-50 min-h-screen">
-      <HowToUse/>
+      
       <h1 className="text-2xl font-bold text-gray-800">Product Brainstorming</h1>
   
       {/* Timer */}
