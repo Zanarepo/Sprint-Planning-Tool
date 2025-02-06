@@ -7,7 +7,7 @@ function HomePage() {
       <div className="text-center max-w-3xl bg-white p-8 rounded-lg shadow-xl">
         <h1 className="text-4xl font-bold text-blue-600">Sprintify</h1>
         <p className="mt-4 text-lg text-gray-700">
-          The ultimate tool for Agile teams to simulate and prioritize product development using Agile methodologies.
+          The ultimate tool for Agile teams to simulate and prioritize product development using Agile methodologies on the Go.
           Optimize your workflow, plan better sprints, and deliver high-quality products faster.
         </p>
         <Link to="/sprints">
