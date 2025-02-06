@@ -31,7 +31,7 @@ function HomePage() {
             <FaBrain className="text-blue-600 text-4xl mb-4" />
             <h3 className="text-xl font-semibold mb-2">Effective Sprint Estimation</h3>
             <p className="text-gray-700">
-              Accurately estimate and plan sprints with data-driven insights.
+              Accurately estimate and plan sprints.
             </p>
           </div>
           <div className="p-6 bg-white rounded-lg shadow-md">
@@ -52,7 +52,7 @@ function HomePage() {
             <FaDollarSign className="text-blue-600 text-4xl mb-4" />
             <h3 className="text-xl font-semibold mb-2">Business/Users Value Estimator</h3>
             <p className="text-gray-700">
-              Evaluate the potential value of features to ensure maximum ROI for your business.
+            Teams can collaboratively evaluate the potential value of features to ensure maximum ROI for business/users.
             </p>
           </div>
           <div className="p-6 bg-white rounded-lg shadow-md">

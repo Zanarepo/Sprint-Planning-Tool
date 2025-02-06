@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-
+import HowToUse from './HowToUse'
 export default function ProductBrainstorming() {
   const [timer, setTimer] = useState(5 * 60); // 5 minutes timer
   const [problem, setProblem] = useState("");
@@ -8,6 +8,7 @@ export default function ProductBrainstorming() {
   const [currentFeature, setCurrentFeature] = useState("");
   const [currentChallenge, setCurrentChallenge] = useState("");
   const [currentSolution, setCurrentSolution] = useState("");
+  const [error, setError] = useState(""); // To hold error message
 
   useEffect(() => {
     if (timer > 0) {
@@ -27,11 +28,17 @@ export default function ProductBrainstorming() {
       setCurrentFeature("");
       setCurrentChallenge("");
       setCurrentSolution("");
+      setError(""); // Clear error on successful addition
+    } else {
+      setError("All fields are required!"); // Show error if fields are incomplete
     }
   };
 
+  const isFormValid = currentFeature && currentChallenge && currentSolution; // Check if form is valid
+
   return (
     <div className="p-6 space-y-6 bg-gray-50 min-h-screen">
+      <HowToUse/>
       <h1 className="text-2xl font-bold text-gray-800">Product Brainstorming</h1>
   
       {/* Timer */}
@@ -86,9 +93,14 @@ export default function ProductBrainstorming() {
             placeholder="Possible Solution"
             className="p-3 border rounded-md w-full shadow-sm"
           />
+          
+          {/* Display error message if required fields are not filled */}
+          {error && <p className="text-red-600">{error}</p>}
+
           <button
             onClick={handleAddFeature}
-            className="mt-4 p-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition"
+            disabled={!isFormValid}
+            className={`mt-4 p-3 rounded-md transition ${isFormValid ? 'bg-blue-600 text-white hover:bg-blue-700' : 'bg-gray-400 text-gray-700 cursor-not-allowed'}`}
           >
             Add Idea to Table
           </button>
@@ -128,14 +140,8 @@ export default function ProductBrainstorming() {
   
       {/* End Session Button */}
       <div className="mt-6">
-        <button
-          onClick={() => setTimer(0)}
-          className="p-3 bg-red-600 text-white rounded-md hover:bg-red-700 transition"
-        >
-          End Session
-        </button>
+        
       </div>
     </div>
   );
-  
 }
