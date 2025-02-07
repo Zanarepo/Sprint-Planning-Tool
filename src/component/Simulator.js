@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import BrainstormingFeature from './BrainstormingFeature'
+
 
 export default function ProductBrainstorming() {
   const [timer, setTimer] = useState(5 * 60);
@@ -83,35 +83,35 @@ export default function ProductBrainstorming() {
   };
 
   return (
-    <div className="p-6 space-y-6 bg-gray-50 min-h-screen mt-4">
-     
-<BrainstormingFeature/>
+    <div className="p-6 space-y-6 bg-gray-50 min-h-screen mt-16">
+     <h1 className="text-2xl font-bold text-blue-800 text-center">Product Brainstorming</h1>
+
       <div className="mb-4 text-gray-700 font-semibold">
         Time Remaining: {Math.floor(timer / 60)}:{String(timer % 60).padStart(2, "0")}
       </div>
       
       <div>
-        <h2 className="text-lg font-semibold text-yellow-800">Unique Value Proposition (UVP) </h2>
+        <h2 className="text-lg font-semibold text-blue-800">Unique Value Proposition (UVP) </h2>
         <textarea
           value={uvp}
           onChange={(e) => setUvp(e.target.value)}
           placeholder="Describe the UVP"
           className="w-full p-3 border rounded-md shadow-sm"
         />
-        <h2 className="text-lg font-semibold text-yellow-800">Problem Statement (PS)</h2>
+        <h2 className="text-lg font-semibold text-blue-800">Problem Statement (PS)</h2>
         <textarea
           value={problem}
           onChange={(e) => setProblem(e.target.value)}
           placeholder="What is the problem statement"
           className="w-full p-3 border rounded-md shadow-sm mt-2"
         />
-        <button onClick={handleAddUvp} className="mt-4 p-3 bg-yellow-600 text-white rounded-md hover:bg-yellow-700">
+        <button onClick={handleAddUvp} className="mt-4 p-3 bg-blue-600 text-white rounded-md hover:bg-blue-700">
           {editingUvpIndex !== null ? "Update" : "Add"} UVP & PS to Table
         </button>
       </div>
       
       <table className="min-w-full border bg-white shadow-md rounded-lg">
-        <thead className="bg-yellow-600 text-white">
+        <thead className="bg-blue-200">
           <tr>
             <th className="border p-3">UVP</th>
             <th className="border p-3">Problem</th>
@@ -124,7 +124,7 @@ export default function ProductBrainstorming() {
               <td className="border p-3">{item.uvp}</td>
               <td className="border p-3">{item.problem}</td>
               <td className="border p-3">
-                <button onClick={() => handleEditUvp(index)} className="mr-2 text-yellow-600">Edit</button>
+                <button onClick={() => handleEditUvp(index)} className="mr-2 text-blue-600">Edit</button>
                 <button onClick={() => handleDeleteUvp(index)} className="text-red-600">Delete</button>
               </td>
             </tr>
@@ -132,16 +132,16 @@ export default function ProductBrainstorming() {
         </tbody>
       </table>
       
-      <h2 className="text-lg font-semibold text-yellow-600">Features</h2>
+      <h2 className="text-lg font-semibold text-blue-600">Features</h2>
       <input type="text" value={currentFeature} onChange={(e) => setCurrentFeature(e.target.value)} placeholder="Feature Name" className="p-3 border rounded-md w-full shadow-sm" />
       <input type="text" value={currentChallenge} onChange={(e) => setCurrentChallenge(e.target.value)} placeholder="Challenge" className="p-3 border rounded-md w-full shadow-sm" />
       <input type="text" value={currentSolution} onChange={(e) => setCurrentSolution(e.target.value)} placeholder="Possible Solution" className="p-3 border rounded-md w-full shadow-sm" />
-      <button onClick={handleAddFeature} className="mt-4 p-3 bg-yellow-600 text-white rounded-md hover:bg-yellow-700">
+      <button onClick={handleAddFeature} className="mt-4 p-3 bg-blue-600 text-white rounded-md hover:bg-blue-700">
         {editingFeatureIndex !== null ? "Update" : "Add"} Feature to Table
       </button>
       
       <table className="min-w-full border bg-white shadow-md rounded-lg">
-        <thead className="bg-yellow-600 text-white">
+        <thead className="bg-blue-200">
           <tr>
             <th className="border p-3">Feature</th>
             <th className="border p-3">Challenge</th>

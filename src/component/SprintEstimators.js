@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Bar } from 'react-chartjs-2';
-import FeatureEstimator from './FeatureEstimator'
+
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -70,12 +70,12 @@ export default function EstimationPlayground() {
 
   return (
     <div className="p-12 bg-white rounded-lg shadow-md">
-  
-      <FeatureEstimator/>
+      <h1 className="text-2xl font-bold text-blue-800 text-center mt-16">Agile Estimation Playground</h1>
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
         {/* Estimation Method Selection */}
         <div className="space-y-4">
-          <h2 className="text-lg font-semibold text-green-600">Estimation Method</h2>
+          <h2 className="text-lg font-semibold text-blue-600">Estimation Method</h2>
           <select 
             value={method}
             onChange={(e) => setMethod(e.target.value)}
@@ -89,7 +89,7 @@ export default function EstimationPlayground() {
           </select>
           
           <div className="p-4 bg-gray-50 rounded">
-            <h3 className="font-medium mb-2 text-green-600">Method Description</h3>
+            <h3 className="font-medium mb-2 text-blue-600">Method Description</h3>
             {method === 'FIBONACCI' && (
               <p>Use Fibonacci sequence to represent relative complexity. Good for story points estimation.</p>
             )}
@@ -110,7 +110,7 @@ export default function EstimationPlayground() {
 
         {/* Feature Input */}
         <div className="space-y-4">
-          <h2 className="text-lg font-semibold text-green-600 mt-8">Add Features</h2>
+          <h2 className="text-lg font-semibold text-blue-600 mt-8">Add Features</h2>
           <div className="flex gap-2">
             <input
               value={newFeature}
@@ -120,7 +120,7 @@ export default function EstimationPlayground() {
             />
             <button 
               onClick={addFeature}
-              className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+              className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
             >
               Add Feature
             </button>
@@ -130,7 +130,7 @@ export default function EstimationPlayground() {
 
       {/* Estimation Area */}
       <div className="mb-8">
-        <h2 className="text-lg font-semibold mb-4 text-green-600">Estimate Features</h2>
+        <h2 className="text-lg font-semibold mb-4 text-blue-600">Estimate Features</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {features.map(feature => (
             <div key={feature} className="p-4 border rounded">
@@ -158,15 +158,15 @@ export default function EstimationPlayground() {
       {/* Results Visualization */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="p-4 border rounded">
-          <h2 className="text-lg font-semibold mb-4 text-green-600">Estimation Results</h2>
+          <h2 className="text-lg font-semibold mb-4 text-blue-600">Estimation Results</h2>
           <Bar data={chartData} />
         </div>
 
         {/* Velocity Planning */}
         <div className="p-4 border rounded space-y-4">
-          <h2 className="text-lg font-semibold text-green-600">Sprint Planning</h2>
+          <h2 className="text-lg font-semibold text-blue-600">Sprint Planning</h2>
           <div>
-            <label className="block mb-2 text-green-600" >Team Velocity (points/sprint):</label>
+            <label className="block mb-2 text-blue-600" >Team Velocity (points/sprint):</label>
             <input
               type="number"
               value={velocity}
@@ -184,11 +184,11 @@ export default function EstimationPlayground() {
 
       {/* Comparison Table */}
       <div className="mt-8">
-        <h2 className="text-lg font-semibold mb-4 text-green-600">Estimation Comparison</h2>
+        <h2 className="text-lg font-semibold mb-4 text-blue-600">Estimation Comparison</h2>
         <div className="overflow-x-auto">
           <table className="w-full border-collapse">
             <thead >
-              <tr className="p-6 bg-green-200 ">
+              <tr className="p-6 bg-blue-200 ">
                 <th className="p-2 text-left " >Feature</th>
                 {Object.keys(estimationMethods).map(method => (
                   <th key={method} className="p-2 text-left">{method.replace('_', ' ')}</th>
