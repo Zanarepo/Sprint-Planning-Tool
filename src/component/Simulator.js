@@ -83,7 +83,7 @@ export default function ProductBrainstorming() {
   };
 
   return (
-    <div className="p-6 space-y-6 bg-gray-50 min-h-screen mt-16">
+    <div className="p-6 space-y-6 bg-gray-50 min-h-screen mt-8">
      <h1 className="text-2xl font-bold text-blue-800 text-center">Product Brainstorming</h1>
 
       <div className="mb-4 text-gray-700 font-semibold">

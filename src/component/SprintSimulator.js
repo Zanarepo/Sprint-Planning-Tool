@@ -114,7 +114,7 @@ export default function SprintSimulation() {
   };
 
   return (
-    <div className="p-12 space-y-6 bg-gray-50 rounded-lg shadow-md mt-16">
+    <div className="p-12 space-y-6 bg-gray-50 rounded-lg shadow-md mt-8">
     <AgileSprintSimulation/>
   
       <h1 className="text-2xl font-bold text-blue-700 text-2xl  text-center p-8">Let's Simulate </h1>

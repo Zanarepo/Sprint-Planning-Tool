@@ -68,6 +68,8 @@ export default function EstimationPlayground() {
     }]
   };
 
+
+ 
   return (
     <div className="p-12 bg-white rounded-lg shadow-md">
   
@@ -142,7 +144,7 @@ export default function EstimationPlayground() {
                     onClick={() => handleEstimate(feature, value)}
                     className={`px-3 py-1 rounded ${
                       estimates[feature]?.[method] === value 
-                        ? 'bg-blue-600 text-white' 
+                        ? 'bg-green-600 text-white' 
                         : 'bg-gray-100 hover:bg-gray-200'
                     }`}
                   >

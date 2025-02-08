@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import LandingPageFeatures from './LandingPageFeatures'
-
+//import Standup from './Standup'
 //import AppLauncher from './AppLauncher'
 import { FaCheckCircle, FaBrain, FaListAlt, FaRegLightbulb, FaDollarSign, FaCogs } from "react-icons/fa";
 
@@ -18,9 +18,9 @@ function HomePage() {
             Try Sprintify
           </button>
         </Link>
+        
       </div>
       <LandingPageFeatures/>
-
       <div className="mt-12 w-full px-6 text-center">
         <h2 className="text-3xl font-semibold text-yellow-600 mb-6">Why Sprintify?</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -59,6 +59,8 @@ function HomePage() {
             Teams can collaboratively evaluate the potential value of features to ensure maximum ROI for business/users.
             </p>
           </div>
+         
+
           <div className="p-6 bg-white rounded-lg shadow-md">
             <FaCogs className="text-yellow-600 text-4xl mb-4" />
             <h3 className="text-xl font-semibold mb-2">Effort & Feature Sizing</h3>
@@ -68,7 +70,7 @@ function HomePage() {
           </div>
         </div>
       </div>
-
+     
     </div>
     
   );

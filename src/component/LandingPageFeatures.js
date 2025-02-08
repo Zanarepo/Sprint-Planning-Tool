@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { Brain, LineChart, Rocket } from "lucide-react";
+import { Brain, LineChart, Rocket , Users , Activity  } from "lucide-react";
 
 const features = [
   {
@@ -33,6 +33,28 @@ const features = [
     btnBg: "bg-blue-600",
     route: "/sprints",
   },
+
+  {
+    title: "Daily Standup",
+    description:
+      " Document and gather feedback on the go using our easy to use standup tool",
+    icon: <Users size={32} className="text-orange-600" />,
+    bgColor: "bg-orange-50",
+    textColor: "text-orange-700",
+    btnBg: "bg-orange-600",
+    route: "/standup",
+  },
+  {
+    title: "Burndown",
+    description:
+      "  Document progress and gather feedback effortlessly using our intuitive Burndown tool.",
+    icon: <Activity size={32} className="text-red-600" />,
+    bgColor: "bg-red-50",
+    textColor: "text-red-700",
+    btnBg: "bg-red-600",
+    route: "/burndown",
+  },
+   
 ];
 
 const LandingPageFeatures = () => {

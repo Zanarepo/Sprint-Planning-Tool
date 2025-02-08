@@ -12,7 +12,7 @@ export default function ProductBrainstorming() {
   const [currentSolution, setCurrentSolution] = useState("");
   const [editingFeatureIndex, setEditingFeatureIndex] = useState(null);
   const [editingUvpIndex, setEditingUvpIndex] = useState(null);
-  const [ setError] = useState("");
+
 
   useEffect(() => {
     if (timer > 0) {
@@ -38,9 +38,9 @@ export default function ProductBrainstorming() {
       setCurrentFeature("");
       setCurrentChallenge("");
       setCurrentSolution("");
-      setError("");
+    
     } else {
-      setError("All fields are required!");
+    
     }
   };
 
@@ -83,7 +83,7 @@ export default function ProductBrainstorming() {
   };
 
   return (
-    <div className="p-6 space-y-6 bg-gray-50 min-h-screen mt-4">
+    <div className="p-6 space-y-6 bg-gray-50 min-h-screen mt-8">
      
 <BrainstormingFeature/>
       <div className="mb-4 text-gray-700 font-semibold">
