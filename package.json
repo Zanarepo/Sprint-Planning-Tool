@@ -7,6 +7,7 @@
     "@mui/material": "^6.4.3",
     "@mui/system": "^6.4.3",
     "@shadcn/ui": "^0.0.4",
+    "@supabase/supabase-js": "^2.48.1",
     "@tanstack/react-table": "^8.20.6",
     "axios": "^1.7.9",
     "chart.js": "^4.4.7",
