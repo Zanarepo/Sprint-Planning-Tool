@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
 import LandingPageFeatures from './LandingPageFeatures'
-import  ReviewForm from './Premiums/ReviewForm'
 //import Standup from './Standup'
 //import AppLauncher from './AppLauncher'
 import { FaCheckCircle, FaBrain, FaListAlt, FaRegLightbulb, FaDollarSign, FaCogs } from "react-icons/fa";
@@ -71,7 +70,7 @@ function HomePage() {
           </div>
         </div>
       </div>
-     <ReviewForm/>
+     
     </div>
     
   );

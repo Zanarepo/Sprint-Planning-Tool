@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import AppLauncher from "./AppLauncher";
+import RegisteredUsersAppLauncher from "./RegisteredUsersAppLauncher";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -8,6 +8,13 @@ const Navbar = () => {
   // Toggle the mobile menu state
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
+  };
+
+  // Handle logout confirmation
+  const handleLogout = (e) => {
+    if (!window.confirm("Are you sure you want to logout?")) {
+      e.preventDefault();
+    }
   };
 
   return (
@@ -38,47 +45,62 @@ const Navbar = () => {
 
       {/* Desktop Menu (visible on md and up) */}
       <div className="hidden md:flex gap-6 items-center">
-        <Link to="/allapps" className="hover:underline">
+        <Link to="/dashboard" className="hover:underline">
+          My Toolsboard
+        </Link>
+
+        
+        <Link to="/allapps2" className="hover:underline">
           All-in-one
         </Link>
-        <Link to="/register" className="hover:underline">
-          Register
+
+        <Link to="/sticky" className="hover:underline">
+          StickyBoard
         </Link>
-        <Link to="/login" className="hover:underline">
-          Login
+
+        
+        <Link 
+          to="/login" 
+          className="hover:underline" 
+          onClick={handleLogout}
+        >
+          Logout
         </Link>
       </div>
 
       {/* Right side: Registered Users App Launcher */}
-      <AppLauncher />
+      <RegisteredUsersAppLauncher />
 
       {/* Mobile Menu (dropdown) */}
       {isMenuOpen && (
         <div className="absolute top-full left-0 w-full bg-yellow-800 text-white flex flex-col items-start p-4 md:hidden">
           <Link
-            to="/allapps"
+            to="/dashboard"
+            className="py-2 w-full hover:underline"
+            onClick={() => setIsMenuOpen(false)}
+          >
+            My Toolsboard
+          </Link>
+          <Link
+            to="/allapps2"
             className="py-2 w-full hover:underline"
             onClick={() => setIsMenuOpen(false)}
           >
             All-in-one
           </Link>
-         
-          <Link
-            to="/register"
-            className="py-2 w-full hover:underline"
-            onClick={() => setIsMenuOpen(false)}
-          >
-             Register
-          </Link>
-
           <Link
             to="/login"
             className="py-2 w-full hover:underline"
-            onClick={() => setIsMenuOpen(false)}
+            onClick={(e) => {
+              if (!window.confirm("Are you sure you want to logout?")) {
+                e.preventDefault();
+              } else {
+                setIsMenuOpen(false);
+              }
+            }}
           >
-             Login
+            Logout
           </Link>
-        
         </div>
       )}
     </nav>

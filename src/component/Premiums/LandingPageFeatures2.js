@@ -11,7 +11,7 @@ const features = [
     bgColor: "bg-yellow-50",
     textColor: "text-yellow-700",
     btnBg: "bg-yellow-600",
-    route: "/brainstorm",
+    route: "/brainstorm2",
   },
   {
     title: "Feature Estimator",
@@ -21,7 +21,7 @@ const features = [
     bgColor: "bg-green-50",
     textColor: "text-green-700",
     btnBg: "bg-green-600",
-    route: "/estimator",
+    route: "/estimator2",
   },
   {
     title: "Agile Sprint Simulation",
@@ -31,7 +31,7 @@ const features = [
     bgColor: "bg-blue-50",
     textColor: "text-blue-700",
     btnBg: "bg-blue-600",
-    route: "/sprints",
+    route: "/sprints2",
   },
 
   {
@@ -42,7 +42,7 @@ const features = [
     bgColor: "bg-orange-50",
     textColor: "text-orange-700",
     btnBg: "bg-orange-600",
-    route: "/standup",
+    route: "/standup2",
   },
   {
     title: "Burndown",
@@ -52,7 +52,7 @@ const features = [
     bgColor: "bg-red-50",
     textColor: "text-red-700",
     btnBg: "bg-red-600",
-    route: "/burndown",
+    route: "/burndown2",
   },
    
   {
@@ -63,7 +63,7 @@ const features = [
     bgColor: "bg-blue-50",
     textColor: "text-blue-700",
     btnBg: "bg-blue-600",
-    route: "/roadmap",
+    route: "/roadmap2",
   },
    
 ];
