@@ -38,9 +38,11 @@ const Navbar = () => {
           </svg>
         </button>
         {/* Home Link always visible */}
-        <Link to="/" className="hover:underline text-xl font-bold">
-          Home
-        </Link>
+         <Link to="/">
+                <img src="/image.png" alt="Sprintify Logo" className="h-6 w-auto" />
+        
+                
+                      </Link>
       </div>
 
       {/* Desktop Menu (visible on md and up) */}
@@ -88,6 +90,11 @@ const Navbar = () => {
           >
             All-in-one
           </Link>
+          <Link to="/sticky" className="hover:underline">
+          StickyBoard
+        </Link>
+
+          
           <Link
             to="/login"
             className="py-2 w-full hover:underline"
