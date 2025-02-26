@@ -42,7 +42,7 @@ const StickyNotesManager = () => {
   const [notes, setNotes] = useState([]);
   const [editingNote, setEditingNote] = useState(null);
 
-  // Form data for create/update (no color field)
+  // Form data for create/update (added 'color' field)
   const [formData, setFormData] = useState({
     title: '',
     content: '',
@@ -51,7 +51,20 @@ const StickyNotesManager = () => {
     width: 200,
     height: 200,
     z_index: 1,
+    color: '#ffeb3b', // default color
   });
+
+  // Helper function to compute contrasting text color based on background color
+  const getContrastingTextColor = (bgColor) => {
+    if (!bgColor) return '#000000';
+    // Remove the '#' if present
+    const color = bgColor.charAt(0) === '#' ? bgColor.substring(1, 7) : bgColor;
+    const r = parseInt(color.substring(0, 2), 16);
+    const g = parseInt(color.substring(2, 4), 16);
+    const b = parseInt(color.substring(4, 6), 16);
+    const yiq = ((r * 299) + (g * 587) + (b * 114)) / 1000;
+    return (yiq >= 128) ? '#000000' : '#ffffff';
+  };
 
   // Memoized fetchNotes function (depends on userId)
   const fetchNotes = useCallback(async () => {
@@ -101,6 +114,7 @@ const StickyNotesManager = () => {
       width: 200,
       height: 200,
       z_index: 1,
+      color: '#ffeb3b',
     });
     setErrorMsg('');
   };
@@ -124,7 +138,7 @@ const StickyNotesManager = () => {
     setErrorMsg('');
 
     if (editingNote) {
-      // Update an existing note
+      // Update an existing note (include color)
       const { data, error } = await supabase
         .from('sticky_notes')
         .update({
@@ -135,6 +149,7 @@ const StickyNotesManager = () => {
           width: formData.width,
           height: formData.height,
           z_index: formData.z_index,
+          color: formData.color,
         })
         .eq('id', editingNote.id);
 
@@ -147,12 +162,12 @@ const StickyNotesManager = () => {
         closeModal();
       }
     } else {
-      // Create a new note
+      // Create a new note (include color)
       const { data, error } = await supabase
         .from('sticky_notes')
         .insert([
           {
-            user_id: userId, // use the retrieved user ID
+            user_id: userId,
             title: formData.title,
             content: formData.content,
             position_x: formData.position_x,
@@ -160,6 +175,7 @@ const StickyNotesManager = () => {
             width: formData.width,
             height: formData.height,
             z_index: formData.z_index,
+            color: formData.color,
           },
         ]);
 
@@ -177,7 +193,6 @@ const StickyNotesManager = () => {
 
   // Update note position after dragging stops
   const handleDragStop = async (note, e, data) => {
-    // data.x and data.y are the new positions
     const { error } = await supabase
       .from('sticky_notes')
       .update({
@@ -190,7 +205,6 @@ const StickyNotesManager = () => {
       console.error('Error updating note position:', error);
       setErrorMsg('Error updating note position.');
     } else {
-      // Refresh notes to reflect new positions
       fetchNotes();
     }
   };
@@ -206,6 +220,7 @@ const StickyNotesManager = () => {
       width: note.width,
       height: note.height,
       z_index: note.z_index,
+      color: note.color || '#ffeb3b',
     });
     setErrorMsg('');
     setIsModalOpen(true);
@@ -230,7 +245,7 @@ const StickyNotesManager = () => {
 
   return (
     <>
-      {/* Floating "think" icon on the right-hand side */}
+      {/* Floating "jotty" icon */}
       <div className="fixed right-0 top-1/2 transform -translate-y-1/2 m-4 z-30">
         <button
           onClick={openModal}
@@ -247,7 +262,6 @@ const StickyNotesManager = () => {
       {isModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-40">
           <div className="bg-white p-6 rounded shadow-lg max-w-md w-full relative">
-            {/* Close button */}
             <button
               onClick={closeModal}
               className="absolute top-2 right-2 text-gray-600 hover:text-gray-800 text-2xl leading-none"
@@ -287,6 +301,20 @@ const StickyNotesManager = () => {
                   required
                 ></textarea>
               </div>
+              {/* New Color Picker Field */}
+              <div className="mb-2">
+                <label htmlFor="color" className="block text-sm font-medium mb-1">
+                  Color
+                </label>
+                <input
+                  type="color"
+                  name="color"
+                  id="color"
+                  value={formData.color}
+                  onChange={handleInputChange}
+                  className="w-full border p-1 rounded focus:outline-none"
+                />
+              </div>
               <button
                 type="submit"
                 className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors"
@@ -311,7 +339,6 @@ const StickyNotesManager = () => {
         )}
         <div className="space-y-3">
           {notes.map((note) => (
-            // Wrap each note in a Draggable component
             <Draggable
               key={note.id}
               defaultPosition={{ x: note.position_x, y: note.position_y }}
@@ -320,9 +347,10 @@ const StickyNotesManager = () => {
               <div
                 className="p-3 rounded shadow cursor-move"
                 style={{
-                  backgroundColor: '#ffeb3b', // default display color
+                  backgroundColor: note.color || '#ffeb3b', // use note's color, fallback to default
                   width: note.width,
                   height: note.height,
+                  color: getContrastingTextColor(note.color || '#ffeb3b') // computed text color
                 }}
               >
                 <div className="flex justify-between items-start">
