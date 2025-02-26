@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import BrainstormingFeature from './BrainstormingFeature'
 
+
 export default function ProductBrainstorming() {
   const [timer, setTimer] = useState(5 * 60);
   const [problem, setProblem] = useState("");
@@ -84,7 +85,8 @@ export default function ProductBrainstorming() {
 
   return (
     <div className="p-6 space-y-6 bg-gray-50 min-h-screen mt-8">
-     
+      
+ 
 <BrainstormingFeature/>
       <div className="mb-4 text-gray-700 font-semibold">
         Time Remaining: {Math.floor(timer / 60)}:{String(timer % 60).padStart(2, "0")}

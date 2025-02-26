@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { Pie } from "react-chartjs-2";
 import KPIsFeatures from './KPIsFeatures'
+
+
 import {
   Chart as ChartJS,
   ArcElement,
@@ -208,115 +210,142 @@ const ProductGoalsTracker = () => {
   const overallRate = totalTarget > 0 ? ((totalProgress / totalTarget) * 100).toFixed(2) : 0;
 
   return (
-    <div className="container mx-auto p-4">
-        <KPIsFeatures/>
-     
+    <div className="container mx-auto p-4 mt-8">
+    
+  <KPIsFeatures />
 
-      {/* Form Section */}
-      <form onSubmit={handleSubmit} className="mb-6 p-4 border rounded shadow">
-        <h2 className="text-xl font-semibold mb-2">
-          {editingId ? "Edit Entry" : "Create New Entry"}
-        </h2>
-        <div className="mb-2">
-          <label className="block">Product Goal Name</label>
-          <input
-            type="text"
-            value={productGoalName}
-            onChange={(e) => setProductGoalName(e.target.value)}
-            className="border p-1 w-full"
-            placeholder="e.g., Increase Revenue"
-            required
-          />
-        </div>
-        <div className="mb-2">
-          <label className="block">Product Goal Target (%)</label>
-          <input
-            type="number"
-            value={productGoalTarget}
-            onChange={(e) => setProductGoalTarget(e.target.value)}
-            className="border p-1 w-full"
-            placeholder="e.g., 30"
-            required
-          />
-        </div>
-        <div className="mb-2">
-          <label className="block">Feature Goal Name</label>
-          <input
-            type="text"
-            value={featureGoalName}
-            onChange={(e) => setFeatureGoalName(e.target.value)}
-            className="border p-1 w-full"
-            placeholder="e.g., Improve Landing Page"
-            required
-          />
-        </div>
+  {/* Form Section */}
+  <form
+    onSubmit={handleSubmit}
+    className="max-w-lg mx-auto mb-6 p-4 border rounded shadow"
+  >
+    <h2 className="text-xl font-semibold mb-2 text-center">
+      {editingId ? "Edit Entry" : "Create New Entry"}
+    </h2>
 
-        {/* Key Results Section (during creation, no toggle option) */}
-        <div className="mb-2 border p-2 rounded">
-          <h3 className="font-semibold mb-1">Key Results</h3>
-          {krList.length > 0 && (
-            <ul className="mb-2">
-              {krList.map((kr) => (
-                <li key={kr.id} className="flex items-center justify-between border-b py-1">
-                  <span>
-                    <strong>{kr.description}</strong> - Pending
-                  </span>
-                </li>
-              ))}
-            </ul>
-          )}
-          <div className="flex flex-col md:flex-row md:space-x-2 items-center">
-            <input
-              type="text"
-              name="description"
-              value={krForm.description}
-              onChange={handleKRChange}
-              className="border p-1 flex-1 mb-2 md:mb-0"
-              placeholder="Key Result Description"
-            />
-            <input
-              type="number"
-              name="target"
-              value={krForm.target}
-              onChange={handleKRChange}
-              className="border p-1 w-24 mb-2 md:mb-0"
-              placeholder="Target"
-            />
-            <button
-              type="button"
-              onClick={addKeyResult}
-              className="bg-indigo-600 text-white px-3 py-1 rounded"
+    <div className="mb-2">
+      <label className="block text-gray-700 font-bold mb-2">
+        Product Goal Name
+      </label>
+      <input
+        type="text"
+        value={productGoalName}
+        onChange={(e) => setProductGoalName(e.target.value)}
+        className="border p-1 w-full"
+        placeholder="e.g., Increase Revenue"
+        required
+      />
+    </div>
+
+    <div className="mb-2">
+      <label className="block text-gray-700 font-bold mb-2">
+        Product Goal Target (%)
+      </label>
+      <input
+        type="number"
+        value={productGoalTarget}
+        onChange={(e) => setProductGoalTarget(e.target.value)}
+        className="border p-1 w-full"
+        placeholder="e.g., 30"
+        required
+      />
+    </div>
+
+    <div className="mb-2">
+      <label className="block text-gray-700 font-bold mb-2">
+        Feature Goal Name
+      </label>
+      <input
+        type="text"
+        value={featureGoalName}
+        onChange={(e) => setFeatureGoalName(e.target.value)}
+        className="border p-1 w-full"
+        placeholder="e.g., Improve Landing Page"
+        required
+      />
+    </div>
+
+    {/* Key Results Section */}
+    <div className="mb-2 border p-2 rounded">
+      <h3 className="font-semibold mb-1">Key Results</h3>
+      {krList.length > 0 && (
+        <ul className="mb-2">
+          {krList.map((kr) => (
+            <li
+              key={kr.id}
+              className="flex items-center justify-between border-b py-1"
             >
-              +
-            </button>
-          </div>
-        </div>
-        <button type="submit" className="bg-indigo-600 text-white px-4 py-2 rounded">
-          {editingId ? "Update Entry" : "Create Entry"}
-        </button>
-      </form>
-
-      {/* View Mode & Print Buttons */}
-      <div className="flex items-center justify-center space-x-4 mb-4">
+              <span>
+                <strong>{kr.description}</strong> - Pending
+              </span>
+            </li>
+          ))}
+        </ul>
+      )}
+      <div className="flex flex-col md:flex-row md:space-x-2 items-center">
+        <input
+          type="text"
+          name="description"
+          value={krForm.description}
+          onChange={handleKRChange}
+          className="border p-1 flex-1 mb-2 md:mb-0"
+          placeholder="Key Result Description"
+        />
+        <input
+          type="number"
+          name="target"
+          value={krForm.target}
+          onChange={handleKRChange}
+          className="border p-1 w-24 mb-2 md:mb-0"
+          placeholder="Target"
+        />
         <button
-          onClick={() => setViewMode("table")}
-          className={`px-4 py-2 rounded ${viewMode === "table" ? "bg-indigo-600 text-white" : "bg-gray-200 text-gray-800"}`}
+          type="button"
+          onClick={addKeyResult}
+          className="bg-indigo-600 text-white px-3 py-1 rounded"
         >
-          Table View
-        </button>
-        <button
-          onClick={() => setViewMode("organogram")}
-          className={`px-4 py-2 rounded ${viewMode === "organogram" ? "bg-indigo-600 text-white" : "bg-gray-200 text-gray-800"}`}
-        >
-          Organogram View
-        </button>
-        <button
-          onClick={handlePrint}
-          className="px-4 py-2 rounded bg-gray-800 text-white"
-        >
-          Print Dashboard
+          +
         </button>
       </div>
+    </div>
+
+    <button
+      type="submit"
+      className="w-full sm:w-auto bg-indigo-600 text-white px-4 py-2 rounded"
+    >
+      {editingId ? "Update Entry" : "Create Entry"}
+    </button>
+  </form>
+
+
+  <div className="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-4 mb-4">
+  <button
+    onClick={() => setViewMode("table")}
+    className={`w-full sm:w-auto px-4 py-2 rounded ${
+      viewMode === "table"
+        ? "bg-indigo-600 text-white"
+        : "bg-gray-200 text-gray-800"
+    }`}
+  >
+    Table View
+  </button>
+  <button
+    onClick={() => setViewMode("organogram")}
+    className={`w-full sm:w-auto px-4 py-2 rounded ${
+      viewMode === "organogram"
+        ? "bg-indigo-600 text-white"
+        : "bg-gray-200 text-gray-800"
+    }`}
+  >
+    Organogram View
+  </button>
+  <button
+    onClick={handlePrint}
+    className="w-full sm:w-auto px-4 py-2 rounded bg-gray-800 text-white"
+  >
+    Print Dashboard
+  </button>
+</div>
 
       {/* Dashboard Section */}
       {viewMode === "table" ? (
@@ -332,38 +361,106 @@ const ProductGoalsTracker = () => {
               </tr>
               
             </thead>
-            <tbody>
-              {entries.map((entry) => (
-                <tr key={entry.id}>
-                  <td className="border p-2">{entry.productGoalName}</td>
-                  <td className="border p-2">{entry.featureGoalName}</td>
-                  <td className="border p-2">
+
+
+           <div className="overflow-x-auto">
+  <table className="min-w-full border-collapse">
+    <tbody>
+      {entries.map((entry) => (
+        <tr key={entry.id}>
+          <td className="border p-2 whitespace-nowrap">{entry.productGoalName}</td>
+          <td className="border p-2 whitespace-nowrap">{entry.featureGoalName}</td>
+          <td className="border p-2">
+            <ProgressBar
+              progress={entry.overallProgress}
+              target={entry.productGoalTarget}
+            />
+          </td>
+          <td className="border p-2">
+            <ul>
+              {entry.keyResults.map((kr) => (
+                <li key={kr.id} className="flex items-center justify-between">
+                  <span className="text-sm">
+                    {kr.description} - {kr.done ? "Done" : "Pending"}
+                  </span>
+                  <button
+                    onClick={() => handleToggleKR(entry.id, kr.id)}
+                    className="ml-2 text-blue-600 text-xs"
+                  >
+                    {kr.done ? "Mark as Pending" : "Mark as Done"}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </td>
+          <td className="border p-2 text-center whitespace-nowrap">
+            <button
+              onClick={() => handleEdit(entry.id)}
+              className="bg-yellow-500 text-white px-2 py-1 mr-2 rounded text-sm"
+            >
+              Edit
+            </button>
+            <button
+              onClick={() => handleDelete(entry.id)}
+              className="bg-red-600 text-white px-2 py-1 rounded text-sm"
+            >
+              Delete
+            </button>
+          </td>
+        </tr>
+      ))}
+      {entries.length === 0 && (
+        <tr>
+          <td colSpan="5" className="border p-2 text-center">
+            No entries available.
+          </td>
+        </tr>
+      )}
+    </tbody>
+  </table>
+</div>
+          </table>
+        </div>
+      ) : (
+        // Organogram View: Group entries by Product Goal.
+        <div className="space-y-6">
+        {Object.keys(groupedData).length === 0 ? (
+          <p className="text-center text-gray-600">No entries to display.</p>
+        ) : (
+          Object.keys(groupedData).map((prodGoal) => (
+            <div key={prodGoal} className="mb-6 border p-4 rounded shadow bg-white">
+              <h2 className="text-xl font-bold mb-2">{prodGoal}</h2>
+              {groupedData[prodGoal].map((entry) => (
+                <div key={entry.id} className="ml-4 mt-2 border-l pl-4">
+                  <h3 className="text-lg font-semibold">{entry.featureGoalName}</h3>
+                  <div className="my-2">
                     <ProgressBar
                       progress={entry.overallProgress}
                       target={entry.productGoalTarget}
                     />
-                  </td>
-                  <td className="border p-2">
-                    <ul>
-                      {entry.keyResults.map((kr) => (
-                        <li key={kr.id} className="flex items-center justify-between">
-                          <span>
-                            {kr.description} - {kr.done ? "Done" : "Pending"}
-                          </span>
-                          <button
-                            onClick={() => handleToggleKR(entry.id, kr.id)}
-                            className="ml-2 text-blue-600 text-xs"
-                          >
-                            {kr.done ? "Mark as Pending" : "Mark as Done"}
-                          </button>
-                        </li>
-                      ))}
-                    </ul>
-                  </td>
-                  <td className="border p-2 text-center">
+                  </div>
+                  <ul className="list-disc ml-6">
+                    {entry.keyResults.map((kr) => (
+                      <li
+                        key={kr.id}
+                        className="mb-1 flex flex-col sm:flex-row items-start sm:items-center justify-between"
+                      >
+                        <span className="text-sm">
+                          <strong>{kr.description}</strong> - {kr.done ? "Done" : "Pending"}
+                        </span>
+                        <button
+                          onClick={() => handleToggleKR(entry.id, kr.id)}
+                          className="mt-1 sm:mt-0 ml-0 sm:ml-2 text-indigo-600 text-xs"
+                        >
+                          {kr.done ? "Mark as Pending" : "Mark as Done"}
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                  <div className="mt-2 flex flex-col sm:flex-row gap-2">
                     <button
                       onClick={() => handleEdit(entry.id)}
-                      className="bg-yellow-500 text-white px-2 py-1 mr-2 rounded"
+                      className="bg-yellow-500 text-white px-2 py-1 rounded"
                     >
                       Edit
                     </button>
@@ -373,72 +470,14 @@ const ProductGoalsTracker = () => {
                     >
                       Delete
                     </button>
-                  </td>
-                </tr>
-              ))}
-              {entries.length === 0 && (
-                <tr>
-                  <td colSpan="5" className="border p-2 text-center">
-                    No entries available.
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
-      ) : (
-        // Organogram View: Group entries by Product Goal.
-        <div>
-          {Object.keys(groupedData).length === 0 ? (
-            <p className="text-center">No entries to display.</p>
-          ) : (
-            Object.keys(groupedData).map((prodGoal) => (
-              <div key={prodGoal} className="mb-6 border p-4 rounded shadow">
-                <h2 className="text-xl font-bold">{prodGoal}</h2>
-                {groupedData[prodGoal].map((entry) => (
-                  <div key={entry.id} className="ml-4 mt-2 border-l pl-4">
-                    <h3 className="text-lg font-semibold">{entry.featureGoalName}</h3>
-                    <div className="my-2">
-                      <ProgressBar
-                        progress={entry.overallProgress}
-                        target={entry.productGoalTarget}
-                      />
-                    </div>
-                    <ul className="list-disc ml-6">
-                      {entry.keyResults.map((kr) => (
-                        <li key={kr.id} className="mb-1 flex items-center justify-between">
-                          <span>
-                            <strong>{kr.description}</strong> - {kr.done ? "Done" : "Pending"}
-                          </span>
-                          <button
-                            onClick={() => handleToggleKR(entry.id, kr.id)}
-                            className="ml-2 text-indigo-600 text-xs"
-                          >
-                            {kr.done ? "Mark as Pending" : "Mark as Done"}
-                          </button>
-                        </li>
-                      ))}
-                    </ul>
-                    <div className="mt-2">
-                      <button
-                        onClick={() => handleEdit(entry.id)}
-                        className="bg-yellow-500 text-white px-2 py-1 mr-2 rounded"
-                      >
-                        Edit
-                      </button>
-                      <button
-                        onClick={() => handleDelete(entry.id)}
-                        className="bg-red-600 text-white px-2 py-1 rounded"
-                      >
-                        Delete
-                      </button>
-                    </div>
                   </div>
-                ))}
-              </div>
-            ))
-          )}
-        </div>
+                </div>
+              ))}
+            </div>
+          ))
+        )}
+      </div>
+      
       )}
 
      {/* Overall Aggregated Progress Pie Chart */}

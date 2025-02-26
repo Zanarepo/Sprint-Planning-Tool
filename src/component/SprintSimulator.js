@@ -2,6 +2,8 @@ import { useState } from "react";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import AgileSprintSimulation from './AgileSprintSimulation'
 
+
+
 export default function SprintSimulation() {
   const [stage, setStage] = useState("product_backlog");
   const [features, setFeatures] = useState([]);
@@ -114,10 +116,9 @@ export default function SprintSimulation() {
   };
 
   return (
-    <div className="p-12 space-y-6 bg-gray-50 rounded-lg shadow-md mt-8">
-    <AgileSprintSimulation/>
-  
-      <h1 className="text-2xl font-bold text-blue-700 text-2xl  text-center p-8">Let's Simulate </h1>
+    <div className="p-6 space-y-6 bg-gray-50 rounded-lg shadow-md mt-8">
+     <AgileSprintSimulation/>
+      <h1 className="text-2xl font-bold text-blue-700 text-2xl  text-center">Agile Sprint Simulation </h1>
 
       {/* Edit Feature Modal */}
       {showEditModal && (
@@ -533,7 +534,7 @@ export default function SprintSimulation() {
               </ul>
             </div>
            
-              {/* <h3 className="font-semibold mb-2">Velocity Metrics</h3>*/ }
+              <h3 className="font-semibold mb-2">Velocity Metrics</h3>
               <p>Total Effort: {sprintBacklog.reduce((sum, f) => sum + f.effort, 0)}</p>
             </div>
           </div>

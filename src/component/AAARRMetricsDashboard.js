@@ -1,3 +1,8 @@
+
+
+
+
+
 import React, { useState } from "react";
 import { Line } from "react-chartjs-2";
 import AARRRMetricsFeatures from './AARRRMetricsFeatures'
@@ -174,87 +179,94 @@ const AAARRMetricsDashboard = () => {
 
 
       {/* Data Entry Form */}
-      <form onSubmit={handleSubmit} className="bg-white shadow-lg rounded px-8 pt-6 pb-8 mb-6 max-w-lg mx-auto">
-        <div className="mb-4">
-          <label className="block text-gray-700 font-bold mb-2">Date</label>
-          <input
-            type="date"
-            name="date"
-            value={formData.date}
-            onChange={handleChange}
-            className="w-full px-3 py-2 border rounded"
-          />
-        </div>
-        <div className="mb-4 grid grid-cols-2 gap-4">
-          <div>
-            <label className="block text-gray-700 font-bold mb-2">Acquisition</label>
-            <input
-              type="number"
-              name="acquisition"
-              value={formData.acquisition}
-              onChange={handleChange}
-              placeholder="e.g., 1000"
-              className="w-full px-3 py-2 border rounded"
-            />
-          </div>
-          <div>
-            <label className="block text-gray-700 font-bold mb-2">Activation</label>
-            <input
-              type="number"
-              name="activation"
-              value={formData.activation}
-              onChange={handleChange}
-              placeholder="e.g., 600"
-              className="w-full px-3 py-2 border rounded"
-            />
-          </div>
-          <div>
-            <label className="block text-gray-700 font-bold mb-2">Retention</label>
-            <input
-              type="number"
-              name="retention"
-              value={formData.retention}
-              onChange={handleChange}
-              placeholder="e.g., 400"
-              className="w-full px-3 py-2 border rounded"
-            />
-          </div>
-          <div>
-            <label className="block text-gray-700 font-bold mb-2">Revenue</label>
-            <input
-              type="number"
-              name="revenue"
-              value={formData.revenue}
-              onChange={handleChange}
-              placeholder="e.g., 5000"
-              className="w-full px-3 py-2 border rounded"
-            />
-          </div>
-          <div className="col-span-2">
-            <label className="block text-gray-700 font-bold mb-2">Referral</label>
-            <input
-              type="number"
-              name="referral"
-              value={formData.referral}
-              onChange={handleChange}
-              placeholder="e.g., 150"
-              className="w-full px-3 py-2 border rounded"
-            />
-          </div>
-        </div>
-        <div className="flex items-center justify-between">
-          <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-            {isEditing ? "Update Record" : "Add Record"}
-          </button>
-          <button
-            type="button"
-            onClick={() => window.print()}
-            className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
-          >
-            Print Data/Chart
-          </button>
-        </div>
-      </form>
+      <form
+  onSubmit={handleSubmit}
+  className="bg-white shadow-lg rounded px-4 sm:px-8 pt-6 pb-8 mb-6 max-w-lg mx-auto"
+>
+  <div className="mb-4">
+    <label className="block text-gray-700 font-bold mb-2">Date</label>
+    <input
+      type="date"
+      name="date"
+      value={formData.date}
+      onChange={handleChange}
+      className="w-full px-3 py-2 border rounded"
+    />
+  </div>
+  <div className="mb-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
+    <div>
+      <label className="block text-gray-700 font-bold mb-2">Acquisition</label>
+      <input
+        type="number"
+        name="acquisition"
+        value={formData.acquisition}
+        onChange={handleChange}
+        placeholder="e.g., 1000"
+        className="w-full px-3 py-2 border rounded"
+      />
+    </div>
+    <div>
+      <label className="block text-gray-700 font-bold mb-2">Activation</label>
+      <input
+        type="number"
+        name="activation"
+        value={formData.activation}
+        onChange={handleChange}
+        placeholder="e.g., 600"
+        className="w-full px-3 py-2 border rounded"
+      />
+    </div>
+    <div>
+      <label className="block text-gray-700 font-bold mb-2">Retention</label>
+      <input
+        type="number"
+        name="retention"
+        value={formData.retention}
+        onChange={handleChange}
+        placeholder="e.g., 400"
+        className="w-full px-3 py-2 border rounded"
+      />
+    </div>
+    <div>
+      <label className="block text-gray-700 font-bold mb-2">Revenue</label>
+      <input
+        type="number"
+        name="revenue"
+        value={formData.revenue}
+        onChange={handleChange}
+        placeholder="e.g., 5000"
+        className="w-full px-3 py-2 border rounded"
+      />
+    </div>
+    <div className="col-span-1 sm:col-span-2">
+      <label className="block text-gray-700 font-bold mb-2">Referral</label>
+      <input
+        type="number"
+        name="referral"
+        value={formData.referral}
+        onChange={handleChange}
+        placeholder="e.g., 150"
+        className="w-full px-3 py-2 border rounded"
+      />
+    </div>
+  </div>
+  <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+    <button
+      type="submit"
+      className="w-full sm:w-auto bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+    >
+      {isEditing ? "Update Record" : "Add Record"}
+    </button>
+    <button
+      type="button"
+      onClick={() => window.print()}
+      className="w-full sm:w-auto bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+    >
+      Print Data/Chart
+    </button>
+  </div>
+</form>
+
 
       {/* Data Table */}
       <div className="overflow-x-auto mb-6">

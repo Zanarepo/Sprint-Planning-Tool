@@ -2,6 +2,7 @@ import { useState } from "react";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import Simulator from './Simulator';
 import SprintEstimators from './SprintEstimators'
+import AppLauncher from "./AppLauncher";
 //import SprintEstimator from './SprintEstimator'
 
 export default function SprintSimulation() {
@@ -117,8 +118,10 @@ export default function SprintSimulation() {
 
   return (
     <div className="p-6 space-y-6 bg-gray-50 rounded-lg shadow-md mt-4">
+      <AppLauncher/>
       <Simulator />
       <SprintEstimators/>
+      
       <h1 className="text-2xl font-bold text-blue-700 text-2xl  text-center">Agile Sprint Simulation </h1>
 
       {/* Edit Feature Modal */}

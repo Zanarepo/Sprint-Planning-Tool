@@ -6,7 +6,7 @@ import { FaCheckCircle, FaBrain, FaListAlt, FaRegLightbulb, FaDollarSign, FaCogs
 
 function HomePage() {
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 p-6 text-gray-800 mt-16">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 p-6 text-gray-800 mt-8">
       <div className="text-center max-w-3xl bg-white p-8 rounded-lg shadow-xl">
         <h1 className="text-4xl font-bold text-yellow-600">Sprintify</h1>
         <p className="mt-4 text-lg text-gray-700">

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import StrategyFeature from './StrategyFeature'
 
+
 // ---------- Main Component: ProductStrategyTracker ----------
 const ProductStrategyTracker = () => {
   // State for our list of strategy entries.
@@ -122,7 +123,8 @@ const ProductStrategyTracker = () => {
 
 
   return (
-    <div className="container mx-auto p-6">
+    <div className="container mx-auto p-6 mt-8">
+
       <StrategyFeature/>
     
       {/* Explanation Section */}
@@ -319,26 +321,31 @@ const ProductStrategyTracker = () => {
       </form>
 
       {/* View Mode & Print Buttons */}
-      <div className="flex items-center justify-center space-x-4 mb-4">
-        <button
-          onClick={() => setViewMode("table")}
-          className={`px-4 py-2 rounded ${viewMode === "table" ? "bg-indigo-600 text-white" : "bg-gray-200 text-gray-800"}`}
-        >
-          Table View
-        </button>
-        <button
-          onClick={() => setViewMode("organogram")}
-          className={`px-4 py-2 rounded ${viewMode === "organogram" ? "bg-indigo-600 text-white" : "bg-gray-200 text-gray-800"}`}
-        >
-          Organogram View
-        </button>
-        <button
-          onClick={() => window.print()}
-          className="px-4 py-2 rounded bg-gray-800 text-white"
-        >
-          Print Dashboard
-        </button>
-      </div>
+      <div className="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-4 mb-4">
+  <button
+    onClick={() => setViewMode("table")}
+    className={`w-full sm:w-auto px-4 py-2 rounded ${
+      viewMode === "table" ? "bg-indigo-600 text-white" : "bg-gray-200 text-gray-800"
+    }`}
+  >
+    Table View
+  </button>
+  <button
+    onClick={() => setViewMode("organogram")}
+    className={`w-full sm:w-auto px-4 py-2 rounded ${
+      viewMode === "organogram" ? "bg-indigo-600 text-white" : "bg-gray-200 text-gray-800"
+    }`}
+  >
+    Organogram View
+  </button>
+  <button
+    onClick={() => window.print()}
+    className="w-full sm:w-auto px-4 py-2 rounded bg-gray-800 text-white"
+  >
+    Print Dashboard
+  </button>
+</div>
+
 
       {/* Dashboard Section */}
       {viewMode === "table" ? (

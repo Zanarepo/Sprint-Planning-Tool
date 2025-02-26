@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { supabase } from "../../supabaseClient";
 import StickyNotesManager from "./StickyNotesManager";
-
+import StickyNoteFeature from "./StickyNoteFeature";
 const defaultDivisions = 1;
 const defaultColors = ["#ffffff"];
 
@@ -178,17 +178,15 @@ const StickyDashboard = () => {
   const handlePrint = () => window.print();
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-200 mt-16">
+    <div className="flex flex-col items-center p-4 justify-center min-h-screen bg-gray-200 mt-16">
       {/* Header with Print Button */}
+      <StickyNoteFeature />
       <div className="flex items-center gap-4 mb-4">
-        <div className="text-yellow-600 font-semibold text-xl">
-          Stick On It
-        </div>
+      
+       
         
       </div>
-      <div className="text-brown-600 text-xl mb-2 flex items-center gap-2">
-        Capture your ideas - document on the go
-      </div>
+     
 
       {/* Board Settings Controls */}
       <div className="flex flex-wrap gap-4 mb-4">

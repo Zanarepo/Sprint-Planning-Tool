@@ -1,5 +1,10 @@
+
+
 import React, { useState } from 'react';
 import MarketResearchFeatures from './MarketResearchFeatures';
+
+
+
 const MarketResearchDoc = () => {
   // Define the initial structure of a market research document.
   const initialResearch = {
@@ -658,3 +663,4 @@ const MarketResearchDoc = () => {
 };
 
 export default MarketResearchDoc;
+

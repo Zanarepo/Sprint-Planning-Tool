@@ -33,7 +33,10 @@ const RevenueMetricsFeatures = () => {
       </div>
 
       {/* Revenue Metrics Grid */}
-      <div className="grid grid-cols-2 gap-6 mt-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-6">
+  {/* Your grid items here */}
+
+
         {/* MRR */}
         <div className="flex flex-col items-center bg-white p-4 shadow rounded-lg">
           <TrendingUp size={32} className="text-blue-600" />

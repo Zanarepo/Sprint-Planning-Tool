@@ -174,6 +174,14 @@ const AppLauncher = () => {
               <span className="text-xs">priority</span>
             </Link>
 
+            <Link
+              to="/compare2"
+              className="flex flex-col items-center p-2 hover:bg-gray-100 rounded text-gray-800"
+            >
+              <User  size={20} className="text-blue-500" />
+              <span className="text-xs">Feature Matrix</span>
+            </Link>
+
 
             <Link
               to="/prd2"

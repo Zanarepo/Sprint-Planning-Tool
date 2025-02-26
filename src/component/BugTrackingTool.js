@@ -1,3 +1,6 @@
+
+
+
 import React, { useState } from "react";
 import { Edit3, Trash } from "lucide-react";
 import BugTrackingFeature from './BugTrackingFeature'
@@ -85,147 +88,148 @@ const BugTrackingTool = () => {
 
       {/* Bug Entry Form */}
       <form
-        onSubmit={handleSubmit}
-        className="max-w-lg mx-auto bg-white shadow-lg rounded px-8 pt-6 pb-8 mb-6"
+  onSubmit={handleSubmit}
+  className="max-w-lg mx-auto bg-white shadow-lg rounded px-4 sm:px-8 pt-6 pb-8 mb-6"
+>
+  <div className="mb-4">
+    <label className="block text-gray-700 font-bold mb-2">
+      Bug Title
+    </label>
+    <input
+      type="text"
+      name="title"
+      value={form.title}
+      onChange={handleChange}
+      placeholder="Enter bug title"
+      className="w-full px-3 py-2 border rounded focus:outline-none"
+    />
+  </div>
+
+  <div className="mb-4">
+    <label className="block text-gray-700 font-bold mb-2">
+      Description
+    </label>
+    <textarea
+      name="description"
+      value={form.description}
+      onChange={handleChange}
+      placeholder="Enter bug description"
+      rows="3"
+      className="w-full px-3 py-2 border rounded focus:outline-none"
+    ></textarea>
+  </div>
+
+  <div className="mb-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
+    <div>
+      <label className="block text-gray-700 font-bold mb-2">
+        Severity
+      </label>
+      <select
+        name="severity"
+        value={form.severity}
+        onChange={handleChange}
+        className="w-full px-3 py-2 border rounded focus:outline-none"
       >
-        <div className="mb-4">
-          <label className="block text-gray-700 font-bold mb-2">
-            Bug Title
-          </label>
-          <input
-            type="text"
-            name="title"
-            value={form.title}
-            onChange={handleChange}
-            placeholder="Enter bug title"
-            className="w-full px-3 py-2 border rounded focus:outline-none"
-          />
-        </div>
+        <option value="">Select severity</option>
+        <option value="Low">Low</option>
+        <option value="Medium">Medium</option>
+        <option value="High">High</option>
+        <option value="Critical">Critical</option>
+      </select>
+    </div>
+    {/* Add more fields here if needed */}
+  
 
-        <div className="mb-4">
-          <label className="block text-gray-700 font-bold mb-2">
-            Description
-          </label>
-          <textarea
-            name="description"
-            value={form.description}
-            onChange={handleChange}
-            placeholder="Enter bug description"
-            rows="3"
-            className="w-full px-3 py-2 border rounded focus:outline-none"
-          ></textarea>
-        </div>
 
-        <div className="mb-4 grid grid-cols-2 gap-4">
-          <div>
-            <label className="block text-gray-700 font-bold mb-2">
-              Severity
-            </label>
-            <select
-              name="severity"
-              value={form.severity}
-              onChange={handleChange}
-              className="w-full px-3 py-2 border rounded focus:outline-none"
-            >
-              <option value="">Select severity</option>
-              <option value="Low">Low</option>
-              <option value="Medium">Medium</option>
-              <option value="High">High</option>
-              <option value="Critical">Critical</option>
-            </select>
-          </div>
-          <div>
-            <label className="block text-gray-700 font-bold mb-2">
-              Status
-            </label>
-            <select
-              name="status"
-              value={form.status}
-              onChange={handleChange}
-              className="w-full px-3 py-2 border rounded focus:outline-none"
-            >
-              <option value="Open">Open</option>
-              <option value="In Progress">In Progress</option>
-              <option value="Resolved">Resolved</option>
-              <option value="Closed">Closed</option>
-            </select>
-          </div>
-        </div>
+  <label className="block text-gray-700 font-bold mb-2">
+    Status
+  </label>
+  <select
+    name="status"
+    value={form.status}
+    onChange={handleChange}
+    className="w-full px-3 py-2 border rounded focus:outline-none"
+  >
+    <option value="Open">Open</option>
+    <option value="In Progress">In Progress</option>
+    <option value="Resolved">Resolved</option>
+    <option value="Closed">Closed</option>
+  </select>
+</div>
 
-        <div className="mb-4 grid grid-cols-2 gap-4">
-          <div>
-            <label className="block text-gray-700 font-bold mb-2">
-              Reporter
-            </label>
-            <input
-              type="text"
-              name="reporter"
-              value={form.reporter}
-              onChange={handleChange}
-              placeholder="Reporter name"
-              className="w-full px-3 py-2 border rounded focus:outline-none"
-            />
-          </div>
-          <div>
-            <label className="block text-gray-700 font-bold mb-2">
-              Assigned To
-            </label>
-            <input
-              type="text"
-              name="assignedTo"
-              value={form.assignedTo}
-              onChange={handleChange}
-              placeholder="Assignee"
-              className="w-full px-3 py-2 border rounded focus:outline-none"
-            />
-          </div>
-        </div>
+<div className="mb-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
+  <div>
+    <label className="block text-gray-700 font-bold mb-2">
+      Reporter
+    </label>
+    <input
+      type="text"
+      name="reporter"
+      value={form.reporter}
+      onChange={handleChange}
+      placeholder="Reporter name"
+      className="w-full px-3 py-2 border rounded focus:outline-none"
+    />
+  </div>
+  <div>
+    <label className="block text-gray-700 font-bold mb-2">
+      Assigned To
+    </label>
+    <input
+      type="text"
+      name="assignedTo"
+      value={form.assignedTo}
+      onChange={handleChange}
+      placeholder="Assignee"
+      className="w-full px-3 py-2 border rounded focus:outline-none"
+    />
+  </div>
+</div>
 
-        <div className="mb-4 grid grid-cols-2 gap-4">
-          <div>
-            <label className="block text-gray-700 font-bold mb-2">
-              Date Reported
-            </label>
-            <input
-              type="date"
-              name="dateReported"
-              value={form.dateReported}
-              onChange={handleChange}
-              className="w-full px-3 py-2 border rounded focus:outline-none"
-            />
-          </div>
-          <div>
-            <label className="block text-gray-700 font-bold mb-2">
-              Additional Notes
-            </label>
-            <input
-              type="text"
-              name="notes"
-              value={form.notes}
-              onChange={handleChange}
-              placeholder="Any extra info"
-              className="w-full px-3 py-2 border rounded focus:outline-none"
-            />
-          </div>
-        </div>
+<div className="mb-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
+  <div>
+    <label className="block text-gray-700 font-bold mb-2">
+      Date Reported
+    </label>
+    <input
+      type="date"
+      name="dateReported"
+      value={form.dateReported}
+      onChange={handleChange}
+      className="w-full px-3 py-2 border rounded focus:outline-none"
+    />
+  </div>
+  <div>
+    <label className="block text-gray-700 font-bold mb-2">
+      Additional Notes
+    </label>
+    <input
+      type="text"
+      name="notes"
+      value={form.notes}
+      onChange={handleChange}
+      placeholder="Any extra info"
+      className="w-full px-3 py-2 border rounded focus:outline-none"
+    />
+  </div>
+</div>
 
-        <div className="flex items-center justify-between">
-          <button
-            type="submit"
-            className="bg-red-400 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
-          >
-            {isEditing ? "Update Bug" : "Add Bug"}
-          </button>
-          <button
-            type="button"
-            onClick={() => window.print()}
-            className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
-          >
-            Print Bug List
-          </button>
-        </div>
-      </form>
-
+<div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+  <button
+    type="submit"
+    className="w-full sm:w-auto bg-red-400 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+  >
+    {isEditing ? "Update Bug" : "Add Bug"}
+  </button>
+  <button
+    type="button"
+    onClick={() => window.print()}
+    className="w-full sm:w-auto bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+  >
+    Print Bug List
+  </button>
+</div>
+</form>
       {/* Bug List Table */}
       <div className="overflow-x-auto">
         <table className="min-w-full bg-white border rounded shadow">

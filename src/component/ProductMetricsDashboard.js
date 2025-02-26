@@ -207,8 +207,8 @@ const ProductMetricsDashboard = () => {
   };
 
   return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">Product Metrics Dashboard</h1>
+    <div className="container mx-auto p-4 mt-10">
+     
 <MetricsDashbaordFeature/>
       {/* Tabs for selecting the metric */}
       <div className="flex justify-center items-center space-x-4 mb-4 text-center mt-8">

@@ -4,7 +4,10 @@ import { motion } from "framer-motion";
 
 const BrainstormingFeature = () => {
   return (
-    <div className="flex flex-col items-center text-center p-6 max-w-3xl mx-auto ">
+    <div className="flex flex-col items-center text-center p-6 max-w-3xl mx-auto mt-8">
+    {/* Your content goes here */}
+  
+  
       {/* Icon */}
       <BrainCircuit size={40} className="text-yellow-600 mt-8" />
 

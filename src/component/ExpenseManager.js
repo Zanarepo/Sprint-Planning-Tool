@@ -107,21 +107,22 @@ const ExpenseManager = () => {
             rows="3"
           ></textarea>
         </div>
-        <div className="flex justify-between items-center">
-          <button
-            type="submit"
-            className="bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded"
-          >
-            {isEditing ? "Update Expense" : "Add Expense"}
-          </button>
-          <button
-            type="button"
-            onClick={() => setShowReceipt(true)}
-            className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
-          >
-            Generate Receipt
-          </button>
-        </div>
+        <div className="flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0">
+  <button
+    type="submit"
+    className="w-full sm:w-auto bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded"
+  >
+    {isEditing ? "Update Expense" : "Add Expense"}
+  </button>
+  <button
+    type="button"
+    onClick={() => setShowReceipt(true)}
+    className="w-full sm:w-auto bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+  >
+    Generate Receipt
+  </button>
+</div>
+
       </form>
 
       {/* Expense Table */}

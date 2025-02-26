@@ -165,16 +165,7 @@ const AppLauncher = () => {
               <span className="text-xs">Strategy</span>
             </Link>
 
-                      
-            <Link
-              to="/prioritization2"
-              className="flex flex-col items-center p-2 hover:bg-gray-100 rounded text-gray-800"
-            >
-              <ListChecks  size={20} className="text-blue-900" />
-              <span className="text-xs">priority</span>
-            </Link>
-
-
+            
             <Link
               to="/prd2"
               className="flex flex-col items-center p-2 hover:bg-gray-100 rounded text-gray-800"
@@ -208,6 +199,24 @@ const AppLauncher = () => {
               <span className="text-xs">MrktResrch</span>
             </Link>
             
+
+
+
+          
+            <Link
+              to="/prioritization2"
+              className="flex flex-col items-center p-2 hover:bg-gray-100 rounded text-gray-800"
+            >
+              <ListChecks  size={20} className="text-blue-900" />
+              <span className="text-xs">priority</span>
+            </Link>
+
+
+
+
+
+
+
             <Link
               to="/userresearch2"
               className="flex flex-col items-center p-2 hover:bg-gray-100 rounded text-gray-800"

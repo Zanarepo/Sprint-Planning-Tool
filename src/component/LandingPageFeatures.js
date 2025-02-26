@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { Brain, LineChart, Rocket , Users , Activity , Map  } from "lucide-react";
+import { Brain, LineChart, Rocket, Users, Activity, Map } from "lucide-react";
 
 const features = [
   {
@@ -33,11 +33,10 @@ const features = [
     btnBg: "bg-blue-600",
     route: "/sprints",
   },
-
   {
     title: "Daily Standup",
     description:
-      " Document and gather feedback on the go using our easy to use standup tool",
+      "Document and gather feedback on the go using our easy-to-use standup tool.",
     icon: <Users size={32} className="text-orange-600" />,
     bgColor: "bg-orange-50",
     textColor: "text-orange-700",
@@ -47,61 +46,93 @@ const features = [
   {
     title: "Burndown",
     description:
-      "  Document progress and gather feedback effortlessly using our intuitive Burndown tool.",
+      "Document progress and gather feedback effortlessly using our intuitive Burndown tool.",
     icon: <Activity size={32} className="text-red-600" />,
     bgColor: "bg-red-50",
     textColor: "text-red-700",
     btnBg: "bg-red-600",
     route: "/burndown",
   },
-   
   {
     title: "Roadmap",
     description:
-      " Stay focused on what matters- Build with alignment, using our easy intuitive Roadmap tool to track progresss",
+      "Stay focused on what matters—build with alignment using our intuitive Roadmap tool to track progress.",
     icon: <Map size={32} className="text-blue-600" />,
     bgColor: "bg-blue-50",
     textColor: "text-blue-700",
     btnBg: "bg-blue-600",
     route: "/roadmap",
   },
-   
 ];
 
 const LandingPageFeatures = () => {
   return (
-    <div className="max-w-5xl mx-auto mt-12 px-6">
-      <h2 className="text-4xl font-extrabold text-center text-gray-800 mb-8">
-        Explore Our Features
-      </h2>
-      <div className="grid md:grid-cols-3 gap-6">
-        {features.map((feature, index) => (
-          <div
-            key={index}
-            className={`p-6 rounded-2xl shadow-md ${feature.bgColor} text-center`}
-          >
-            {/* Icon */}
-            <div className="flex justify-center mb-4">{feature.icon}</div>
-
-            {/* Title */}
-            <h3 className={`text-2xl font-bold ${feature.textColor}`}>
-              {feature.title}
-            </h3>
-
-            {/* Description */}
-            <p className="text-gray-700 mt-3">{feature.description}</p>
-
-            {/* CTA Button */}
-            <Link
-              to={feature.route}
-              className={`mt-4 inline-block ${feature.btnBg} text-white py-2 px-4 rounded-lg shadow hover:brightness-110 transition`}
-            >
-              Explore
-            </Link>
+    <>
+      {/* Desktop Carousel (visible on md and up) */}
+      <div className="hidden md:block max-w-5xl mx-auto mt-12">
+        <h2 className="text-4xl font-extrabold text-center text-gray-800 mb-8">
+          Explore Our Features
+        </h2>
+        <div className="relative w-full overflow-hidden">
+          <style>{`
+            @keyframes slide {
+              0% { transform: translateX(0); }
+              100% { transform: translateX(-50%); }
+            }
+            .desktop-carousel {
+              animation: slide 15s linear infinite;
+            }
+          `}</style>
+          <div className="flex desktop-carousel">
+            {[...features, ...features].map((feature, index) => (
+              <div
+                key={index}
+                className={`flex-shrink-0 w-72 mx-4 p-6 rounded-2xl shadow-md ${feature.bgColor} text-center`}
+              >
+                <div className="flex justify-center mb-4">{feature.icon}</div>
+                <h3 className={`text-2xl font-bold ${feature.textColor}`}>
+                  {feature.title}
+                </h3>
+                <p className="text-gray-700 mt-3">{feature.description}</p>
+                <Link
+                  to={feature.route}
+                  className={`mt-4 inline-block ${feature.btnBg} text-white py-2 px-4 rounded-lg shadow hover:brightness-110 transition`}
+                >
+                  Explore
+                </Link>
+              </div>
+            ))}
           </div>
-        ))}
+        </div>
       </div>
-    </div>
+
+      {/* Mobile Vertical Grid (visible on mobile) */}
+      <div className="block md:hidden max-w-5xl mx-auto mt-12">
+        <h2 className="text-4xl font-extrabold text-center text-gray-800 mb-8">
+          Explore Our Features
+        </h2>
+        <div className="grid grid-cols-1 gap-6">
+          {features.map((feature, index) => (
+            <div
+              key={index}
+              className={`p-6 rounded-2xl shadow-md ${feature.bgColor} text-center`}
+            >
+              <div className="flex justify-center mb-4">{feature.icon}</div>
+              <h3 className={`text-2xl font-bold ${feature.textColor}`}>
+                {feature.title}
+              </h3>
+              <p className="text-gray-700 mt-3">{feature.description}</p>
+              <Link
+                to={feature.route}
+                className={`mt-4 inline-block ${feature.btnBg} text-white py-2 px-4 rounded-lg shadow hover:brightness-110 transition`}
+              >
+                Explore
+              </Link>
+            </div>
+          ))}
+        </div>
+      </div>
+    </>
   );
 };
 

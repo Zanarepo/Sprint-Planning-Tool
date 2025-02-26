@@ -110,9 +110,12 @@ const RegistrationComponent = () => {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen">
-    <div className="w-2/3 p-6 bg-yellow-600 border rounded shadow mt-24 text-center">
-      <h2 className="text-2xl font-bold mb-4">Register</h2>
+    <div className="flex justify-center items-center min-h-screen mt-2 mb-24">
+  <div className="w-full md:w-2/3 p-4 bg-yellow-600 border rounded shadow mt-24 md:mt-32 text-center">
+    {/* Logon form content goes here */}
+
+
+      <h2 className="text-2xl font-bold mb-4 text-gray-100 ">Register</h2>
       
       {/* Inline message displays */}
       {errorMessage && (
@@ -125,7 +128,7 @@ const RegistrationComponent = () => {
       <form onSubmit={handleSubmit}>
         {/* Full Name */}
         <div className="mb-4">
-          <label htmlFor="fullName" className="block mb-1">Full Name</label>
+          <label htmlFor="fullName" className="block mb-1 text-white font-bold">Full Name</label>
           <input
             id="fullName"
             type="text"
@@ -138,7 +141,7 @@ const RegistrationComponent = () => {
         
         {/* Email */}
         <div className="mb-4">
-          <label htmlFor="email" className="block mb-1">Email</label>
+          <label htmlFor="email" className="block mb-1 text-gray-100 font-bold">Email</label>
           <input
             id="email"
             type="email"
@@ -151,7 +154,7 @@ const RegistrationComponent = () => {
         
         {/* Password with toggle */}
         <div className="mb-4 relative">
-          <label htmlFor="password" className="block mb-1">Password</label>
+          <label htmlFor="password" className="block mb-1 text-gray-100 font-bold">Password</label>
           <input
             id="password"
             type={showPassword ? 'text' : 'password'}
@@ -167,14 +170,15 @@ const RegistrationComponent = () => {
           >
             {showPassword ? 'Hide' : 'Show'}
           </button>
-          <small className="textbold-white-600 block mt-1">
+            <small className="block mt-1 text-gray-100 ">
             Password must be at least 6 characters long and include a mix of letters and numbers.
           </small>
+
         </div>
         
         {/* Role */}
         <div className="mb-4 " >
-          <label htmlFor="role" className="block mb-1">Role</label>
+          <label htmlFor="role" className="block mb-1 text-gray-100 font-bold">Role</label>
           <select
             id="role"
             value={role}
@@ -197,7 +201,7 @@ const RegistrationComponent = () => {
               onChange={(e) => setTermsAccepted(e.target.checked)}
               className="form-checkbox"
             />
-            <span className="ml-2">I agree to the Terms and Conditions</span>
+            <span className="ml-2 text-gray-100">I agree to the Terms and Conditions</span>
           </label>
         </div>
         

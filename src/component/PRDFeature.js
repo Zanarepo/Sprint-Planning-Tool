@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 
 const PRDFeature = () => {
   return (
-    <div className="flex flex-col items-center text-center p-6 max-w-3xl mx-auto">
+    <div className="flex flex-col items-center text-center p-6 max-w-3xl mx-auto mt-8">
       {/* Icon */}
       <FileText size={40} className="text-blue-600 mt-8" />
 

@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import RegisteredUsersAppLauncher from "./RegisteredUsersAppLauncher";
+import NotificationIcon from  './NotificationBoard/NotificationIcon.js'
+
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -18,8 +20,9 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="fixed top-0 left-0 w-full bg-yellow-800 p-4 text-white flex justify-between items-center z-50 shadow-md">
-      {/* Left side: Hamburger menu and Home link */}
+<nav className="fixed top-0 left-0 w-full font-bold bg-gray-100 p-0 text-yellow-800 flex justify-between items-center z-50 shadow-md">
+      <span className="absolute left-0 bottom-2 w-full border-b-4 border-double border-yellow-800"></span>
+    {/* Left side: Hamburger menu and Home link */}
       <div className="flex items-center">
         {/* Hamburger Icon (visible on mobile only) */}
         <button onClick={toggleMenu} className="md:hidden mr-2 focus:outline-none">
@@ -39,16 +42,14 @@ const Navbar = () => {
         </button>
         {/* Home Link always visible */}
          <Link to="/">
-                <img src="/image.png" alt="Sprintify Logo" className="h-6 w-auto" />
-        
-                
-                      </Link>
+         <img src="/Sprintify.png" alt="Sprintify Logo" className="h-20 w-auto ml-2" />
+      </Link>
       </div>
 
       {/* Desktop Menu (visible on md and up) */}
-      <div className="hidden md:flex gap-6 items-center">
+        <div className="hidden md:flex gap-6 items-center pr-6">
         <Link to="/dashboard" className="hover:underline">
-          My Toolsboard
+          My Dashboard
         </Link>
 
         
@@ -60,13 +61,21 @@ const Navbar = () => {
           StickyBoard
         </Link>
 
-        
+       
+
+
         <Link 
           to="/login" 
           className="hover:underline" 
           onClick={handleLogout}
         >
           Logout
+        </Link>
+
+
+
+        <Link to="/usernotify" className="hover:underline">
+         <NotificationIcon/>
         </Link>
       </div>
 
@@ -81,7 +90,7 @@ const Navbar = () => {
             className="py-2 w-full hover:underline"
             onClick={() => setIsMenuOpen(false)}
           >
-            My Toolsboard
+            My Dashboard
           </Link>
           <Link
             to="/allapps2"

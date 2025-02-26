@@ -72,7 +72,9 @@ const ReviewForm = () => {
   };
 
   return (
-    <div className="w-full p-6 bg-white shadow-lg rounded mt-16">
+    <div className="w-full max-w-4xl p-6 bg-white shadow-lg rounded mt-16 mx-auto">
+  
+  
     {/* Your content goes here */}
   
   
@@ -81,7 +83,9 @@ const ReviewForm = () => {
         {/* Rating Section */}
         <div className="mb-4">
           <label className="block text-gray-700 mb-2">Rating:</label>
-          <div className="flex items-center space-x-4">
+          <div className="flex flex-wrap items-center gap-4">
+
+
             {[1, 2, 3, 4, 5].map((num) => (
               <label key={num} className="flex items-center">
                 <input
@@ -144,7 +148,7 @@ const ReviewForm = () => {
         <button
           type="submit"
           disabled={loading}
-          className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition-colors"
+          className="w-full bg-yellow-700 text-white py-2 rounded hover:bg-yellow-600 transition-colors"
         >
           {loading ? "Submitting..." : "Submit Review"}
         </button>

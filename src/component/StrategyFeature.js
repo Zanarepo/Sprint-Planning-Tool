@@ -1,12 +1,12 @@
 import React from "react";
-import { Map } from "lucide-react"; // Strategy icon
+import { Compass  } from "lucide-react"; // Strategy icon
 import { motion } from "framer-motion";
 
 const ProductStrategyFeature = () => {
   return (
     <div className="flex flex-col items-center text-center p-6 max-w-3xl mx-auto">
       {/* Icon */}
-      <Map size={40} className="text-indigo-600 mt-8" />
+      <Compass  size={40} className="text-indigo-600 mt-8" />
 
       {/* Title */}
       <h2 className="text-3xl font-extrabold text-gray-800 mt-2">

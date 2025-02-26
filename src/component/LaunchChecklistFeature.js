@@ -4,7 +4,7 @@ import { ClipboardCheck } from "lucide-react";
 
 const LaunchChecklist = () => {
   return (
-    <div className="flex flex-col items-center text-center p-6 max-w-3xl mx-auto mt-0">
+    <div className="flex flex-col items-center text-center p-6 max-w-3xl mx-auto mt-16">
       {/* Icon */}
       <ClipboardCheck size={40} className="text-purple-700" />
 

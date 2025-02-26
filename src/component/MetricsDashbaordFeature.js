@@ -29,7 +29,10 @@ const CustomerMetrics = () => {
       </p>
 
       {/* Metrics Grid */}
-      <div className="grid grid-cols-2 gap-6 mt-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-6">
+  {/* Your grid items go here */}
+
+
         {/* NPS */}
         <div className="flex flex-col items-center bg-white p-4 shadow rounded-lg">
           <ThumbsUp size={32} className="text-green-600" />

@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import PrioritizationScore from "./PrioritizationScore";
 import PrioritizationTechniques from "./PrioritizationTechniques";
 
+
 const Tabs = () => {
   const [activeTab, setActiveTab] = useState("score");
 

@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Line } from "react-chartjs-2";
 import CohortStickinessFeature from './CohortStickinessFeature'
@@ -279,69 +280,71 @@ const CohortStickinessDashboard = () => {
 
       {/* Render active tab content */}
       {activeTab === "cohort" ? (
-        <section className="mb-12">
-          <h3 className="text-2xl font-bold mb-4 text-center">Cohort Analysis</h3>
-          {/* Cohort Form */}
-          <form
-            onSubmit={handleCohortSubmit}
-            className="bg-white shadow-lg rounded px-8 pt-6 pb-8 mb-6 max-w-lg mx-auto"
-          >
-            <div className="mb-4">
-              <label className="block text-gray-700 text-sm font-bold mb-2">
-                Cohort Date
-              </label>
-              <input
-                type="date"
-                name="cohortDate"
-                value={cohortForm.cohortDate}
-                onChange={handleCohortChange}
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 focus:outline-none"
-              />
-            </div>
-            <div className="mb-4 grid grid-cols-2 gap-4">
-              <div>
-                <label className="block text-gray-700 text-sm font-bold mb-2">
-                  Total Users
-                </label>
-                <input
-                  type="number"
-                  name="totalUsers"
-                  value={cohortForm.totalUsers}
-                  onChange={handleCohortChange}
-                  placeholder="e.g. 1000"
-                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 focus:outline-none"
-                />
-              </div>
-              <div>
-                <label className="block text-gray-700 text-sm font-bold mb-2">
-                  Retained Users
-                </label>
-                <input
-                  type="number"
-                  name="retainedUsers"
-                  value={cohortForm.retainedUsers}
-                  onChange={handleCohortChange}
-                  placeholder="e.g. 600"
-                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 focus:outline-none"
-                />
-              </div>
-            </div>
-            <div className="flex items-center justify-between">
-              <button
-                type="submit"
-                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-              >
-                {isEditingCohort ? "Update Cohort" : "Add Cohort"}
-              </button>
-              <button
-                type="button"
-                onClick={() => window.print()}
-                className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
-              >
-                Print Cohort Data
-              </button>
-            </div>
-          </form>
+       <section className="mb-12">
+       <h3 className="text-2xl font-bold mb-4 text-center">Cohort Analysis</h3>
+       {/* Cohort Form */}
+       <form
+         onSubmit={handleCohortSubmit}
+         className="bg-white shadow-lg rounded px-4 sm:px-8 pt-6 pb-8 mb-6 max-w-lg mx-auto"
+       >
+         <div className="mb-4">
+           <label className="block text-gray-700 text-sm font-bold mb-2">
+             Cohort Date
+           </label>
+           <input
+             type="date"
+             name="cohortDate"
+             value={cohortForm.cohortDate}
+             onChange={handleCohortChange}
+             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 focus:outline-none"
+           />
+         </div>
+         <div className="mb-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
+           <div>
+             <label className="block text-gray-700 text-sm font-bold mb-2">
+               Total Users
+             </label>
+             <input
+               type="number"
+               name="totalUsers"
+               value={cohortForm.totalUsers}
+               onChange={handleCohortChange}
+               placeholder="e.g. 1000"
+               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 focus:outline-none"
+             />
+           </div>
+           <div>
+             <label className="block text-gray-700 text-sm font-bold mb-2">
+               Retained Users
+             </label>
+             <input
+               type="number"
+               name="retainedUsers"
+               value={cohortForm.retainedUsers}
+               onChange={handleCohortChange}
+               placeholder="e.g. 600"
+               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 focus:outline-none"
+             />
+           </div>
+         </div>
+         <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+           <button
+             type="submit"
+             className="w-full sm:w-auto bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+           >
+             {isEditingCohort ? "Update Cohort" : "Add Cohort"}
+           </button>
+           <button
+             type="button"
+             onClick={() => window.print()}
+             className="w-full sm:w-auto bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+           >
+             Print Cohort Data
+           </button>
+         </div>
+       </form>
+     
+     
 
           {/* Cohort Table */}
           <div className="overflow-x-auto mb-6">
@@ -413,62 +416,72 @@ const CohortStickinessDashboard = () => {
         </section>
       ) : (
         <section className="mb-12">
-          <h3 className="text-2xl font-bold mb-4 text-center">Stickiness Ratio Analysis</h3>
-          {/* Stickiness Form */}
-          <form
-            onSubmit={handleStickinessSubmit}
-            className="bg-white shadow-lg rounded px-8 pt-6 pb-8 mb-6 max-w-lg mx-auto"
-          >
-            <div className="mb-4">
-              <label className="block text-gray-700 text-sm font-bold mb-2">Date</label>
+        <h3 className="text-2xl font-bold mb-4 text-center">
+          Stickiness Ratio Analysis
+        </h3>
+        {/* Stickiness Form */}
+        <form
+          onSubmit={handleStickinessSubmit}
+          className="bg-white shadow-lg rounded px-4 sm:px-8 pt-6 pb-8 mb-6 max-w-lg mx-auto"
+        >
+          <div className="mb-4">
+            <label className="block text-gray-700 text-sm font-bold mb-2">
+              Date
+            </label>
+            <input
+              type="date"
+              name="date"
+              value={stickinessForm.date}
+              onChange={handleStickinessChange}
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 focus:outline-none"
+            />
+          </div>
+          <div className="mb-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-gray-700 text-sm font-bold mb-2">
+                DAU
+              </label>
               <input
-                type="date"
-                name="date"
-                value={stickinessForm.date}
+                type="number"
+                name="DAU"
+                value={stickinessForm.DAU}
                 onChange={handleStickinessChange}
+                placeholder="e.g. 500"
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 focus:outline-none"
               />
             </div>
-            <div className="mb-4 grid grid-cols-2 gap-4">
-              <div>
-                <label className="block text-gray-700 text-sm font-bold mb-2">DAU</label>
-                <input
-                  type="number"
-                  name="DAU"
-                  value={stickinessForm.DAU}
-                  onChange={handleStickinessChange}
-                  placeholder="e.g. 500"
-                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 focus:outline-none"
-                />
-              </div>
-              <div>
-                <label className="block text-gray-700 text-sm font-bold mb-2">MAU</label>
-                <input
-                  type="number"
-                  name="MAU"
-                  value={stickinessForm.MAU}
-                  onChange={handleStickinessChange}
-                  placeholder="e.g. 2000"
-                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 focus:outline-none"
-                />
-              </div>
+            <div>
+              <label className="block text-gray-700 text-sm font-bold mb-2">
+                MAU
+              </label>
+              <input
+                type="number"
+                name="MAU"
+                value={stickinessForm.MAU}
+                onChange={handleStickinessChange}
+                placeholder="e.g. 2000"
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 focus:outline-none"
+              />
             </div>
-            <div className="flex items-center justify-between">
-              <button
-                type="submit"
-                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-              >
-                {isEditingStickiness ? "Update Record" : "Add Record"}
-              </button>
-              <button
-                type="button"
-                onClick={() => window.print()}
-                className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
-              >
-                Print Stickiness Data
-              </button>
-            </div>
-          </form>
+          </div>
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+            <button
+              type="submit"
+              className="w-full sm:w-auto bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            >
+              {isEditingStickiness ? "Update Record" : "Add Record"}
+            </button>
+            <button
+              type="button"
+              onClick={() => window.print()}
+              className="w-full sm:w-auto bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+            >
+              Print Stickiness Data
+            </button>
+          </div>
+        </form>
+   
+      
 
           {/* Stickiness Table */}
           <div className="overflow-x-auto mb-6">

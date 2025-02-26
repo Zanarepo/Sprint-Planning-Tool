@@ -1,3 +1,8 @@
+
+
+
+
+
 import React, { useState } from 'react';
 import { Line } from 'react-chartjs-2';
 import {
@@ -12,7 +17,7 @@ import {
   TimeScale,
 } from 'chart.js';
 import 'chartjs-adapter-date-fns';
-import ProductMetricsFeatures from './ProductMetricsFeatures'
+import ProductMetricsFeatures from '../ProductMetricsFeatures'
 import { FaArrowUp, FaArrowDown, FaArrowRight, FaEdit, FaTrash } from 'react-icons/fa';
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, TimeScale);
@@ -139,72 +144,82 @@ const ProductMetricsComponent = () => {
     <div className="container mx-auto mt-16 px-4">
         <ProductMetricsFeatures/>
      
+        <form
+  onSubmit={handleSubmit}
+  className="bg-white shadow-lg rounded px-4 sm:px-8 pt-6 pb-8 mb-12 max-w-lg mx-auto"
+>
+  <div className="mb-4">
+    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="date">
+      Date
+    </label>
+    <input
+      type="date"
+      id="date"
+      name="date"
+      value={form.date}
+      onChange={handleChange}
+      className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 focus:outline-none focus:shadow-outline"
+    />
+  </div>
 
-      {/* Form Section */}
-      <form
-        onSubmit={handleSubmit}
-        className="bg-white shadow-lg rounded px-8 pt-6 pb-8 mb-12 max-w-lg mx-auto"
-      >
-        <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="date">
-            Date
-          </label>
-          <input
-            type="date"
-            id="date"
-            name="date"
-            value={form.date}
-            onChange={handleChange}
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 focus:outline-none focus:shadow-outline"
-          />
-        </div>
+  <div className="mb-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
+    <div>
+      <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="newUsers">
+        New Users
+      </label>
+      <input
+        type="number"
+        id="newUsers"
+        name="newUsers"
+        value={form.newUsers}
+        onChange={handleChange}
+        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 focus:outline-none focus:shadow-outline"
+        placeholder="e.g. 50"
+      />
+    </div>
+  
+        {/* Retained Users */}
+<div className="mb-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
+  <div>
+    <label
+      className="block text-gray-700 text-sm font-bold mb-2"
+      htmlFor="retainedUsers"
+    >
+      Retained Users
+    </label>
+    <input
+      type="number"
+      id="retainedUsers"
+      name="retainedUsers"
+      value={form.retainedUsers}
+      onChange={handleChange}
+      className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 focus:outline-none focus:shadow-outline"
+      placeholder="e.g. 30"
+    />
+  </div>
+</div>
 
-        <div className="mb-4 grid grid-cols-2 gap-4">
-          <div>
-            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="newUsers">
-              New Users
-            </label>
-            <input
-              type="number"
-              id="newUsers"
-              name="newUsers"
-              value={form.newUsers}
-              onChange={handleChange}
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 focus:outline-none focus:shadow-outline"
-              placeholder="e.g. 50"
-            />
-          </div>
-          <div>
-            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="retainedUsers">
-              Retained Users
-            </label>
-            <input
-              type="number"
-              id="retainedUsers"
-              name="retainedUsers"
-              value={form.retainedUsers}
-              onChange={handleChange}
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 focus:outline-none focus:shadow-outline"
-              placeholder="e.g. 30"
-            />
-          </div>
-        </div>
+{/* Churned Users */}
+<div className="mb-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
+  <div>
+    <label
+      className="block text-gray-700 text-sm font-bold mb-2"
+      htmlFor="churnedUsers"
+    >
+      Churned Users
+    </label>
+    <input
+      type="number"
+      id="churnedUsers"
+      name="churnedUsers"
+      value={form.churnedUsers}
+      onChange={handleChange}
+      className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 focus:outline-none focus:shadow-outline"
+      placeholder="e.g. 5"
+    />
+  </div>
+</div>
 
-        <div className="mb-4 grid grid-cols-2 gap-4">
-          <div>
-            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="churnedUsers">
-              Churned Users
-            </label>
-            <input
-              type="number"
-              id="churnedUsers"
-              name="churnedUsers"
-              value={form.churnedUsers}
-              onChange={handleChange}
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 focus:outline-none focus:shadow-outline"
-              placeholder="e.g. 5"
-            />
-          </div>
           <div>
             <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="totalUsersAtStart">
               Total Users at Start
@@ -230,29 +245,34 @@ const ProductMetricsComponent = () => {
           </button>
         </div>
       </form>
+{/* Charts Section */}
+<div className="container mx-auto px-2 sm:px-4 mb-12">
+  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+    {/* Growth Rate Chart */}
+    <div className="bg-white shadow-lg rounded p-6">
+      <h3 className="text-xl font-bold mb-4">User Growth Rate (%)</h3>
+      <Line
+        data={{
+          labels: chartLabels,
+          datasets: [
+            {
+              label: 'Growth Rate (%)',
+              data: growthRatesData,
+              fill: false,
+              backgroundColor: 'rgba(59,130,246,0.4)',
+              borderColor: 'rgba(59,130,246,1)',
+              tension: 0.2,
+            },
+          ],
+        }}
+        options={chartOptions('User Growth Rate Over Time', 'Growth Rate (%)')}
+      />
+    </div>
+    {/* Additional chart cards can be added here */}
+  </div>
 
-      {/* Charts Section */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-        {/* Growth Rate Chart */}
-        <div className="bg-white shadow-lg rounded p-6">
-          <h3 className="text-xl font-bold mb-4">User Growth Rate (%)</h3>
-          <Line
-            data={{
-              labels: chartLabels,
-              datasets: [
-                {
-                  label: 'Growth Rate (%)',
-                  data: growthRatesData,
-                  fill: false,
-                  backgroundColor: 'rgba(59,130,246,0.4)',
-                  borderColor: 'rgba(59,130,246,1)',
-                  tension: 0.2,
-                },
-              ],
-            }}
-            options={chartOptions('User Growth Rate Over Time', 'Growth Rate (%)')}
-          />
-        </div>
+
+
         {/* Retention Rate Chart */}
         <div className="bg-white shadow-lg rounded p-6">
           <h3 className="text-xl font-bold mb-4">User Retention Rate (%)</h3>

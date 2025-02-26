@@ -5,7 +5,7 @@ import { Rocket } from "lucide-react";
 
 const AgileSprintSimulation = () => {
   return (
-    <div className="flex flex-col items-center text-center p-6 max-w-3xl mx-auto mt-0">
+    <div className="flex flex-col items-center text-center p-6 max-w-3xl mx-auto mt-8">
       {/* Icon */}
       <Rocket size={40} className="text-blue-600" />
       

@@ -84,6 +84,7 @@ export default function ProductBrainstorming() {
 
   return (
     <div className="p-6 space-y-6 bg-gray-50 min-h-screen mt-8">
+      
      <h1 className="text-2xl font-bold text-blue-800 text-center">Product Brainstorming</h1>
 
       <div className="mb-4 text-gray-700 font-semibold">
@@ -139,16 +140,17 @@ export default function ProductBrainstorming() {
       <button onClick={handleAddFeature} className="mt-4 p-3 bg-blue-600 text-white rounded-md hover:bg-blue-700">
         {editingFeatureIndex !== null ? "Update" : "Add"} Feature to Table
       </button>
-      
-      <table className="min-w-full border bg-white shadow-md rounded-lg">
-        <thead className="bg-blue-200">
-          <tr>
-            <th className="border p-3">Feature</th>
-            <th className="border p-3">Challenge</th>
-            <th className="border p-3">Solution</th>
-            <th className="border p-3">Actions</th>
-          </tr>
-        </thead>
+
+  <div className="overflow-x-auto">
+  <table className="w-full border bg-white shadow-md rounded-lg">
+    <thead className="bg-blue-200">
+      <tr>
+        <th className="border p-3">Feature</th>
+        <th className="border p-3">Challenge</th>
+        <th className="border p-3">Solution</th>
+        <th className="border p-3">Actions</th>
+      </tr>
+    </thead>
         <tbody>
           {features.map((item, index) => (
             <tr key={index}>
@@ -163,6 +165,7 @@ export default function ProductBrainstorming() {
           ))}
         </tbody>
       </table>
+    </div>
     </div>
   );
 }

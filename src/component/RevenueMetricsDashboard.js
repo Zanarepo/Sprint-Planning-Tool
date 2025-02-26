@@ -89,6 +89,8 @@ const RevenueMetricsDashboard = () => {
     return 0;
   };
 
+
+  
   // Handle form submission (create/update)
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -388,25 +390,26 @@ const RevenueMetricsDashboard = () => {
       
 
       {/* Metric Tabs */}
-      <div className="flex justify-center items-center space-x-4 mb-4 text-center mt-8">
-        {metricTabs.map((metric) => (
-          <button
-            key={metric}
-            className={`px-4 py-2 rounded ${
-              selectedMetric === metric
-                ? "bg-green-600 text-white"
-                : "bg-gray-200 text-gray-800"
-            }`}
-            onClick={() => {
-              setSelectedMetric(metric);
-              setFormData(initialFormState);
-              setEditingEntryId(null);
-            }}
-          >
-            {metric}
-          </button>
-        ))}
-      </div>
+      <div className="grid grid-cols-3 grid-rows-2 gap-4 mb-4 text-center mt-8">
+  {metricTabs.map((metric) => (
+    <button
+      key={metric}
+      className={`px-0 py-3 rounded ${
+        selectedMetric === metric
+          ? "bg-green-600 text-white"
+          : "bg-gray-200 text-gray-800"
+      }`}
+      onClick={() => {
+        setSelectedMetric(metric);
+        setFormData(initialFormState);
+        setEditingEntryId(null);
+      }}
+    >
+      {metric}
+    </button>
+  ))}
+</div>
+
 
       {/* Form for Adding/Updating an Entry */}
       <form

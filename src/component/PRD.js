@@ -1,5 +1,10 @@
+
+
+
+
 import React, { useState } from 'react';
 import PRDFeature from './PRDFeature';
+
 
 const PRDDocument = () => {
   // Define the initial state for a PRD document following the Facebook PRD format.
@@ -99,7 +104,7 @@ const PRDDocument = () => {
   };
 
   return (
-    <div className="container mx-auto p-4" id="printableArea">
+    <div className="container mx-auto p-4" id="printableArea mt-8">
      <PRDFeature/>
 
       {/* Form to add/update a PRD */}
@@ -772,3 +777,15 @@ const PRDDocument = () => {
 };
 
 export default PRDDocument;
+
+
+
+
+
+
+
+
+
+
+
+

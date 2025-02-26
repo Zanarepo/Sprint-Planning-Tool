@@ -4,8 +4,7 @@ import { BarChart3 } from "lucide-react";
 
 const FeatureEstimator = () => {
   return (
-    <div className="flex flex-col items-center text-center p-6 max-w-3xl mx-auto mt-10">
-      {/* Icon */}
+    <div className="flex flex-col items-center text-center px-0 p-6 max-w-3xl mx-auto mt-10">
       <BarChart3 size={40} className="text-green-600" />
 
       {/* Slug - Sliding Effect */}

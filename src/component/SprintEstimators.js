@@ -110,27 +110,28 @@ export default function EstimationPlayground() {
 
         {/* Feature Input */}
         <div className="space-y-4">
-          <h2 className="text-lg font-semibold text-blue-600 mt-8">Add Features</h2>
-          <div className="flex gap-2">
-            <input
-              value={newFeature}
-              onChange={(e) => setNewFeature(e.target.value)}
-              placeholder="Enter feature name"
-              className="flex-1 p-2 border rounded"
-            />
-            <button 
-              onClick={addFeature}
-              className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-            >
-              Add Feature
-            </button>
-          </div>
-        </div>
+  <h2 className="text-lg font-semibold text-blue-600 mt-8">Add Features</h2>
+  <div className="flex flex-col sm:flex-row gap-2">
+    <input
+      value={newFeature}
+      onChange={(e) => setNewFeature(e.target.value)}
+      placeholder="Enter feature name"
+      className="flex-1 p-2 border rounded"
+    />
+    <button 
+      onClick={addFeature}
+      className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+    >
+      Add Feature
+    </button>
+  </div>
+</div>
       </div>
 
       {/* Estimation Area */}
       <div className="mb-8">
-        <h2 className="text-lg font-semibold mb-4 text-blue-600">Estimate Features</h2>
+      
+        <h2 className="text-lg font-semibold text-blue-600 mt-8">Estimate Features</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {features.map(feature => (
             <div key={feature} className="p-4 border rounded">
@@ -156,11 +157,15 @@ export default function EstimationPlayground() {
       </div>
 
       {/* Results Visualization */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="p-4 border rounded">
-          <h2 className="text-lg font-semibold mb-4 text-blue-600">Estimation Results</h2>
-          <Bar data={chartData} />
-        </div>
+      <div className="w-full">
+  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div className="w-full border rounded">
+      <h2 className="text-lg font-semibold text-blue-600 mt-8">Estimation Results</h2>
+      <Bar data={chartData} />
+    </div>
+    {/* Add other grid columns here if needed */}
+  </div>
+
 
         {/* Velocity Planning */}
         <div className="p-4 border rounded space-y-4">
@@ -183,18 +188,22 @@ export default function EstimationPlayground() {
       </div>
 
       {/* Comparison Table */}
-      <div className="mt-8">
-        <h2 className="text-lg font-semibold mb-4 text-blue-600">Estimation Comparison</h2>
-        <div className="overflow-x-auto">
-          <table className="w-full border-collapse">
-            <thead >
-              <tr className="p-6 bg-blue-200 ">
-                <th className="p-2 text-left " >Feature</th>
-                {Object.keys(estimationMethods).map(method => (
-                  <th key={method} className="p-2 text-left">{method.replace('_', ' ')}</th>
-                ))}
-              </tr>
-            </thead>
+      <div className="mt-8 w-full">
+  <h2 className="text-lg font-semibold mb-4 text-blue-600">
+    Estimation Comparison
+  </h2>
+  <div className="overflow-x-auto">
+    <table className="min-w-full table-auto border-collapse">
+      <thead>
+        <tr className="bg-blue-200">
+          <th className="p-2 text-left whitespace-nowrap">Feature</th>
+          {Object.keys(estimationMethods).map((method) => (
+            <th key={method} className="p-2 text-left whitespace-nowrap">
+              {method.replace("_", " ")}
+            </th>
+          ))}
+        </tr>
+      </thead>
             <tbody>
               {features.map(feature => (
                 <tr key={feature} className="border-t">
