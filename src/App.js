@@ -47,7 +47,9 @@ import UsersNotifications from './component/NotificationBoard/UsersNotifications
 import Estimator from './component/Estimator'
 import Votings from './component/Premiums/Votings'
 import FeatureComparisonMatrix from './component/FeatureComparisonMatrix'
-
+import UATForms from './component/Premiums/UATForms'
+import RegisteredDashboards from './component/RegisteredDashboards'
+import Tools from './component/Tools'
 
 
 
@@ -126,6 +128,8 @@ const App = () => {
             <Route path="/brainstorm2" element={<Simulate />} />
             <Route path="/allapps2" element={<AllinOne />} />
             <Route path="/sprints2" element={<SprintSimulator />} />
+            <Route path="/sprints2" element={<SprintSimulator />} />
+          
 
             <Route path="/burndown2" element={<BurnDownChart />} />
             <Route path="/activeusers2" element={<ActiveUsersComponent />} />
@@ -163,6 +167,12 @@ const App = () => {
           <Route element={<AdminNav />}>
           <Route path="/admindashboard" element={<AdminDasboard/>} />
           <Route path="/adminregister" element={<AdminRegistration/>} /> </Route>
+          <Route path="/uat" element={<UATForms />} />
+          <Route path="/regdashboard" element={<RegisteredDashboards />} />
+          <Route element={<RegisteredDashboards />}>
+            <Route path="/tools" element={<Tools />} />
+            
+            </Route>
           </Routes>
 
 
@@ -172,6 +182,9 @@ const App = () => {
           <Routes>
             {/* Routes using the RegisteredNavbar layout */}
             <Route element={<RegisteredNavbar />}>
+            <Route element={<RegisteredDashboards />}>
+            <Route path="/tools" element={<Tools />} />
+            </Route>
               <Route path="/dashboard" element={<RegisteredHomePage />} />
               <Route path="/estimator2" element={<SprintEstimator />} />
 
@@ -192,7 +205,9 @@ const App = () => {
               <Route path="/cohort2" element={<CohortStickinessDashboard />} />
               <Route path="/activation2" element={<AAARRMetricsDashboard />} />
               <Route path="/features" element={<LandingPageFeatures2 />} />
-
+              <Route path="/regdashboard" element={<RegisteredDashboards />} />
+              <Route path="/tools" element={<Tools />} />
+              
 
 
               <Route path="/checklist2" element={<ProductLaunchChecklist />} />
@@ -209,6 +224,8 @@ const App = () => {
               <Route path="/sticky" element={<StickyBoard />} />
               <Route path="/usernotify" element={<UsersNotifications />} />
               <Route path="/compare2" element={<FeatureComparisonMatrix />} />
+              <Route path="/uat" element={<UATForms />} />
+              
 
             </Route>
           </Routes>

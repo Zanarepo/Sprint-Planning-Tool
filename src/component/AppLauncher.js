@@ -86,7 +86,7 @@ const AppLauncher = () => {
               className="flex flex-col items-center p-2 hover:bg-gray-100 rounded text-gray-800"
             >
               <ListChecks  size={20} className="text-blue-900" />
-              <span className="text-xs text-center">priority</span>
+              <span className="text-xs text-center">prioritization Techniques</span>
             </Link>
 
  {/* Dropdown menu displayed as a grid with 4 columns */}

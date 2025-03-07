@@ -1,20 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { 
- 
-
+  FaUsers, 
+  FaUserShield, 
   FaCreditCard, 
-  
+  FaCog, 
   FaBell, 
   FaTools, 
   FaStar, 
   FaBars, 
-  FaTachometerAlt ,
+ 
   FaTimes 
 } from 'react-icons/fa';
-import Welcome from './Welcome';
-import ReviewForm from './ReviewForm'
-import Tools from '../Tools'
-import ChatWindow from "../Chatdashboard/ChatWindow";
+import Welcome from './Premiums/Welcome';
+import ReviewForm from './Premiums/ReviewForm'
+import Tools from './Tools';
 
 const Dashboard = () => {
   const [activeTab, setActiveTab] = useState('Welcome');
@@ -35,16 +34,12 @@ const Dashboard = () => {
             <Welcome />
           </div>
         );
-      
-      
-      /**/  case 'reviews':
+      case 'reviews':
         return (
           <div className="w-full bg-white dark:bg-gray-700 rounded-lg shadow">
             <ReviewForm />
           </div>
         );
-
-        
       case 'Tools':
         return (
           <div className="w-full bg-white dark:bg-gray-700 rounded-lg shadow">
@@ -67,11 +62,9 @@ const Dashboard = () => {
       case 'notifications':
         return (
           <div className="w-full bg-white dark:bg-gray-700 rounded-lg shadow">
-            
+            Notifications Section Content
           </div>
         );
-
-     
       default:
         return (
           <div className="w-full bg-white dark:bg-gray-700 rounded-lg shadow">
@@ -88,8 +81,7 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="flex h-screen bg-gray-200 dark:bg-gray-700 mt-20">
-      <ChatWindow/>
+    <div className="flex h-screen bg-gray-500 dark:bg-gray-900 mt-20">
       {/* Sidebar remains unchanged */}
       <aside 
         className={`transition-all duration-300 bg-white dark:bg-gray-800 ${sidebarOpen ? "w-64" : "w-0"} md:w-64 flex-shrink-0`}
@@ -109,7 +101,7 @@ const Dashboard = () => {
                   onClick={() => handleNavClick('Welcome')}
                   className={`flex items-center p-2 rounded cursor-pointer hover:bg-gray-200 dark:hover:bg-yellow-800 transition ${activeTab === 'RegisteredHomePage2' ? 'bg-gray-300 dark:bg-yellow-800' : ''}`}
                 >
-                  <FaTachometerAlt  className="text-yellow-800 dark:text-gray-300 mr-3" />
+                  <FaUsers className="text-yellow-800 dark:text-gray-300 mr-3" />
                   <span className="text-yellow-800 dark:text-gray-300">Dashboard</span>
                 </li>
 
@@ -117,11 +109,18 @@ const Dashboard = () => {
                   onClick={() => handleNavClick('Tools')}
                   className={`flex items-center p-2 rounded cursor-pointer hover:bg-gray-200 dark:hover:bg-yellow-800 transition ${activeTab === 'Tools' ? 'bg-gray-300 dark:bg-yellow-800' : ''}`}
                 >
-                  <FaTools className="text-yellow-800 dark:text-gray-300 mr-3" />
+                  <FaTools  className="text-yellow-800 dark:text-gray-300 mr-3" />
                   <span className="text-yellow-800 dark:text-gray-300">Product Tools</span>
                 </li>
               
-              
+                <li 
+                  onClick={() => handleNavClick('admins')}
+                  className={`flex items-center p-2 rounded cursor-pointer hover:bg-gray-200 dark:hover:bg-yellow-700 transition ${activeTab === 'admins' ? 'bg-gray-300 dark:bg-yellow-800' : ''}`}
+                >
+                  <FaUserShield className="text-yellow-800 dark:text-gray-300 mr-3" />
+                  <span className="text-yellow-800 dark:text-gray-300">Admins</span>
+                </li> 
+                
                 <li 
                   onClick={() => handleNavClick('reviews')}
                   className={`flex items-center p-2 rounded cursor-pointer hover:bg-gray-200 dark:hover:bg-yellow-800 transition ${activeTab === 'reviews' ? 'bg-gray-300 dark:bg-yellow-800' : ''}`}
@@ -145,7 +144,7 @@ const Dashboard = () => {
                   <FaBell className="text-yellow-800 dark:text-gray-300 mr-3" />
                   <span className="text-yellow-800 dark:text-gray-300">Notifications</span>
                 </li>
-{/* Dark/Light Mode Toggle 
+
                 <li 
                   onClick={() => handleNavClick('settings')}
                   className={`flex items-center p-2 rounded cursor-pointer hover:bg-gray-200 dark:hover:bg-yellow-800 transition ${activeTab === 'settings' ? 'bg-gray-300 dark:bg-yellow-800' : ''}`}
@@ -153,8 +152,6 @@ const Dashboard = () => {
                   <FaCog className="text-yellow-800 dark:text-gray-300 mr-3" />
                   <span className="text-yellow-800 dark:text-gray-300">Settings</span>
                 </li>
-*/}
-
               </ul>
             </nav>
           </div>

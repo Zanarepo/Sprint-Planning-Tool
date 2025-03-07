@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import RegisteredUsersAppLauncher from "./RegisteredUsersAppLauncher";
-import NotificationIcon from  './NotificationBoard/NotificationIcon.js'
+//import RegisteredUsersAppLauncher from "./RegisteredUsersAppLauncher";
+//import NotificationIcon from  './NotificationBoard/NotificationIcon.js'
 
 
 const Navbar = () => {
@@ -61,7 +61,7 @@ const Navbar = () => {
           StickyBoard
         </Link>
 
-       
+      
 
 
         <Link 
@@ -73,14 +73,14 @@ const Navbar = () => {
         </Link>
 
 
-
+  {/* Mobile Menu (dropdown)
         <Link to="/usernotify" className="hover:underline">
          <NotificationIcon/>
-        </Link>
+        </Link> */}
       </div>
 
-      {/* Right side: Registered Users App Launcher */}
-      <RegisteredUsersAppLauncher />
+      {/* Right side: Registered Users App Launcher 
+      <RegisteredUsersAppLauncher />*/}
 
       {/* Mobile Menu (dropdown) */}
       {isMenuOpen && (

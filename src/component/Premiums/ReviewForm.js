@@ -72,22 +72,17 @@ const ReviewForm = () => {
   };
 
   return (
-    <div className="w-full max-w-4xl p-6 bg-white shadow-lg rounded mt-16 mx-auto">
-  
-  
-    {/* Your content goes here */}
-  
-  
-      <h2 className="text-2xl font-bold mb-4 text-center">Leave a Review</h2>
+    <div className="w-full p-4 md:p-6 bg-gray-200 dark:bg-gray-700 shadow-lg rounded mt-16">
+      <h2 className="text-2xl font-bold mb-4 text-center text-yellow-800 dark:text-yellow-800">
+        Leave a Review
+      </h2>
       <form onSubmit={handleSubmit}>
         {/* Rating Section */}
         <div className="mb-4">
-          <label className="block text-gray-700 mb-2">Rating:</label>
-          <div className="flex flex-wrap items-center gap-4">
-
-
+          <label className="block text-gray-700 dark:text-white mb-2">Rating:</label>
+          <div className="flex flex-wrap text-gray-700 items-center gap-4">
             {[1, 2, 3, 4, 5].map((num) => (
-              <label key={num} className="flex items-center">
+              <label key={num} className="flex items-center text-gray-500">
                 <input
                   type="radio"
                   name="rating"
@@ -105,11 +100,11 @@ const ReviewForm = () => {
 
         {/* Review Text */}
         <div className="mb-4">
-          <label className="block text-gray-700 mb-2">Review:</label>
+          <label className="block text-gray-700 dark:text-gray-300 mb-2">Review:</label>
           <textarea
             value={reviewText}
             onChange={(e) => setReviewText(e.target.value)}
-            className="w-full border border-gray-300 p-2 rounded"
+            className="w-full border border-gray-300 dark:border-gray-600 p-2 rounded bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-300"
             rows="4"
             placeholder="Write your review here..."
             required
@@ -120,23 +115,23 @@ const ReviewForm = () => {
         {!user && (
           <>
             <div className="mb-4">
-              <label className="block text-gray-700 mb-2">Your Name:</label>
+              <label className="block text-gray-700 dark:text-gray-300 mb-2">Your Name:</label>
               <input
                 type="text"
                 value={guestName}
                 onChange={(e) => setGuestName(e.target.value)}
-                className="w-full border border-gray-300 p-2 rounded"
+                className="w-full border border-gray-300 dark:border-gray-600 p-2 rounded bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-300"
                 placeholder="Enter your name"
                 required
               />
             </div>
             <div className="mb-4">
-              <label className="block text-gray-700 mb-2">Your Email:</label>
+              <label className="block text-gray-700 dark:text-gray-300 mb-2">Your Email:</label>
               <input
                 type="email"
                 value={guestEmail}
                 onChange={(e) => setGuestEmail(e.target.value)}
-                className="w-full border border-gray-300 p-2 rounded"
+                className="w-full border border-gray-300 dark:border-gray-600 p-2 rounded bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-300"
                 placeholder="Enter your email"
                 required
               />
@@ -156,7 +151,7 @@ const ReviewForm = () => {
 
       {/* Success/Error Prompt */}
       {feedbackMsg && (
-        <div className="mt-4 p-3 bg-green-100 text-green-700 border border-green-300 rounded text-center">
+        <div className="mt-4 p-3 bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-100 border border-green-300 dark:border-green-700 rounded text-center">
           {feedbackMsg}
         </div>
       )}
