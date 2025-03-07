@@ -92,7 +92,7 @@ const Dashboard = () => {
       <ChatWindow/>
       {/* Sidebar remains unchanged */}
       <aside 
-        className={`transition-all duration-300 bg-white dark:bg-gray-800 ${sidebarOpen ? "w-64" : "w-0"} md:w-64 flex-shrink-0`}
+        className={`transition-all duration-300 bg-gray-150 dark:bg-gray-800 ${sidebarOpen ? "w-64" : "w-0"} md:w-64 flex-shrink-0`}
       >
         <div className={`${sidebarOpen ? "block" : "hidden"} md:block`}>
           <div className="p-6">

@@ -50,8 +50,9 @@ import FeatureComparisonMatrix from './component/FeatureComparisonMatrix'
 import UATForms from './component/Premiums/UATForms'
 import RegisteredDashboards from './component/RegisteredDashboards'
 import Tools from './component/Tools'
+import ForgotPassword from './component/ForgotPassword'
 
-
+import ResetPassword from './component/ResetPassword'
 
 
 
@@ -112,6 +113,9 @@ const App = () => {
             <Route path="/companalysis" element={<CompetitorAnalysis />} />
             <Route path="/userresearch" element={<UserResearchDashboard />} />
             <Route path="/register" element={<Registration />} />
+            <Route path="/forgotpassword" element={<ForgotPassword />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
+            
             <Route path="/login" element={<Login />} />
             <Route path="/register2" element={<Registration />} />
             <Route path="/homepage" element={<RegisteredHomePage />} />

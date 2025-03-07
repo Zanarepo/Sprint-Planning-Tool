@@ -6,7 +6,7 @@ import { LayoutDashboard } from "lucide-react";
 
 function HomePage() {
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 dark:bg-gray-700 p-6 text-gray-800 dark:text-gray-100">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 dark:bg-gray-700 p-6 text-gray-800 dark:text-gray-100 ">
       <DashboardFeaturs />
       <ChatWindow />
       <div className="text-center max-w-3xl bg-white dark:bg-gray-800 p-8 rounded-lg shadow-xl my-6">

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { supabase } from '../../supabaseClient';
 
 // Helper function using the Web Crypto API to hash the password with SHA-256.
@@ -50,7 +50,7 @@ const LoginComponent = () => {
       const normalizedEmail = email.trim().toLowerCase();
 
       // Fetch both admin and user records concurrently.
-      const { data: adminData } = await supabase
+      const { data: adminData  } = await supabase
         .from('sprintify_admin')
         .select('*')
         .eq('email', normalizedEmail)
@@ -141,9 +141,7 @@ const LoginComponent = () => {
         <form onSubmit={handleSubmit}>
           {/* Email Field */}
           <div className="mb-4">
-            <label htmlFor="email" className="block mb-1 text-gray-100 font-bold">
-              Email
-            </label>
+            <label htmlFor="email" className="block mb-1 text-gray-100 font-bold">Email</label>
             <input
               id="email"
               type="email"
@@ -155,10 +153,8 @@ const LoginComponent = () => {
           </div>
 
           {/* Password Field with Toggle */}
-          <div className="mb-2 relative">
-            <label htmlFor="password" className="block mb-1 text-gray-100 font-bold">
-              Password
-            </label>
+          <div className="mb-4 relative">
+            <label htmlFor="password" className="block mb-1 text-gray-100 font-bold">Password</label>
             <input
               id="password"
               type={showPassword ? 'text' : 'password'}
@@ -174,13 +170,6 @@ const LoginComponent = () => {
             >
               {showPassword ? 'Hide' : 'Show'}
             </button>
-          </div>
-
-          {/* Forgot Password Link */}
-          <div className="mb-4 text-right">
-            <Link to="/forgotpassword" className="text-blue-200 hover:text-blue-100 underline text-sm">
-              Forgot Password?
-            </Link>
           </div>
 
           {/* Submit Button */}

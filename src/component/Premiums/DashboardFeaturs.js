@@ -27,7 +27,7 @@ const DashboardWelcome = () => {
   }, []);
 
   return (
-    <div className="mt-2 flex flex-col items-center">
+    <div className="mt-4 flex flex-col items-center">
       <svg
         className="w-20 h-20 text-yellow-800 dark:text-yellow-800"
         fill="currentColor"
