@@ -217,7 +217,7 @@ const ProductGoalsTracker = () => {
   {/* Form Section */}
   <form
     onSubmit={handleSubmit}
-    className="max-w-lg mx-auto mb-6 p-4 border rounded shadow"
+    className="bg-white shadow-lg rounded px-4 sm:px-8 pt-6 pb-8 mb-12 w-full"
   >
     <h2 className="text-xl font-semibold mb-2 text-center">
       {editingId ? "Edit Entry" : "Create New Entry"}

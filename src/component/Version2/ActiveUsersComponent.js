@@ -195,7 +195,7 @@ const ActiveUsersComponent = () => {
   };
 
   return (
-    <div className="container mx-auto mt-16 px-4">
+    <div className="bg-white shadow-lg rounded px-4 sm:px-8 pt-6 pb-8 mb-12 w-full">
         <ActiveUserFeatures/>
       <h2 className="text-3xl font-bold text-center mb-8">
         Active Users Metrics (DAU, WAU, MAU)
@@ -204,7 +204,7 @@ const ActiveUsersComponent = () => {
       {/* Form Section */}
       <form
         onSubmit={handleSubmit}
-        className="bg-white shadow-lg rounded px-8 pt-6 pb-8 mb-12 max-w-lg mx-auto"
+        className="bg-white shadow-lg rounded px-4 sm:px-8 pt-6 pb-8 mb-12 w-full"
       >
         <div className="mb-4">
           <label className="block text-gray-700 text-sm font-bold mb-2">Type</label>
@@ -271,7 +271,7 @@ const ActiveUsersComponent = () => {
         return (
           <div
             key={type}
-            className="bg-white shadow-lg rounded px-8 pt-6 pb-8 mb-12 max-w-3xl mx-auto"
+            className="bg-white shadow-lg rounded px-4 sm:px-8 pt-6 pb-8 mb-12 w-full"
           >
             <div className="flex items-center mb-4">
               <h3 className="text-2xl font-semibold">{type}</h3>

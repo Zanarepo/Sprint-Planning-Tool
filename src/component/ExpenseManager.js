@@ -73,7 +73,7 @@ const ExpenseManager = () => {
       <h2 className="text-3xl font-bold text-center mb-6">Let's Track It</h2>
 
       {/* Expense Entry Form */}
-      <form onSubmit={handleSubmit} className="max-w-lg mx-auto bg-white p-6 rounded shadow mb-6">
+      <form onSubmit={handleSubmit} className="bg-white shadow-lg rounded px-4 sm:px-8 pt-6 pb-8 mb-12 w-full">
         <div className="mb-4">
           <label className="block text-gray-700 mb-2">Expense Item</label>
           <input

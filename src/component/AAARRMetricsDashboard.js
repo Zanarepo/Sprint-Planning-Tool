@@ -181,7 +181,7 @@ const AAARRMetricsDashboard = () => {
       {/* Data Entry Form */}
       <form
   onSubmit={handleSubmit}
-  className="bg-white shadow-lg rounded px-4 sm:px-8 pt-6 pb-8 mb-6 max-w-lg mx-auto"
+  className="bg-white shadow-lg rounded px-4 sm:px-8 pt-6 pb-8 mb-12 w-full"
 >
   <div className="mb-4">
     <label className="block text-gray-700 font-bold mb-2">Date</label>

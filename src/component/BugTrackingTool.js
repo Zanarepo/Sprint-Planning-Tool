@@ -89,7 +89,7 @@ const BugTrackingTool = () => {
       {/* Bug Entry Form */}
       <form
   onSubmit={handleSubmit}
-  className="max-w-lg mx-auto bg-white shadow-lg rounded px-4 sm:px-8 pt-6 pb-8 mb-6"
+  className="bg-white shadow-lg rounded px-4 sm:px-8 pt-6 pb-8 mb-12 w-full"
 >
   <div className="mb-4">
     <label className="block text-gray-700 font-bold mb-2">
@@ -119,42 +119,43 @@ const BugTrackingTool = () => {
     ></textarea>
   </div>
 
-  <div className="mb-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
-    <div>
-      <label className="block text-gray-700 font-bold mb-2">
-        Severity
-      </label>
-      <select
-        name="severity"
-        value={form.severity}
-        onChange={handleChange}
-        className="w-full px-3 py-2 border rounded focus:outline-none"
-      >
-        <option value="">Select severity</option>
-        <option value="Low">Low</option>
-        <option value="Medium">Medium</option>
-        <option value="High">High</option>
-        <option value="Critical">Critical</option>
-      </select>
-    </div>
-    {/* Add more fields here if needed */}
-  
+  <div className="mb-4 grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+  {/* Severity Field */}
+  <div>
+    <label className="block text-gray-700 font-bold text-sm sm:text-base mb-2">
+      Severity
+    </label>
+    <select
+      name="severity"
+      value={form.severity}
+      onChange={handleChange}
+      className="w-full px-3 py-2 text-sm sm:text-base border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+    >
+      <option value="">Select severity</option>
+      <option value="Low">Low</option>
+      <option value="Medium">Medium</option>
+      <option value="High">High</option>
+      <option value="Critical">Critical</option>
+    </select>
+  </div>
 
-
-  <label className="block text-gray-700 font-bold mb-2">
-    Status
-  </label>
-  <select
-    name="status"
-    value={form.status}
-    onChange={handleChange}
-    className="w-full px-3 py-2 border rounded focus:outline-none"
-  >
-    <option value="Open">Open</option>
-    <option value="In Progress">In Progress</option>
-    <option value="Resolved">Resolved</option>
-    <option value="Closed">Closed</option>
-  </select>
+  {/* Status Field */}
+  <div>
+    <label className="block text-gray-700 font-bold text-sm sm:text-base mb-2">
+      Status
+    </label>
+    <select
+      name="status"
+      value={form.status}
+      onChange={handleChange}
+      className="w-full px-3 py-2 text-sm sm:text-base border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+    >
+      <option value="Open">Open</option>
+      <option value="In Progress">In Progress</option>
+      <option value="Resolved">Resolved</option>
+      <option value="Closed">Closed</option>
+    </select>
+  </div>
 </div>
 
 <div className="mb-4 grid grid-cols-1 sm:grid-cols-2 gap-4">

@@ -141,12 +141,13 @@ const ProductMetricsComponent = () => {
   });
 
   return (
-    <div className="container mx-auto mt-16 px-4">
+    
+  <div className="mt-16 px-4 w-full">
         <ProductMetricsFeatures/>
-     
+   
         <form
   onSubmit={handleSubmit}
-  className="bg-white shadow-lg rounded px-4 sm:px-8 pt-6 pb-8 mb-12 max-w-lg mx-auto"
+  className="bg-white shadow-lg rounded px-4 sm:px-8 pt-6 pb-8 mb-12 w-full"
 >
   <div className="mb-4">
     <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="date">
@@ -246,7 +247,7 @@ const ProductMetricsComponent = () => {
         </div>
       </form>
 {/* Charts Section */}
-<div className="container mx-auto px-2 sm:px-4 mb-12">
+<div className="container mx-auto px-2 sm:px-4 mb-12 ">
   <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
     {/* Growth Rate Chart */}
     <div className="bg-white shadow-lg rounded p-6">
