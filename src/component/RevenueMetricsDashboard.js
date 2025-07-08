@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { supabase } from "../supabaseClient";
 import { Line } from "react-chartjs-2";
-import RevenueMetricsFeatures from './RevenueMetricsFeatures'
+import RevenueMetricsFeatures from "./RevenueMetricsFeatures";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -24,64 +25,97 @@ ChartJS.register(
 );
 
 const RevenueMetricsDashboard = () => {
-  // Define the metric tabs
+  // State for user info
+  const [, setUserEmail] = useState("");
+  const [userId, setUserId] = useState(null);
+
+  // Metric type tabs and selected metric state
   const metricTabs = ["MRR", "ARR", "ARPU", "RevenueChurn", "GrossMargin"];
   const [selectedMetric, setSelectedMetric] = useState("MRR");
 
-  // Initial form state (all possible fields)
+  // Initial form state for possible input fields
   const initialFormState = {
     date: "",
-    // MRR: Monthly Recurring Revenue
     monthlyRevenue: "",
-    // ARR: Annual Recurring Revenue
     annualRevenue: "",
-    // ARPU: Average Revenue Per User
     totalRevenue: "",
     activeUsers: "",
-    // Revenue Churn: (Lost Revenue / Starting Revenue)*100
     lostRevenue: "",
     startingRevenue: "",
-    // Gross Margin: ((Revenue - Cost) / Revenue)*100
     revenue: "",
     cost: "",
   };
-
   const [formData, setFormData] = useState(initialFormState);
   const [editingEntryId, setEditingEntryId] = useState(null);
-  const [metricsData, setMetricsData] = useState({
-    MRR: [],
-    ARR: [],
-    ARPU: [],
-    RevenueChurn: [],
-    GrossMargin: [],
-  });
 
-  // Update form state on input change
+  // State for fetched metric entries (for the selected metric)
+  const [metricsEntries, setMetricsEntries] = useState([]);
+
+  // Retrieve user email from localStorage and then fetch user id
+  useEffect(() => {
+    const email = localStorage.getItem("userEmail");
+    if (email) {
+      setUserEmail(email);
+      console.debug("User email found in localStorage:", email);
+      const fetchUserId = async () => {
+        const { data, error } = await supabase
+          .from("users")
+          .select("id")
+          .eq("email", email)
+          .single();
+        if (error) {
+          console.error("Error fetching user id:", error);
+        } else if (data) {
+          setUserId(data.id);
+        }
+      };
+      fetchUserId();
+    } else {
+      console.debug("No user email found in localStorage.");
+    }
+  }, []);
+
+  // When userId or selectedMetric changes, fetch the entries for that user and metric type
+  useEffect(() => {
+    const fetchMetricsEntries = async () => {
+      if (userId) {
+        const { data, error } = await supabase
+          .from("revenue_metrics")
+          .select("*")
+          .eq("user_id", userId)
+          .eq("metric_type", selectedMetric)
+          .order("entry_date", { ascending: true });
+        if (error) {
+          console.error("Error fetching metrics entries:", error);
+        } else {
+          setMetricsEntries(data);
+        }
+      }
+    };
+    fetchMetricsEntries();
+  }, [userId, selectedMetric]);
+
+  // Update form data on input change
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  // Compute the metric value based on the selected metric and its inputs
+  // Compute the metric value based on selected metric and form inputs
   const computeMetricValue = () => {
     if (selectedMetric === "MRR") {
-      // MRR is the monthly revenue (in currency units)
       return Number(formData.monthlyRevenue) || 0;
     } else if (selectedMetric === "ARR") {
-      // ARR is the annual revenue (in currency units)
       return Number(formData.annualRevenue) || 0;
     } else if (selectedMetric === "ARPU") {
-      // ARPU = Total Revenue / Active Users
       const totalRev = Number(formData.totalRevenue);
       const active = Number(formData.activeUsers);
       return active > 0 ? totalRev / active : 0;
     } else if (selectedMetric === "RevenueChurn") {
-      // Revenue Churn (%) = (Lost Revenue / Starting Revenue) * 100
       const lost = Number(formData.lostRevenue);
       const starting = Number(formData.startingRevenue);
       return starting > 0 ? (lost / starting) * 100 : 0;
     } else if (selectedMetric === "GrossMargin") {
-      // Gross Margin (%) = ((Revenue - Cost) / Revenue) * 100
       const rev = Number(formData.revenue);
       const cost = Number(formData.cost);
       return rev > 0 ? ((rev - cost) / rev) * 100 : 0;
@@ -89,76 +123,113 @@ const RevenueMetricsDashboard = () => {
     return 0;
   };
 
-
-  
-  // Handle form submission (create/update)
-  const handleSubmit = (e) => {
+  // Handle form submission for creating or updating an entry
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!userId) {
+      console.error("User ID not set.");
+      return;
+    }
     const metricValue = computeMetricValue();
-    const entry = {
-      id: editingEntryId ? editingEntryId : Date.now(),
-      date: formData.date,
+
+    // Build the entry object including optional fields
+    const entryData = {
+      user_id: userId,
+      metric_type: selectedMetric,
+      entry_date: formData.date,
       value: metricValue,
-      data: { ...formData },
+      monthly_revenue: formData.monthlyRevenue ? Number(formData.monthlyRevenue) : null,
+      annual_revenue: formData.annualRevenue ? Number(formData.annualRevenue) : null,
+      total_revenue: formData.totalRevenue ? Number(formData.totalRevenue) : null,
+      active_users: formData.activeUsers ? Number(formData.activeUsers) : null,
+      lost_revenue: formData.lostRevenue ? Number(formData.lostRevenue) : null,
+      starting_revenue: formData.startingRevenue ? Number(formData.startingRevenue) : null,
+      revenue: formData.revenue ? Number(formData.revenue) : null,
+      cost: formData.cost ? Number(formData.cost) : null,
     };
 
-    setMetricsData((prev) => {
-      const list = prev[selectedMetric];
-      if (editingEntryId) {
-        // Update existing entry
-        return {
-          ...prev,
-          [selectedMetric]: list.map((item) =>
-            item.id === editingEntryId ? entry : item
-          ),
-        };
-      } else {
-        // Add new entry
-        return {
-          ...prev,
-          [selectedMetric]: [...list, entry],
-        };
+    if (editingEntryId) {
+      // Update an existing record
+      const { error } = await supabase
+        .from("revenue_metrics")
+        .update(entryData)
+        .eq("id", editingEntryId);
+      if (error) {
+        console.error("Error updating entry:", error);
       }
-    });
-
-    // Reset form and editing state
+    } else {
+      // Insert a new record
+      const { error } = await supabase
+        .from("revenue_metrics")
+        .insert([entryData]);
+      if (error) {
+        console.error("Error inserting entry:", error);
+      }
+    }
+    // Reset the form and editing state
     setFormData(initialFormState);
     setEditingEntryId(null);
+
+    // Refresh the entries list
+    const { data, error } = await supabase
+      .from("revenue_metrics")
+      .select("*")
+      .eq("user_id", userId)
+      .eq("metric_type", selectedMetric)
+      .order("entry_date", { ascending: true });
+    if (error) {
+      console.error("Error fetching metrics entries:", error);
+    } else {
+      setMetricsEntries(data);
+    }
   };
 
-  // Populate the form for editing
+  // Populate the form with an entry's details for editing
   const handleEdit = (entry) => {
     setFormData({
-      date: entry.date,
-      monthlyRevenue: entry.data.monthlyRevenue || "",
-      annualRevenue: entry.data.annualRevenue || "",
-      totalRevenue: entry.data.totalRevenue || "",
-      activeUsers: entry.data.activeUsers || "",
-      lostRevenue: entry.data.lostRevenue || "",
-      startingRevenue: entry.data.startingRevenue || "",
-      revenue: entry.data.revenue || "",
-      cost: entry.data.cost || "",
+      date: entry.entry_date,
+      monthlyRevenue: entry.monthly_revenue || "",
+      annualRevenue: entry.annual_revenue || "",
+      totalRevenue: entry.total_revenue || "",
+      activeUsers: entry.active_users || "",
+      lostRevenue: entry.lost_revenue || "",
+      startingRevenue: entry.starting_revenue || "",
+      revenue: entry.revenue || "",
+      cost: entry.cost || "",
     });
     setEditingEntryId(entry.id);
   };
 
   // Delete an entry
-  const handleDelete = (id) => {
-    setMetricsData((prev) => {
-      const list = prev[selectedMetric];
-      return {
-        ...prev,
-        [selectedMetric]: list.filter((item) => item.id !== id),
-      };
-    });
+  const handleDelete = async (id) => {
+    const { error } = await supabase
+      .from("revenue_metrics")
+      .delete()
+      .eq("id", id);
+    if (error) {
+      console.error("Error deleting entry:", error);
+    } else {
+      // Refresh the list after deletion
+      const { data, error } = await supabase
+        .from("revenue_metrics")
+        .select("*")
+        .eq("user_id", userId)
+        .eq("metric_type", selectedMetric)
+        .order("entry_date", { ascending: true });
+      if (error) {
+        console.error("Error fetching metrics entries:", error);
+      } else {
+        setMetricsEntries(data);
+      }
+    }
   };
 
-  // Prepare chart data by sorting entries by date
-  const sortedData = [...metricsData[selectedMetric]].sort(
-    (a, b) => new Date(a.date) - new Date(b.date)
+  // Prepare chart data from the entries (sorted by date)
+  const sortedData = [...metricsEntries].sort(
+    (a, b) => new Date(a.entry_date) - new Date(b.entry_date)
   );
   const chartData = {
-    labels: sortedData.map((item) => item.date),
+    labels: sortedData.map((item) => item.entry_date),
     datasets: [
       {
         label: `${selectedMetric} Trend`,
@@ -169,39 +240,35 @@ const RevenueMetricsDashboard = () => {
     ],
   };
 
-  // For analysis: get the latest entry and (if available) the previous one to compute change
+  // Analysis: compute percentage change and generate a review
   const latestEntry = sortedData[sortedData.length - 1];
   const previousEntry =
     sortedData.length > 1 ? sortedData[sortedData.length - 2] : null;
   let percentageChange = null;
-  if (previousEntry && previousEntry.value !== 0) {
+  if (latestEntry && previousEntry && previousEntry.value !== 0) {
     percentageChange =
       ((latestEntry.value - previousEntry.value) / previousEntry.value) * 100;
   }
 
-  // Function to return a review, recommendation, and change percentage based on the metric
   const getMetricReview = (metric, latestVal, change) => {
     if (metric === "MRR") {
       if (change !== null) {
         if (change > 0)
           return {
             review: "Positive: MRR is increasing.",
-            recommendation:
-              "Keep up your retention and upselling strategies.",
+            recommendation: "Keep up your retention and upselling strategies.",
             change: change.toFixed(2) + "%",
           };
         else if (change < 0)
           return {
             review: "Negative: MRR is declining.",
-            recommendation:
-              "Investigate customer churn and adjust pricing strategies.",
+            recommendation: "Investigate customer churn and adjust pricing strategies.",
             change: change.toFixed(2) + "%",
           };
         else
           return {
             review: "Breakeven: MRR is stable.",
-            recommendation:
-              "Maintain current efforts and look for incremental growth opportunities.",
+            recommendation: "Maintain current efforts and look for incremental growth opportunities.",
             change: "0%",
           };
       } else {
@@ -216,15 +283,13 @@ const RevenueMetricsDashboard = () => {
         if (change > 0)
           return {
             review: "Positive: ARR is increasing.",
-            recommendation:
-              "Your subscription growth is healthy. Consider expanding marketing efforts.",
+            recommendation: "Your subscription growth is healthy. Consider expanding marketing efforts.",
             change: change.toFixed(2) + "%",
           };
         else if (change < 0)
           return {
             review: "Negative: ARR is declining.",
-            recommendation:
-              "Investigate churn and customer satisfaction issues.",
+            recommendation: "Investigate churn and customer satisfaction issues.",
             change: change.toFixed(2) + "%",
           };
         else
@@ -245,22 +310,19 @@ const RevenueMetricsDashboard = () => {
         if (change > 0)
           return {
             review: "Positive: ARPU is increasing.",
-            recommendation:
-              "Upselling and cross-selling strategies are effective.",
+            recommendation: "Upselling and cross-selling strategies are effective.",
             change: change.toFixed(2) + "%",
           };
         else if (change < 0)
           return {
             review: "Negative: ARPU is decreasing.",
-            recommendation:
-              "Review pricing strategies and product value propositions.",
+            recommendation: "Review pricing strategies and product value propositions.",
             change: change.toFixed(2) + "%",
           };
         else
           return {
             review: "Breakeven: ARPU is stable.",
-            recommendation:
-              "Monitor for potential opportunities to increase revenue per user.",
+            recommendation: "Monitor for potential opportunities to increase revenue per user.",
             change: "0%",
           };
       } else {
@@ -271,27 +333,23 @@ const RevenueMetricsDashboard = () => {
         };
       }
     } else if (metric === "RevenueChurn") {
-      // For churn, lower percentages are preferable.
       if (change !== null) {
         if (latestVal < 5)
           return {
             review: "Positive: Revenue churn is minimal.",
-            recommendation:
-              "Continue strong customer retention efforts.",
+            recommendation: "Continue strong customer retention efforts.",
             change: change.toFixed(2) + "%",
           };
         else if (latestVal >= 5 && latestVal <= 10)
           return {
             review: "Neutral: Revenue churn is moderate.",
-            recommendation:
-              "Enhance customer engagement and support.",
+            recommendation: "Enhance customer engagement and support.",
             change: change.toFixed(2) + "%",
           };
         else
           return {
             review: "Negative: Revenue churn is high.",
-            recommendation:
-              "Address churn causes and improve customer satisfaction.",
+            recommendation: "Address churn causes and improve customer satisfaction.",
             change: change.toFixed(2) + "%",
           };
       } else {
@@ -319,22 +377,19 @@ const RevenueMetricsDashboard = () => {
         if (latestVal >= 50)
           return {
             review: "Positive: Gross margin is strong.",
-            recommendation:
-              "Your cost management is effective. Consider reinvesting in growth.",
+            recommendation: "Your cost management is effective. Consider reinvesting in growth.",
             change: change.toFixed(2) + "%",
           };
         else if (latestVal >= 20 && latestVal < 50)
           return {
             review: "Neutral: Gross margin is moderate.",
-            recommendation:
-              "Examine operational efficiency for potential improvements.",
+            recommendation: "Examine operational efficiency for potential improvements.",
             change: change.toFixed(2) + "%",
           };
         else
           return {
             review: "Negative: Gross margin is low.",
-            recommendation:
-              "Reassess pricing or reduce costs to improve profitability.",
+            recommendation: "Reassess pricing or reduce costs to improve profitability.",
             change: change.toFixed(2) + "%",
           };
       } else {
@@ -353,8 +408,7 @@ const RevenueMetricsDashboard = () => {
         else
           return {
             review: "Negative: Gross margin is low.",
-            recommendation:
-              "Immediate review of cost structure is needed.",
+            recommendation: "Immediate review of cost structure is needed.",
             change: "N/A",
           };
       }
@@ -366,7 +420,6 @@ const RevenueMetricsDashboard = () => {
     ? getMetricReview(selectedMetric, latestEntry.value, percentageChange)
     : { review: "", recommendation: "", change: "" };
 
-  // Explanations for each metric
   const getMetricExplanation = (metric) => {
     if (metric === "MRR") {
       return "Monthly Recurring Revenue (MRR) represents the predictable revenue generated from subscriptions each month. It is calculated as the sum of all recurring monthly subscription revenue.";
@@ -386,36 +439,31 @@ const RevenueMetricsDashboard = () => {
 
   return (
     <div className="container mx-auto p-4">
-        <RevenueMetricsFeatures/>
-      
+      <RevenueMetricsFeatures />
 
       {/* Metric Tabs */}
       <div className="grid grid-cols-3 grid-rows-2 gap-4 mb-4 text-center mt-8">
-  {metricTabs.map((metric) => (
-    <button
-      key={metric}
-      className={`px-0 py-3 rounded ${
-        selectedMetric === metric
-          ? "bg-green-600 text-white"
-          : "bg-gray-200 text-gray-800"
-      }`}
-      onClick={() => {
-        setSelectedMetric(metric);
-        setFormData(initialFormState);
-        setEditingEntryId(null);
-      }}
-    >
-      {metric}
-    </button>
-  ))}
-</div>
-
+        {metricTabs.map((metric) => (
+          <button
+            key={metric}
+            className={`px-0 py-3 rounded ${
+              selectedMetric === metric
+                ? "bg-green-600 text-white"
+                : "bg-gray-200 text-gray-800"
+            }`}
+            onClick={() => {
+              setSelectedMetric(metric);
+              setFormData(initialFormState);
+              setEditingEntryId(null);
+            }}
+          >
+            {metric}
+          </button>
+        ))}
+      </div>
 
       {/* Form for Adding/Updating an Entry */}
-      <form
-        onSubmit={handleSubmit}
-        className="mb-4 p-4 border rounded shadow"
-      >
+      <form onSubmit={handleSubmit} className="mb-4 p-4 border rounded shadow">
         <h2 className="text-xl font-semibold mb-2">
           {editingEntryId ? "Edit" : "Add"} {selectedMetric} Entry
         </h2>
@@ -541,10 +589,8 @@ const RevenueMetricsDashboard = () => {
 
       {/* Table of Entries */}
       <div className="mb-4">
-        <h2 className="text-xl font-semibold mb-2">
-          {selectedMetric} Entries
-        </h2>
-        {metricsData[selectedMetric].length > 0 ? (
+        <h2 className="text-xl font-semibold mb-2">{selectedMetric} Entries</h2>
+        {metricsEntries.length > 0 ? (
           <table className="min-w-full border">
             <thead>
               <tr>
@@ -555,11 +601,11 @@ const RevenueMetricsDashboard = () => {
               </tr>
             </thead>
             <tbody>
-              {metricsData[selectedMetric].map((entry) => (
+              {metricsEntries.map((entry) => (
                 <tr key={entry.id}>
-                  <td className="border p-2 text-center">{entry.date}</td>
+                  <td className="border p-2 text-center">{entry.entry_date}</td>
                   <td className="border p-2 text-center">
-                    {entry.value.toFixed(2)}
+                    {Number(entry.value).toFixed(2)}
                   </td>
                   <td className="border p-2 text-center">
                     {getMetricReview(selectedMetric, entry.value, null).review}
@@ -589,15 +635,10 @@ const RevenueMetricsDashboard = () => {
 
       {/* Trend Chart */}
       <div className="mb-4 p-4 border rounded shadow">
-        <h2 className="text-xl font-semibold mb-2">
-          {selectedMetric} Trend Chart
-        </h2>
+        <h2 className="text-xl font-semibold mb-2">{selectedMetric} Trend Chart</h2>
         {sortedData.length > 0 ? (
           <div style={{ height: "400px" }}>
-            <Line
-              data={chartData}
-              options={{ responsive: true, maintainAspectRatio: false }}
-            />
+            <Line data={chartData} options={{ responsive: true, maintainAspectRatio: false }} />
           </div>
         ) : (
           <p>No data to display in chart.</p>
@@ -606,18 +647,15 @@ const RevenueMetricsDashboard = () => {
 
       {/* Analysis & Explanation Section */}
       <div className="mb-4 p-4 border rounded shadow">
-        <h2 className="text-xl font-semibold mb-2">
-          Analysis & Explanation
-        </h2>
+        <h2 className="text-xl font-semibold mb-2">Analysis & Explanation</h2>
         {latestEntry ? (
           <>
             <p>
-              <strong>Latest Value:</strong> {latestEntry.value.toFixed(2)}
+              <strong>Latest Value:</strong> {Number(latestEntry.value).toFixed(2)}
             </p>
             {percentageChange !== null && (
               <p>
-                <strong>Change from previous:</strong>{" "}
-                {percentageChange.toFixed(2)}%
+                <strong>Change from previous:</strong> {percentageChange.toFixed(2)}%
               </p>
             )}
             <p>

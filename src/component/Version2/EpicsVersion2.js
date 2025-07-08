@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { supabase } from "../../supabaseClient";
-import EpicsFeatures from '../EpicsFeatures'
+import { supabase } from "../supabaseClient";
+import EpicsFeatures from './EpicsFeatures'
 
 const EpicFeatureManager = () => {
   // User state

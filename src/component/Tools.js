@@ -159,7 +159,11 @@ const appList = [
     route: "/uat",
     icon: <ClipboardCheck size={20} className="text-blue-500" />,
   },
-
+ {
+    name: "GTM Strategy",
+    route: "/gtm",
+    icon: <ClipboardCheck size={20} className="text-blue-500" />,
+  },
 
   
 ];

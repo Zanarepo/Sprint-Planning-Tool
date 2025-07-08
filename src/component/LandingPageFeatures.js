@@ -69,7 +69,7 @@ const LandingPageFeatures = () => {
   return (
     <>
       {/* Desktop Carousel (visible on md and up) */}
-      <div className="hidden md:block max-w-5xl mx-auto mt-12">
+      <div className="hidden md:block max-w-5xl mx-auto mt-12 mb-10">
         <h2 className="text-4xl font-extrabold text-center text-gray-800 mb-8">
           Explore Our Features
         </h2>
@@ -108,7 +108,7 @@ const LandingPageFeatures = () => {
 
       {/* Mobile Vertical Grid (visible on mobile) */}
       <div className="block md:hidden max-w-5xl mx-auto mt-12">
-        <h2 className="text-4xl font-extrabold text-center text-gray-800 mb-8">
+        <h2 className="text-4xl font-extrabold text-center text-amber-800 mb-6">
           Explore Our Features
         </h2>
         <div className="grid grid-cols-1 gap-6">

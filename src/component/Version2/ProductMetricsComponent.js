@@ -1,10 +1,7 @@
-
-
-
-
-
-import React, { useState } from 'react';
-import { Line } from 'react-chartjs-2';
+import React, { useState, useEffect, useCallback } from "react";
+import { supabase } from "../../supabaseClient";
+import { Line } from "react-chartjs-2";
+import MetricsDashbaordFeature from "../MetricsDashbaordFeature";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -14,396 +11,517 @@ import {
   Title,
   Tooltip,
   Legend,
-  TimeScale,
-} from 'chart.js';
-import 'chartjs-adapter-date-fns';
-import ProductMetricsFeatures from '../ProductMetricsFeatures'
-import { FaArrowUp, FaArrowDown, FaArrowRight, FaEdit, FaTrash } from 'react-icons/fa';
+} from "chart.js";
 
-ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, TimeScale);
+// Register Chart.js components
+ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
-const ProductMetricsComponent = () => {
-  // Each record represents data for one period.
-  // Fields:
-  // - date: period date
-  // - newUsers: number of new users acquired this period (for growth rate)
-  // - retainedUsers: number of users returning (for retention rate)
-  // - churnedUsers: number of users lost (for churn rate)
-  // - totalUsersAtStart: number of users active at the start of the period (base for retention/churn)
-  const [records, setRecords] = useState([]);
-  const [form, setForm] = useState({
-    id: null,
-    date: '',
-    newUsers: '',
-    retainedUsers: '',
-    churnedUsers: '',
-    totalUsersAtStart: '',
-  });
-  const [isEditing, setIsEditing] = useState(false);
+const ProductMetricsDashboard = () => {
+  // Selected metric type (tab)
+  const [selectedMetric, setSelectedMetric] = useState("NPS");
+  // Array of metric entries from the database
+  const [metrics, setMetrics] = useState([]);
+  // Form state for creating/updating an entry
+  const initialFormState = {
+    entry_date: "",
+    value: "",
+    // NPS fields
+    promoters: "",
+    detractors: "",
+    respondents: "",
+    // CAC fields
+    cost: "",
+    newCustomers: "",
+    // CSAT fields
+    totalScore: "",
+    responses: "",
+    // CES field
+    totalEffort: "",
+  };
+  const [formData, setFormData] = useState(initialFormState);
+  // When editing, store the entry id
+  const [editingEntryId, setEditingEntryId] = useState(null);
+  // User ID from Supabase
+  const [userId, setUserId] = useState(null);
 
-  // Update form values
+  // Chart data will be computed from metrics.
+  const [, setChartData] = useState({ labels: [], datasets: [] });
+
+  // Fetch the current user id from Supabase using email stored in localStorage.
+  useEffect(() => {
+    const email = localStorage.getItem("userEmail");
+    if (email) {
+      const fetchUserId = async () => {
+        const { data, error } = await supabase
+          .from("users")
+          .select("id")
+          .eq("email", email)
+          .single();
+        if (error) {
+          console.error("Error fetching user id:", error);
+        } else if (data) {
+          setUserId(data.id);
+        }
+      };
+      fetchUserId();
+    }
+  }, []);
+
+  // Fetch metric entries for the selected metric type for the current user.
+  const fetchMetrics = useCallback(async () => {
+    if (!userId) return;
+    const { data, error } = await supabase
+      .from("product_metrics")
+      .select("*")
+      .eq("user_id", userId)
+      .eq("metric_type", selectedMetric)
+      .order("entry_date", { ascending: true });
+    if (error) {
+      console.error("Error fetching metrics:", error);
+    } else {
+      setMetrics(data);
+    }
+  }, [userId, selectedMetric]);
+
+  useEffect(() => {
+    if (userId) fetchMetrics();
+  }, [userId, selectedMetric, fetchMetrics]);
+
+  // Update chart data based on the sorted metrics
+  useEffect(() => {
+    const sorted = [...metrics].sort(
+      (a, b) => new Date(a.entry_date) - new Date(b.entry_date)
+    );
+    setChartData({
+      labels: sorted.map((entry) => entry.entry_date),
+      datasets: [
+        {
+          label: `${selectedMetric} Trend`,
+          data: sorted.map((entry) => Number(entry.value)),
+          borderColor: "rgba(75,192,192,1)",
+          fill: false,
+        },
+      ],
+    });
+  }, [metrics, selectedMetric]);
+
+  // Handle form changes.
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setForm({ ...form, [name]: value });
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
-  // Add or update a record
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const { date, newUsers, retainedUsers, churnedUsers, totalUsersAtStart } = form;
-    if (!date || newUsers === '' || retainedUsers === '' || churnedUsers === '' || totalUsersAtStart === '') {
-      alert('Please fill in all fields.');
-      return;
-    }
-    const data = {
-      ...form,
-      newUsers: Number(newUsers),
-      retainedUsers: Number(retainedUsers),
-      churnedUsers: Number(churnedUsers),
-      totalUsersAtStart: Number(totalUsersAtStart),
-    };
-
-    if (isEditing) {
-      setRecords(records.map((rec) => (rec.id === form.id ? data : rec)));
-      setIsEditing(false);
-    } else {
-      data.id = Date.now();
-      setRecords([...records, data]);
-    }
-    setForm({ id: null, date: '', newUsers: '', retainedUsers: '', churnedUsers: '', totalUsersAtStart: '' });
-  };
-
-  // Prepare record for editing
-  const handleEdit = (id) => {
-    const rec = records.find((r) => r.id === id);
-    if (rec) {
-      setForm(rec);
-      setIsEditing(true);
-    }
-  };
-
-  // Delete a record
-  const handleDelete = (id) => {
-    if (window.confirm('Are you sure you want to delete this record?')) {
-      setRecords(records.filter((r) => r.id !== id));
-    }
-  };
-
-  // Sort records by date ascending so we can compute growth rate (based on previous period)
-  const sortedRecords = [...records].sort((a, b) => new Date(a.date) - new Date(b.date));
-
-  // Compute metrics for each record.
-  // For Growth Rate, the first record will have no previous period so we set it as null.
-  const computedRecords = sortedRecords.map((record, index) => {
-    const growthRate =
-      index === 0 || sortedRecords[index - 1].newUsers === 0
-        ? null
-        : ((record.newUsers - sortedRecords[index - 1].newUsers) / sortedRecords[index - 1].newUsers) * 100;
-    const retentionRate =
-      record.totalUsersAtStart > 0 ? (record.retainedUsers / record.totalUsersAtStart) * 100 : 0;
-    const churnRate = record.totalUsersAtStart > 0 ? (record.churnedUsers / record.totalUsersAtStart) * 100 : 0;
-    return { ...record, growthRate, retentionRate, churnRate };
-  });
-
-  // Prepare chart data arrays (using the sorted records by date)
-  const chartLabels = sortedRecords.map((r) => r.date);
-  const growthRatesData = sortedRecords.map((record, index) => {
-    if (index === 0 || sortedRecords[index - 1].newUsers === 0) {
+  // Compute the metric value based on form data.
+  const computeMetricValue = () => {
+    const data = formData;
+    if (selectedMetric === "NPS") {
+      const promoters = Number(data.promoters);
+      const detractors = Number(data.detractors);
+      const respondents = Number(data.respondents);
+      if (respondents > 0) {
+        // Typical NPS = % Promoters - % Detractors.
+        return ((promoters - detractors) / respondents) * 100;
+      }
+      return 0;
+    } else if (selectedMetric === "CAC") {
+      const cost = Number(data.cost);
+      const newCustomers = Number(data.newCustomers);
+      if (newCustomers > 0) return cost / newCustomers;
+      return 0;
+    } else if (selectedMetric === "CSAT") {
+      const totalScore = Number(data.totalScore);
+      const responses = Number(data.responses);
+      if (responses > 0) return totalScore / responses;
+      return 0;
+    } else if (selectedMetric === "CES") {
+      const totalEffort = Number(data.totalEffort);
+      const responses = Number(data.responses);
+      if (responses > 0) return totalEffort / responses;
       return 0;
     }
-    return Number((((record.newUsers - sortedRecords[index - 1].newUsers) / sortedRecords[index - 1].newUsers) * 100).toFixed(2));
-  });
-  const retentionRatesData = sortedRecords.map((r) =>
-    r.totalUsersAtStart > 0 ? Number(((r.retainedUsers / r.totalUsersAtStart) * 100).toFixed(2)) : 0
-  );
-  const churnRatesData = sortedRecords.map((r) =>
-    r.totalUsersAtStart > 0 ? Number(((r.churnedUsers / r.totalUsersAtStart) * 100).toFixed(2)) : 0
-  );
+    return 0;
+  };
 
-  // Chart options (time‑scaled x‑axis)
-  const chartOptions = (title, yLabel) => ({
-    responsive: true,
-    plugins: {
-      legend: { position: 'top' },
-      title: { display: true, text: title },
-    },
-    scales: {
-      x: {
-        type: 'time',
-        time: { unit: 'day', tooltipFormat: 'PP' },
-        title: { display: true, text: 'Date' },
+  // Handle form submission for creating/updating an entry.
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const metricValue = computeMetricValue();
+    if (editingEntryId) {
+      // Update existing record.
+      const { error } = await supabase
+        .from("product_metrics")
+        .update({
+          entry_date: formData.entry_date,
+          value: metricValue,
+          promoters: formData.promoters ? parseInt(formData.promoters) : null,
+          detractors: formData.detractors ? parseInt(formData.detractors) : null,
+          respondents: formData.respondents ? parseInt(formData.respondents) : null,
+          cost: formData.cost ? parseFloat(formData.cost) : null,
+          new_customers: formData.newCustomers ? parseInt(formData.newCustomers) : null,
+          total_score: formData.totalScore ? parseFloat(formData.totalScore) : null,
+          responses: formData.responses ? parseInt(formData.responses) : null,
+          total_effort: formData.totalEffort ? parseFloat(formData.totalEffort) : null,
+        })
+        .eq("id", editingEntryId)
+        .eq("user_id", userId);
+      if (error) {
+        console.error("Error updating metric:", error);
+      } else {
+        fetchMetrics();
+        setEditingEntryId(null);
+        setFormData(initialFormState);
+      }
+    } else {
+      // Insert new record.
+      const payload = {
+        user_id: userId,
+        metric_type: selectedMetric,
+        entry_date: formData.entry_date,
+        value: metricValue,
+        promoters: formData.promoters ? parseInt(formData.promoters) : null,
+        detractors: formData.detractors ? parseInt(formData.detractors) : null,
+        respondents: formData.respondents ? parseInt(formData.respondents) : null,
+        cost: formData.cost ? parseFloat(formData.cost) : null,
+        new_customers: formData.newCustomers ? parseInt(formData.newCustomers) : null,
+        total_score: formData.totalScore ? parseFloat(formData.totalScore) : null,
+        responses: formData.responses ? parseInt(formData.responses) : null,
+        total_effort: formData.totalEffort ? parseFloat(formData.totalEffort) : null,
+      };
+      const { error } = await supabase
+        .from("product_metrics")
+        .insert([payload])
+        .single();
+      if (error) {
+        console.error("Error inserting metric:", error);
+      } else {
+        fetchMetrics();
+        setFormData(initialFormState);
+      }
+    }
+  };
+
+  // Load an entry for editing.
+  const handleEdit = (entry) => {
+    setFormData({
+      entry_date: entry.entry_date,
+      promoters: entry.promoters !== null ? entry.promoters.toString() : "",
+      detractors: entry.detractors !== null ? entry.detractors.toString() : "",
+      respondents: entry.respondents !== null ? entry.respondents.toString() : "",
+      cost: entry.cost !== null ? entry.cost.toString() : "",
+      newCustomers: entry.new_customers !== null ? entry.new_customers.toString() : "",
+      totalScore: entry.total_score !== null ? entry.total_score.toString() : "",
+      responses: entry.responses !== null ? entry.responses.toString() : "",
+      totalEffort: entry.total_effort !== null ? entry.total_effort.toString() : "",
+    });
+    setEditingEntryId(entry.id);
+  };
+
+  // Delete an entry.
+  const handleDelete = async (id) => {
+    const { error } = await supabase
+      .from("product_metrics")
+      .delete()
+      .eq("id", id)
+      .eq("user_id", userId);
+    if (error) {
+      console.error("Error deleting metric:", error);
+    } else {
+      fetchMetrics();
+    }
+  };
+
+  // Returns a short review based on the metric value.
+  const getMetricReview = (metric, value) => {
+    if (metric === "NPS") {
+      if (value >= 50) return "Excellent - High loyalty";
+      else if (value >= 0) return "Good - Generally satisfied";
+      else return "Negative - Improvement needed";
+    } else if (metric === "CAC") {
+      if (value < 100) return "Efficient - Low acquisition cost";
+      else if (value < 200) return "Moderate - Could be improved";
+      else return "High - Acquisition cost is too high";
+    } else if (metric === "CSAT") {
+      if (value >= 4) return "Positive - High satisfaction";
+      else if (value >= 3) return "Neutral - Average satisfaction";
+      else return "Negative - Low satisfaction";
+    } else if (metric === "CES") {
+      if (value <= 2) return "Positive - Minimal effort";
+      else if (value <= 3) return "Neutral - Moderate effort";
+      else return "Negative - Too much effort required";
+    }
+    return "";
+  };
+
+  // Returns an explanation for the metric.
+  const getMetricExplanation = (metric) => {
+    if (metric === "NPS") {
+      return "Net Promoter Score (NPS) measures customer loyalty by asking how likely customers are to recommend your product. It is calculated by subtracting the percentage of detractors from the percentage of promoters.";
+    } else if (metric === "CAC") {
+      return "Customer Acquisition Cost (CAC) is the total cost of acquiring a new customer, divided by the number of new customers acquired.";
+    } else if (metric === "CSAT") {
+      return "Customer Satisfaction Score (CSAT) is an average rating of customer satisfaction on a scale from 1 to 5.";
+    } else if (metric === "CES") {
+      return "Customer Effort Score (CES) measures how easy it is for customers to interact with your product. Lower scores indicate less effort required.";
+    }
+    return "";
+  };
+
+  // Prepare chart data.
+  const sortedData = [...metrics].sort(
+    (a, b) => new Date(a.entry_date) - new Date(b.entry_date)
+  );
+  const chartDataConfig = {
+    labels: sortedData.map((entry) => entry.entry_date),
+    datasets: [
+      {
+        label: `${selectedMetric} Trend`,
+        data: sortedData.map((entry) => Number(entry.value)),
+        borderColor: "rgba(75,192,192,1)",
+        fill: false,
       },
-      y: {
-        beginAtZero: true,
-        title: { display: true, text: yLabel },
-      },
-    },
-  });
+    ],
+  };
 
   return (
-    
-  <div className="mt-16 px-4 w-full">
-        <ProductMetricsFeatures/>
-   
-        <form
-  onSubmit={handleSubmit}
-  className="bg-white shadow-lg rounded px-4 sm:px-8 pt-6 pb-8 mb-12 w-full"
->
-  <div className="mb-4">
-    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="date">
-      Date
-    </label>
-    <input
-      type="date"
-      id="date"
-      name="date"
-      value={form.date}
-      onChange={handleChange}
-      className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 focus:outline-none focus:shadow-outline"
-    />
-  </div>
-
-  <div className="mb-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
-    <div>
-      <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="newUsers">
-        New Users
-      </label>
-      <input
-        type="number"
-        id="newUsers"
-        name="newUsers"
-        value={form.newUsers}
-        onChange={handleChange}
-        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 focus:outline-none focus:shadow-outline"
-        placeholder="e.g. 50"
-      />
-    </div>
-  
-        {/* Retained Users */}
-<div className="mb-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
-  <div>
-    <label
-      className="block text-gray-700 text-sm font-bold mb-2"
-      htmlFor="retainedUsers"
-    >
-      Retained Users
-    </label>
-    <input
-      type="number"
-      id="retainedUsers"
-      name="retainedUsers"
-      value={form.retainedUsers}
-      onChange={handleChange}
-      className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 focus:outline-none focus:shadow-outline"
-      placeholder="e.g. 30"
-    />
-  </div>
-</div>
-
-{/* Churned Users */}
-<div className="mb-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
-  <div>
-    <label
-      className="block text-gray-700 text-sm font-bold mb-2"
-      htmlFor="churnedUsers"
-    >
-      Churned Users
-    </label>
-    <input
-      type="number"
-      id="churnedUsers"
-      name="churnedUsers"
-      value={form.churnedUsers}
-      onChange={handleChange}
-      className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 focus:outline-none focus:shadow-outline"
-      placeholder="e.g. 5"
-    />
-  </div>
-</div>
-
-          <div>
-            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="totalUsersAtStart">
-              Total Users at Start
-            </label>
-            <input
-              type="number"
-              id="totalUsersAtStart"
-              name="totalUsersAtStart"
-              value={form.totalUsersAtStart}
-              onChange={handleChange}
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 focus:outline-none focus:shadow-outline"
-              placeholder="e.g. 200"
-            />
-          </div>
-        </div>
-
-        <div className="flex items-center justify-between">
+    <div className="container mx-auto p-6 mt-10">
+      <MetricsDashbaordFeature />
+      {/* Tabs for selecting the metric */}
+      <div className="flex justify-center items-center space-x-4 mb-4 text-center mt-8">
+        {["NPS", "CAC", "CSAT", "CES"].map((metric) => (
           <button
-            type="submit"
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded focus:outline-none focus:shadow-outline"
+            key={metric}
+            className={`px-4 py-2 rounded ${
+              selectedMetric === metric ? "bg-purple-900 text-white" : "bg-gray-200 text-gray-800"
+            }`}
+            onClick={() => {
+              setSelectedMetric(metric);
+              setFormData(initialFormState);
+              setEditingEntryId(null);
+            }}
           >
-            {isEditing ? 'Update Record' : 'Add Record'}
+            {metric}
           </button>
-        </div>
-      </form>
-{/* Charts Section */}
-<div className="container mx-auto px-2 sm:px-4 mb-12 ">
-  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-    {/* Growth Rate Chart */}
-    <div className="bg-white shadow-lg rounded p-6">
-      <h3 className="text-xl font-bold mb-4">User Growth Rate (%)</h3>
-      <Line
-        data={{
-          labels: chartLabels,
-          datasets: [
-            {
-              label: 'Growth Rate (%)',
-              data: growthRatesData,
-              fill: false,
-              backgroundColor: 'rgba(59,130,246,0.4)',
-              borderColor: 'rgba(59,130,246,1)',
-              tension: 0.2,
-            },
-          ],
-        }}
-        options={chartOptions('User Growth Rate Over Time', 'Growth Rate (%)')}
-      />
-    </div>
-    {/* Additional chart cards can be added here */}
-  </div>
-
-
-
-        {/* Retention Rate Chart */}
-        <div className="bg-white shadow-lg rounded p-6">
-          <h3 className="text-xl font-bold mb-4">User Retention Rate (%)</h3>
-          <Line
-            data={{
-              labels: chartLabels,
-              datasets: [
-                {
-                  label: 'Retention Rate (%)',
-                  data: retentionRatesData,
-                  fill: false,
-                  backgroundColor: 'rgba(16,185,129,0.4)',
-                  borderColor: 'rgba(16,185,129,1)',
-                  tension: 0.2,
-                },
-              ],
-            }}
-            options={chartOptions('User Retention Rate Over Time', 'Retention Rate (%)')}
-          />
-        </div>
-        {/* Churn Rate Chart */}
-        <div className="bg-white shadow-lg rounded p-6">
-          <h3 className="text-xl font-bold mb-4">User Churn Rate (%)</h3>
-          <Line
-            data={{
-              labels: chartLabels,
-              datasets: [
-                {
-                  label: 'Churn Rate (%)',
-                  data: churnRatesData,
-                  fill: false,
-                  backgroundColor: 'rgba(220,38,38,0.4)',
-                  borderColor: 'rgba(220,38,38,1)',
-                  tension: 0.2,
-                },
-              ],
-            }}
-            options={chartOptions('User Churn Rate Over Time', 'Churn Rate (%)')}
-          />
-        </div>
+        ))}
       </div>
 
-      {/* Data Table Section */}
-      <div className="bg-white shadow-lg rounded px-8 pt-6 pb-8 mb-12 max-w-5xl mx-auto">
-        <h3 className="text-2xl font-bold mb-4 text-center">Records</h3>
-        <div className="overflow-x-auto">
-          <table className="min-w-full table-auto">
+      {/* Form for adding/updating an entry */}
+      <form onSubmit={handleSubmit} className="mb-4 p-6 md:p-8 border rounded shadow w-full mx-auto">
+  {/* Form content */}
+
+
+  <h2 className="text-xl font-semibold mb-2">
+    {editingEntryId ? "Edit" : "Add"} {selectedMetric} Entry
+  </h2>
+  <div className="mb-2 w-full">
+  <label className="block mb-1">Date</label>
+  <input
+    type="date"
+    name="entry_date"  // Changed from "date" to "entry_date"
+    value={formData.entry_date}
+    onChange={handleChange}
+    className="block border p-1 w-full"
+    required
+  />
+</div>
+
+  {/* ...other form fields... */}
+
+
+        {selectedMetric === "NPS" && (
+          <>
+            <div className="mb-2">
+              <label className="block">Promoters</label>
+              <input
+                type="number"
+                name="promoters"
+                value={formData.promoters}
+                onChange={handleChange}
+                className="border p-1 w-full"
+                required
+              />
+            </div>
+            <div className="mb-2">
+              <label className="block">Detractors</label>
+              <input
+                type="number"
+                name="detractors"
+                value={formData.detractors}
+                onChange={handleChange}
+                className="border p-1 w-full"
+                required
+              />
+            </div>
+            <div className="mb-2">
+              <label className="block">Respondents</label>
+              <input
+                type="number"
+                name="respondents"
+                value={formData.respondents}
+                onChange={handleChange}
+                className="border p-1 w-full"
+                required
+              />
+            </div>
+          </>
+        )}
+        {selectedMetric === "CAC" && (
+          <>
+            <div className="mb-2">
+              <label className="block">Total Acquisition Cost</label>
+              <input
+                type="number"
+                name="cost"
+                value={formData.cost}
+                onChange={handleChange}
+                className="border p-1 w-full"
+                required
+              />
+            </div>
+            <div className="mb-2">
+              <label className="block">New Customers Acquired</label>
+              <input
+                type="number"
+                name="newCustomers"
+                value={formData.newCustomers}
+                onChange={handleChange}
+                className="border p-1 w-full"
+                required
+              />
+            </div>
+          </>
+        )}
+        {selectedMetric === "CSAT" && (
+          <>
+            <div className="mb-2">
+              <label className="block">Total Score</label>
+              <input
+                type="number"
+                name="totalScore"
+                value={formData.totalScore}
+                onChange={handleChange}
+                className="border p-1 w-full"
+                required
+              />
+            </div>
+            <div className="mb-2">
+              <label className="block">Number of Responses</label>
+              <input
+                type="number"
+                name="responses"
+                value={formData.responses}
+                onChange={handleChange}
+                className="border p-1 w-full"
+                required
+              />
+            </div>
+          </>
+        )}
+        {selectedMetric === "CES" && (
+          <>
+            <div className="mb-2">
+              <label className="block">Total Effort Score</label>
+              <input
+                type="number"
+                name="totalEffort"
+                value={formData.totalEffort}
+                onChange={handleChange}
+                className="border p-1 w-full"
+                required
+              />
+            </div>
+            <div className="mb-2">
+              <label className="block">Number of Responses</label>
+              <input
+                type="number"
+                name="responses"
+                value={formData.responses}
+                onChange={handleChange}
+                className="border p-1 w-full"
+                required
+              />
+            </div>
+          </>
+        )}
+        <button type="submit" className="bg-purple-800 text-white px-4 py-2 rounded w-full">
+          {editingEntryId ? "Update Entry" : "Add Entry"}
+        </button>
+      </form>
+
+      {/* Table of entries */}
+      <div className="mb-4">
+        <h2 className="text-xl font-semibold mb-2">{selectedMetric} Entries</h2>
+        {metrics.length > 0 ? (
+          <table className="min-w-full border">
             <thead>
-              <tr className="bg-gray-200">
-                <th className="px-4 py-2 border-b">Date</th>
-                <th className="px-4 py-2 border-b">New Users</th>
-                <th className="px-4 py-2 border-b">Growth Rate</th>
-                <th className="px-4 py-2 border-b">Retained Users</th>
-                <th className="px-4 py-2 border-b">Retention Rate</th>
-                <th className="px-4 py-2 border-b">Churned Users</th>
-                <th className="px-4 py-2 border-b">Churn Rate</th>
-                <th className="px-4 py-2 border-b">Actions</th>
+              <tr>
+                <th className="border p-2">Date</th>
+                <th className="border p-2">Value</th>
+                <th className="border p-2">Review</th>
+                <th className="border p-2">Actions</th>
               </tr>
             </thead>
             <tbody>
-              {computedRecords
-                .slice()
-                .reverse()
-                .map((record) => (
-                  <tr key={record.id} className="hover:bg-gray-100">
-                    <td className="px-4 py-2 border-b">{record.date}</td>
-                    <td className="px-4 py-2 border-b">{record.newUsers}</td>
-                    <td className="px-4 py-2 border-b">
-                      {record.growthRate === null ? (
-                        'N/A'
-                      ) : (
-                        <span
-                          className={
-                            record.growthRate > 0
-                              ? 'text-green-500'
-                              : record.growthRate < 0
-                              ? 'text-red-500'
-                              : 'text-gray-500'
-                          }
-                        >
-                          {record.growthRate.toFixed(2)}%{' '}
-                          {record.growthRate > 0 ? (
-                            <FaArrowUp className="inline" />
-                          ) : record.growthRate < 0 ? (
-                            <FaArrowDown className="inline" />
-                          ) : (
-                            <FaArrowRight className="inline" />
-                          )}
-                        </span>
-                      )}
-                    </td>
-                    <td className="px-4 py-2 border-b">{record.retainedUsers}</td>
-                    <td className="px-4 py-2 border-b">
-                      <span className="text-green-500">{record.retentionRate.toFixed(2)}%</span>
-                    </td>
-                    <td className="px-4 py-2 border-b">{record.churnedUsers}</td>
-                    <td className="px-4 py-2 border-b">
-                      <span className="text-red-500">{record.churnRate.toFixed(2)}%</span>
-                    </td>
-                    <td className="px-4 py-2 border-b">
+              {metrics.map((entry) => (
+                <tr key={entry.id}>
+                  <td className="border p-2 text-center">{entry.entry_date}</td>
+                  <td className="border p-2 text-center">{Number(entry.value).toFixed(2)}</td>
+                  <td className="border p-2 text-center">{getMetricReview(selectedMetric, entry.value)}</td>
+                  <td className="border p-2 text-center">
+                    <div className="flex flex-col sm:flex-row justify-center items-center gap-2">
                       <button
-                        onClick={() => handleEdit(record.id)}
-                        title="Edit"
-                        className="text-blue-500 hover:text-blue-700 mr-4"
+                        onClick={() => handleEdit(entry)}
+                        className="bg-yellow-500 text-white px-4 py-2 rounded w-full sm:w-auto text-sm"
                       >
-                        <FaEdit />
+                        Edit
                       </button>
                       <button
-                        onClick={() => handleDelete(record.id)}
-                        title="Delete"
-                        className="text-red-500 hover:text-red-700"
+                        onClick={() => handleDelete(entry.id)}
+                        className="bg-red-600 text-white px-4 py-2 rounded w-full sm:w-auto text-sm"
                       >
-                        <FaTrash />
+                        Delete
                       </button>
-                    </td>
-                  </tr>
-                ))}
-              {computedRecords.length === 0 && (
-                <tr>
-                  <td colSpan="8" className="text-center px-4 py-2">
-                    No records found.
+                    </div>
                   </td>
                 </tr>
-              )}
+              ))}
             </tbody>
           </table>
-        </div>
+        ) : (
+          <p className="text-center">No entries available for {selectedMetric}.</p>
+        )}
+      </div>
+
+      {/* Chart displaying the trend */}
+      <div className="mb-4 p-4 border rounded shadow w-full max-w-lg mx-auto">
+        <h2 className="text-xl font-semibold mb-2 text-center">{selectedMetric} Trend Chart</h2>
+        {sortedData.length > 0 ? (
+          <div style={{ height: "400px" }}>
+            <Line data={chartDataConfig} options={{ responsive: true, maintainAspectRatio: false }} />
+          </div>
+        ) : (
+          <p className="text-center">No data to display in chart.</p>
+        )}
+      </div>
+
+      {/* Analysis & Explanation Section */}
+      <div className="mb-4 p-4 border rounded shadow w-full max-w-lg mx-auto">
+        <h2 className="text-xl font-semibold mb-2">Analysis & Explanation</h2>
+        <p>
+          <strong>Metric Explanation:</strong> {getMetricExplanation(selectedMetric)}
+        </p>
+        {sortedData.length > 0 ? (
+          <p>
+            <strong>Latest Entry Analysis:</strong> {getMetricReview(selectedMetric, sortedData[sortedData.length - 1].value)}
+          </p>
+        ) : (
+          <p>No data available for analysis.</p>
+        )}
       </div>
     </div>
   );
 };
 
-export default ProductMetricsComponent;
+export default ProductMetricsDashboard;

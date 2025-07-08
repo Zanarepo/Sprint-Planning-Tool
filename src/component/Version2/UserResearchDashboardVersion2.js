@@ -1,7 +1,7 @@
 // UserResearchDashboard.jsx
 import React, { useState } from 'react';
 import { FaUser, FaEdit, FaTrash,FaPlus,  FaPrint } from 'react-icons/fa';
-import UserResearchFeature from '../UserResearchFeature'
+import UserResearchFeature from './UserResearchFeature'
 
 // Sample initial entries (for demonstration purposes)
 const initialEntries = [

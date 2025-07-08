@@ -29,6 +29,7 @@ import Prioritizations from './component/Prioritizations';
 import MarketResearch from './component/MarketResearch';
 import CompetitorAnalysis from './component/CompetitorAnalysis';
 import UserResearchDashboard from './component/UserResearchDashboard';
+import GTM from "./component/Premiums/GTM";
 
 // Registered Users components
 import Registration from './component/Auth/Registration';
@@ -53,6 +54,9 @@ import Tools from './component/Tools'
 import ForgotPassword from './component/ForgotPassword'
 
 import ResetPassword from './component/ResetPassword'
+//import Syllabus from './component/Syllabus'
+import Sprintifyhome from './component/Sprintifyhome'
+import SprintNavbar from './component/SprintNavbar'
 
 
 
@@ -83,7 +87,9 @@ const App = () => {
 
 
           <Routes>
-            <Route path="/" element={<HomePage />} />
+            <Route path="/sprintify" element={<HomePage/>} />
+            
+            
             <Route path="/sprints" element={<SprintSimulator />} />
             <Route path="/estimator" element={<SprintEstimator />} />
             <Route path="/estimators" element={<Estimator />} />
@@ -161,6 +167,10 @@ const App = () => {
             <Route path="/adminregister" element={<AdminRegistration/>} />
             <Route path="/vote2" element={<Votings />} />
             <Route path="/compare2" element={<FeatureComparisonMatrix />} />
+            <Route path="/gtm" element={<GTM />} />
+             <Route path="/" element={<Sprintifyhome/>} />
+            
+            
             
           {/* Dashboard*/}
 
@@ -174,8 +184,8 @@ const App = () => {
           <Route path="/uat" element={<UATForms />} />
           <Route path="/regdashboard" element={<RegisteredDashboards />} />
           <Route element={<RegisteredDashboards />}>
-            <Route path="/tools" element={<Tools />} />
-            
+          <Route path="/tools" element={<Tools />} />
+         
             </Route>
           </Routes>
 
@@ -211,6 +221,7 @@ const App = () => {
               <Route path="/features" element={<LandingPageFeatures2 />} />
               <Route path="/regdashboard" element={<RegisteredDashboards />} />
               <Route path="/tools" element={<Tools />} />
+              <Route path="/gtm" element={<GTM />} />
               
 
 
@@ -229,12 +240,18 @@ const App = () => {
               <Route path="/usernotify" element={<UsersNotifications />} />
               <Route path="/compare2" element={<FeatureComparisonMatrix />} />
               <Route path="/uat" element={<UATForms />} />
-              
+               <Route path="/" element={<Sprintifyhome/>} />
 
             </Route>
           </Routes>
 
 
+        <Routes>
+          <Route element={<SprintNavbar/>}>
+          <Route path="/" element={<Sprintifyhome/>} />
+         
+            </Route>
+          </Routes>
 
 
 

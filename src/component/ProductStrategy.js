@@ -1,310 +1,388 @@
-import React, { useState } from "react";
-import StrategyFeature from './StrategyFeature'
 
+import React, { useState, useEffect } from "react";
+import { supabase } from "../supabaseClient";
+import StrategyFeature from "./StrategyFeature";
+import StrategyDoc from "./StrategyDoc";
 
-// ---------- Main Component: ProductStrategyTracker ----------
-const ProductStrategyTracker = () => {
-  // State for our list of strategy entries.
+// Initial state for the strategy form (keys match the DB schema)
+const initialStrategyForm = {
+  id: null,
+  name: "",
+  mission: "",
+  vision: "",
+  target_audience: "",
+  customer_problem: "",
+  competitors: "",
+  proposed_solution: "",
+  positioning: "",
+  business_model: "",
+  monetization: "",
+  roadmap: "",
+  go_to_market: "",
+  kpis: "",
+  recommendation: "",
+};
+
+const ProductStrategy = () => {
+  // User and strategies state
+  const [userEmail, setUserEmail] = useState("");
+  const [userId, setUserId] = useState(null);
   const [strategies, setStrategies] = useState([]);
-
-  // Form state for a strategy entry.
-  const [strategyForm, setStrategyForm] = useState({
-    id: null,
-    mission: "",
-    vision: "",
-    targetAudience: "",
-    customerProblem: "",
-    competitors: "",
-    proposedSolution: "",
-    positioning: "",
-    businessModel: "",
-    monetization: "",
-    roadmap: "",
-    goToMarket: "",
-    kpis: "",
-    recommendation: "",
-  });
-
-  // For editing an entry.
+  const [strategyForm, setStrategyForm] = useState(initialStrategyForm);
   const [editingId, setEditingId] = useState(null);
-
-  // View mode: "table" or "organogram"
   const [viewMode, setViewMode] = useState("table");
 
-  // ---------- Handlers for Form ----------
+  // Retrieve user email from localStorage and fetch user id
+  useEffect(() => {
+    const email = localStorage.getItem("userEmail");
+    if (email) {
+      setUserEmail(email);
+      console.debug("User email found in localStorage:", email);
+      (async () => {
+        const { data, error } = await supabase
+          .from("users")
+          .select("id")
+          .eq("email", email)
+          .single();
+        if (error) {
+          console.error("Error fetching user id:", error);
+        } else if (data) {
+          setUserId(data.id);
+        }
+      })();
+    } else {
+      console.debug("No user email found in localStorage.");
+    }
+  }, []);
+
+  // Fetch strategies for the logged-in user
+  useEffect(() => {
+    if (userId) {
+      (async () => {
+        const { data, error } = await supabase
+          .from("product_strategies")
+          .select("*")
+          .eq("user_id", userId);
+        if (error) {
+          console.error("Error fetching strategies:", error);
+        } else if (data) {
+          // Ensure we store only non-null entries.
+          setStrategies(data.filter((d) => d != null));
+        }
+      })();
+    }
+  }, [userId]);
+
+  // ========= CRUD Operations =========
+
+  // Create a new strategy (remove the id field so PostgreSQL auto-generates it)
+  const createStrategy = async (newStrategy) => {
+    const { id, ...strategyData } = newStrategy;
+    const { data, error } = await supabase
+      .from("product_strategies")
+      .insert([{ ...strategyData, user_id: userId }])
+      .single();
+    if (error) {
+      console.error("Error creating strategy:", error);
+    } else if (data) {
+      setStrategies((prev) => [...prev, data].filter((s) => s != null));
+    }
+  };
+
+  // Update an existing strategy.
+  const updateStrategy = async (updatedStrategy) => {
+    if (!updatedStrategy.id) {
+      console.error("No strategy id provided for update.");
+      return;
+    }
+    const { data, error } = await supabase
+      .from("product_strategies")
+      .update(updatedStrategy)
+      .eq("id", updatedStrategy.id)
+      .single();
+    if (error || !data) {
+      console.error("Error updating strategy:", error);
+    } else {
+      setStrategies((prevStrategies) =>
+        prevStrategies.filter((s) => s != null).map((s) =>
+          s.id === data.id ? data : s
+        )
+      );
+    }
+  };
+
+  // Delete a strategy.
+  const deleteStrategy = async (id) => {
+    const { error } = await supabase
+      .from("product_strategies")
+      .delete()
+      .eq("id", id);
+    if (error) {
+      console.error("Error deleting strategy:", error);
+    } else {
+      setStrategies((prevStrategies) =>
+        prevStrategies.filter((s) => s && s.id !== id)
+      );
+    }
+  };
+
+  // ========= Form Handlers =========
+
   const handleFormChange = (e) => {
     const { name, value } = e.target;
     setStrategyForm({ ...strategyForm, [name]: value });
   };
 
-  const handleFormSubmit = (e) => {
+  const handleFormSubmit = async (e) => {
     e.preventDefault();
-    // Validate required fields (for this example, require Mission, Vision, and Roadmap).
-    if (!strategyForm.mission || !strategyForm.vision || !strategyForm.roadmap) {
-      alert("Please fill in the required fields: Mission, Vision, and Roadmap.");
+    // Validate required fields: name, mission, vision, and roadmap
+    if (
+      !strategyForm.name ||
+      !strategyForm.mission ||
+      !strategyForm.vision ||
+      !strategyForm.roadmap
+    ) {
+      alert("Please fill in the required fields: Name, Mission, Vision, and Roadmap.");
       return;
     }
-    const newStrategy = {
-      ...strategyForm,
-      id: strategyForm.id || Date.now(),
-    };
-    if (strategyForm.id) {
-      setStrategies(strategies.map((s) => (s.id === strategyForm.id ? newStrategy : s)));
+    if (editingId) {
+      // Merge stored editingId in case strategyForm.id is missing
+      await updateStrategy({ ...strategyForm, id: editingId });
       setEditingId(null);
     } else {
-      setStrategies([...strategies, newStrategy]);
+      await createStrategy(strategyForm);
     }
-    // Clear the form fields.
-    setStrategyForm({
-      id: null,
-      mission: "",
-      vision: "",
-      targetAudience: "",
-      customerProblem: "",
-      competitors: "",
-      proposedSolution: "",
-      positioning: "",
-      businessModel: "",
-      monetization: "",
-      roadmap: "",
-      goToMarket: "",
-      kpis: "",
-      recommendation: "",
-    });
+    setStrategyForm(initialStrategyForm);
   };
 
-  const handleEdit = (id) => {
-    const strat = strategies.find((s) => s.id === id);
-    if (strat) {
-      setStrategyForm(strat);
-      setEditingId(strat.id);
-    }
+  const handleEdit = (strategy) => {
+    setStrategyForm(strategy);
+    setEditingId(strategy.id);
   };
 
-  const handleDelete = (id) => {
+  const handleDelete = async (id) => {
     if (window.confirm("Are you sure you want to delete this strategy?")) {
-      setStrategies(strategies.filter((s) => s.id !== id));
+      await deleteStrategy(id);
     }
   };
 
-  // Reset the form (simulate "Back" functionality).
   const handleResetForm = () => {
-    setStrategyForm({
-      id: null,
-      mission: "",
-      vision: "",
-      targetAudience: "",
-      customerProblem: "",
-      competitors: "",
-      proposedSolution: "",
-      positioning: "",
-      businessModel: "",
-      monetization: "",
-      roadmap: "",
-      goToMarket: "",
-      kpis: "",
-      recommendation: "",
-    });
+    setStrategyForm(initialStrategyForm);
     setEditingId(null);
   };
 
-  // Print the dashboard.
+  // ========= Grouping for Organogram View =========
 
-  // Group strategies by Mission (or any other field) for Organogram view.
-  const groupedData = strategies.reduce((acc, strat) => {
-    if (!acc[strat.mission]) {
-      acc[strat.mission] = [];
-    }
-    acc[strat.mission].push(strat);
-    return acc;
-  }, {});
+  const groupedData = strategies
+    .filter((s) => s != null)
+    .reduce((acc, strat) => {
+      const key = strat.mission || "Unknown Mission";
+      if (!acc[key]) {
+        acc[key] = [];
+      }
+      acc[key].push(strat);
+      return acc;
+    }, {});
 
-  // ---------- Renderers for Views ----------
-
+  // ========= Rendering =========
 
   return (
     <div className="container mx-auto p-6 mt-8">
+      <StrategyFeature />
+      <h1 className="text-3xl font-bold mb-4 text-center">Product Strategy Tracker</h1>
+      {userEmail && <p className="mb-4 text-center">Welcome, {userEmail}</p>}
 
-      <StrategyFeature/>
-    
-      {/* Explanation Section */}
-      <div className="bg-blue-50 p-4 rounded-lg shadow mb-6 max-w-3xl mx-auto">
-        <h2 className="text-2xl font-bold mb-2 text-center">Product Strategy Overview</h2>
-        <p className="text-gray-700">
-          <strong>Mission & Vision</strong>: Define why your company exists and the future you want to create.<br /><br />
-          <strong>Understanding the Market & Customers</strong>: Identify your target audience, their problems, competitors, and your solution.<br /><br />
-          <strong>Product Positioning & Unique Value</strong>: Explain what makes your product unique.<br /><br />
-          <strong>Business Model & Monetization</strong>: Outline how your product makes money.<br /><br />
-          <strong>Product Roadmap</strong>: List key features and release timelines.<br /><br />
-          <strong>Go-To-Market Strategy</strong>: Define how you'll reach your customers.<br /><br />
-          <strong>Measuring Success</strong>: Specify the KPIs you'll track and any recommendations for improvement.
-        </p>
-      </div>
-
-      {/* Form Section */}
+      {/* Strategy Document Creation / Editing Form */}
       <form onSubmit={handleFormSubmit} className="mb-6 p-4 border rounded shadow">
-        <h2 className="text-xl font-semibold mb-2">
+        <h3 className="text-xl font-semibold mb-2">
           {editingId ? "Edit Product Strategy" : "Create New Product Strategy"}
-        </h2>
+        </h3>
 
-        {/* Section 1: Mission & Vision */}
+        {/* Strategy Name */}
         <div className="mb-4">
-          <h3 className="font-bold mb-1">Mission & Vision</h3>
-          <p className="text-sm text-gray-600 mb-1">
-            <em>Mission:</em> Why does your company exist?<br />
-            <em>Vision:</em> What future do you want to create?
-          </p>
+          <label className="font-bold mb-1 block" htmlFor="name">
+            Strategy Name<span className="text-red-600">*</span>
+          </label>
+          <input
+            type="text"
+            name="name"
+            value={strategyForm.name}
+            onChange={handleFormChange}
+            placeholder="Enter strategy name"
+            className="border p-2 w-full"
+            required
+          />
+        </div>
+
+        {/* Mission & Vision */}
+        <div className="mb-4">
+          <label className="font-bold mb-1 block" htmlFor="mission">
+            Mission<span className="text-red-600">*</span>
+          </label>
           <input
             type="text"
             name="mission"
             value={strategyForm.mission}
             onChange={handleFormChange}
-            placeholder='e.g., "To give people the power to build community..."'
+            placeholder="Enter mission"
             className="border p-2 w-full mb-2"
             required
           />
+          <label className="font-bold mb-1 block" htmlFor="vision">
+            Vision<span className="text-red-600">*</span>
+          </label>
           <input
             type="text"
             name="vision"
             value={strategyForm.vision}
             onChange={handleFormChange}
-            placeholder='e.g., "To create the next evolution of social connection..."'
+            placeholder="Enter vision"
             className="border p-2 w-full"
             required
           />
         </div>
 
-        {/* Section 2: Understanding the Market & Customers */}
+        {/* Market & Customers */}
         <div className="mb-4">
-          <h3 className="font-bold mb-1">Understanding the Market & Customers</h3>
-          <p className="text-sm text-gray-600 mb-1">
-            Who is your product for? What problem does it solve? Who are the competitors? What is your solution?
-          </p>
+          <label className="font-bold mb-1 block" htmlFor="target_audience">
+            Target Audience
+          </label>
           <input
             type="text"
-            name="targetAudience"
-            value={strategyForm.targetAudience}
+            name="target_audience"
+            value={strategyForm.target_audience}
             onChange={handleFormChange}
-            placeholder="Target Audience (e.g., teens, small businesses)"
+            placeholder="e.g., teens, small businesses"
             className="border p-2 w-full mb-2"
           />
+          <label className="font-bold mb-1 block" htmlFor="customer_problem">
+            Customer Problem
+          </label>
           <input
             type="text"
-            name="customerProblem"
-            value={strategyForm.customerProblem}
+            name="customer_problem"
+            value={strategyForm.customer_problem}
             onChange={handleFormChange}
-            placeholder="Customer Problem"
+            placeholder="Describe the customer problem"
             className="border p-2 w-full mb-2"
           />
+          <label className="font-bold mb-1 block" htmlFor="competitors">
+            Competitors
+          </label>
           <input
             type="text"
             name="competitors"
             value={strategyForm.competitors}
             onChange={handleFormChange}
-            placeholder="Competitors"
+            placeholder="List competitors"
             className="border p-2 w-full mb-2"
           />
+          <label className="font-bold mb-1 block" htmlFor="proposed_solution">
+            Proposed Solution
+          </label>
           <input
             type="text"
-            name="proposedSolution"
-            value={strategyForm.proposedSolution}
+            name="proposed_solution"
+            value={strategyForm.proposed_solution}
             onChange={handleFormChange}
-            placeholder="Proposed Solution"
+            placeholder="Describe your solution"
             className="border p-2 w-full"
           />
         </div>
 
-        {/* Section 3: Product Positioning & Unique Value */}
+        {/* Product Positioning */}
         <div className="mb-4">
-          <h3 className="font-bold mb-1">Product Positioning & Unique Value</h3>
-          <p className="text-sm text-gray-600 mb-1">
-            What makes your product unique? Why should customers choose it?
-          </p>
+          <label className="font-bold mb-1 block" htmlFor="positioning">
+            Product Positioning & Unique Value
+          </label>
           <input
             type="text"
             name="positioning"
             value={strategyForm.positioning}
             onChange={handleFormChange}
-            placeholder="Unique Value Proposition / Positioning"
+            placeholder="What makes your product unique?"
             className="border p-2 w-full"
           />
         </div>
 
-        {/* Section 4: Business Model & Monetization */}
+        {/* Business Model & Monetization */}
         <div className="mb-4">
-          <h3 className="font-bold mb-1">Business Model & Monetization</h3>
-          <p className="text-sm text-gray-600 mb-1">
-            How will your product make money? (e.g., advertising, subscriptions)
-          </p>
+          <label className="font-bold mb-1 block" htmlFor="business_model">
+            Business Model
+          </label>
           <input
             type="text"
-            name="businessModel"
-            value={strategyForm.businessModel}
+            name="business_model"
+            value={strategyForm.business_model}
             onChange={handleFormChange}
-            placeholder="Business Model"
+            placeholder="e.g., subscription, advertising"
             className="border p-2 w-full mb-2"
           />
+          <label className="font-bold mb-1 block" htmlFor="monetization">
+            Monetization Strategy
+          </label>
           <input
             type="text"
             name="monetization"
             value={strategyForm.monetization}
             onChange={handleFormChange}
-            placeholder="Monetization Strategy"
+            placeholder="How will your product make money?"
             className="border p-2 w-full"
           />
         </div>
 
-        {/* Section 5: Product Roadmap */}
+        {/* Product Roadmap */}
         <div className="mb-4">
-          <h3 className="font-bold mb-1">Product Roadmap</h3>
-          <p className="text-sm text-gray-600 mb-1">
-            Outline key features and their planned release dates.
-          </p>
+          <label className="font-bold mb-1 block" htmlFor="roadmap">
+            Product Roadmap<span className="text-red-600">*</span>
+          </label>
           <textarea
             name="roadmap"
             value={strategyForm.roadmap}
             onChange={handleFormChange}
-            placeholder="e.g., 2023: Launch new mobile app; 2024: Integrate AI-powered recommendations..."
+            placeholder="Outline key features and planned release dates."
             rows="3"
             className="border p-2 w-full"
+            required
           ></textarea>
         </div>
 
-        {/* Section 6: Go-To-Market Strategy */}
+        {/* Go-To-Market Strategy */}
         <div className="mb-4">
-          <h3 className="font-bold mb-1">Go-To-Market Strategy</h3>
-          <p className="text-sm text-gray-600 mb-1">
-            How will you launch and promote your product?
-          </p>
+          <label className="font-bold mb-1 block" htmlFor="go_to_market">
+            Go-To-Market Strategy
+          </label>
           <textarea
-            name="goToMarket"
-            value={strategyForm.goToMarket}
+            name="go_to_market"
+            value={strategyForm.go_to_market}
             onChange={handleFormChange}
-            placeholder="e.g., Leverage social media, influencer partnerships, paid ads..."
+            placeholder="How will you launch and promote your product?"
             rows="3"
             className="border p-2 w-full"
           ></textarea>
         </div>
 
-        {/* Section 7: Measuring Success */}
+        {/* Measuring Success */}
         <div className="mb-4">
-          <h3 className="font-bold mb-1">Measuring Success</h3>
-          <p className="text-sm text-gray-600 mb-1">
-            What KPIs will you track? (e.g., DAU, conversion rate, revenue, customer satisfaction)
-          </p>
+          <label className="font-bold mb-1 block" htmlFor="kpis">
+            Key Performance Indicators
+          </label>
           <input
             type="text"
             name="kpis"
             value={strategyForm.kpis}
             onChange={handleFormChange}
-            placeholder="Key Performance Indicators"
+            placeholder="e.g., DAU, conversion rate, revenue"
             className="border p-2 w-full mb-2"
           />
+          <label className="font-bold mb-1 block" htmlFor="recommendation">
+            Recommendation / Notes
+          </label>
           <textarea
             name="recommendation"
             value={strategyForm.recommendation}
             onChange={handleFormChange}
-            placeholder="Your review or recommendation (optional)"
+            placeholder="Your review or recommendations (optional)"
             rows="2"
             className="border p-2 w-full"
           ></textarea>
@@ -314,45 +392,45 @@ const ProductStrategyTracker = () => {
           <button type="submit" className="bg-indigo-600 text-white px-4 py-2 rounded">
             {editingId ? "Update Strategy" : "Create Strategy"}
           </button>
-          <div type="" onClick={handleResetForm} className="text-white px-4 py-2 rounded">
-           
-          </div>
+          <button type="button" onClick={handleResetForm} className="bg-gray-500 text-white px-4 py-2 rounded">
+            Reset
+          </button>
         </div>
       </form>
 
-      {/* View Mode & Print Buttons */}
+      {/* View Mode Buttons */}
       <div className="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-4 mb-4">
-  <button
-    onClick={() => setViewMode("table")}
-    className={`w-full sm:w-auto px-4 py-2 rounded ${
-      viewMode === "table" ? "bg-indigo-600 text-white" : "bg-gray-200 text-gray-800"
-    }`}
-  >
-    Table View
-  </button>
-  <button
-    onClick={() => setViewMode("organogram")}
-    className={`w-full sm:w-auto px-4 py-2 rounded ${
-      viewMode === "organogram" ? "bg-indigo-600 text-white" : "bg-gray-200 text-gray-800"
-    }`}
-  >
-    Organogram View
-  </button>
-  <button
-    onClick={() => window.print()}
-    className="w-full sm:w-auto px-4 py-2 rounded bg-gray-800 text-white"
-  >
-    Print Dashboard
-  </button>
-</div>
+        <button
+          onClick={() => setViewMode("table")}
+          className={`w-full sm:w-auto px-4 py-2 rounded ${
+            viewMode === "table" ? "bg-indigo-600 text-white" : "bg-gray-200 text-gray-800"
+          }`}
+        >
+          Table View
+        </button>
+        <button
+          onClick={() => setViewMode("organogram")}
+          className={`w-full sm:w-auto px-4 py-2 rounded ${
+            viewMode === "organogram" ? "bg-indigo-600 text-white" : "bg-gray-200 text-gray-800"
+          }`}
+        >
+          Organogram View
+        </button>
+        <button
+          onClick={() => window.print()}
+          className="w-full sm:w-auto px-4 py-2 rounded bg-gray-800 text-white"
+        >
+          Print Dashboard
+        </button>
+      </div>
 
-
-      {/* Dashboard Section */}
+      {/* Dashboard: Display Strategies */}
       {viewMode === "table" ? (
         <div className="overflow-x-auto">
           <table className="min-w-full border">
             <thead className="bg-indigo-200">
               <tr>
+                <th className="border p-2">Name</th>
                 <th className="border p-2">Mission</th>
                 <th className="border p-2">Vision</th>
                 <th className="border p-2">Target Audience</th>
@@ -370,85 +448,109 @@ const ProductStrategyTracker = () => {
               </tr>
             </thead>
             <tbody>
-              {strategies.map((s) => (
-                <tr key={s.id} className="border-t">
-                  <td className="border p-2">{s.mission}</td>
-                  <td className="border p-2">{s.vision}</td>
-                  <td className="border p-2">{s.targetAudience}</td>
-                  <td className="border p-2">{s.customerProblem}</td>
-                  <td className="border p-2">{s.competitors}</td>
-                  <td className="border p-2">{s.proposedSolution}</td>
-                  <td className="border p-2">{s.positioning}</td>
-                  <td className="border p-2">{s.businessModel}</td>
-                  <td className="border p-2">{s.monetization}</td>
-                  <td className="border p-2">{s.roadmap}</td>
-                  <td className="border p-2">{s.goToMarket}</td>
-                  <td className="border p-2">{s.kpis}</td>
-                  <td className="border p-2">{s.recommendation}</td>
-                  <td className="border p-2 text-center">
-                    <button
-                      onClick={() => handleEdit(s.id)}
-                      className="bg-yellow-500 text-white px-2 py-1 mr-2 rounded"
-                    >
-                      Edit
-                    </button>
-                    <button
-                      onClick={() => handleDelete(s.id)}
-                      className="bg-red-600 text-white px-2 py-1 rounded"
-                    >
-                      Delete
-                    </button>
-                  </td>
-                </tr>
-              ))}
-              {strategies.length === 0 && (
+              {strategies
+                .filter((s) => s != null)
+                .map((s) => (
+                  <tr key={s.id} className="border-t">
+                    <td className="border p-2">{s.name}</td>
+                    <td className="border p-2">{s.mission}</td>
+                    <td className="border p-2">{s.vision}</td>
+                    <td className="border p-2">{s.target_audience}</td>
+                    <td className="border p-2">{s.customer_problem}</td>
+                    <td className="border p-2">{s.competitors}</td>
+                    <td className="border p-2">{s.proposed_solution}</td>
+                    <td className="border p-2">{s.positioning}</td>
+                    <td className="border p-2">{s.business_model}</td>
+                    <td className="border p-2">{s.monetization}</td>
+                    <td className="border p-2">{s.roadmap}</td>
+                    <td className="border p-2">{s.go_to_market}</td>
+                    <td className="border p-2">{s.kpis}</td>
+                    <td className="border p-2">{s.recommendation}</td>
+                    <td className="border p-2 text-center">
+                      <button onClick={() => handleEdit(s)} className="bg-yellow-500 text-white px-2 py-1 mr-2 rounded">
+                        Edit
+                      </button>
+                      <button onClick={() => handleDelete(s.id)} className="bg-red-600 text-white px-2 py-1 rounded">
+                        Delete
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              {strategies.filter((s) => s != null).length === 0 && (
                 <tr>
-                  <td colSpan="14" className="border p-2 text-center">
+                  <td colSpan="15" className="border p-2 text-center">
                     No strategies available.
                   </td>
                 </tr>
               )}
             </tbody>
           </table>
+          <StrategyDoc/>
         </div>
       ) : (
+        // Organogram View
         <div>
           {Object.keys(groupedData).length === 0 ? (
             <p className="text-center">No strategies to display.</p>
           ) : (
             Object.keys(groupedData).map((mission) => (
               <div key={mission} className="mb-6 border p-4 rounded shadow">
-                <h2 className="text-xl font-bold">{mission}</h2>
-                {groupedData[mission].map((s) => (
-                  <div key={s.id} className="ml-4 mt-2 border-l pl-4">
-                    <h3 className="text-lg font-semibold">Vision: {s.vision}</h3>
-                    <p><strong>Target Audience:</strong> {s.targetAudience}</p>
-                    <p><strong>Customer Problem:</strong> {s.customerProblem}</p>
-                    <p><strong>Competitors:</strong> {s.competitors}</p>
-                    <p><strong>Proposed Solution:</strong> {s.proposedSolution}</p>
-                    <p><strong>Positioning:</strong> {s.positioning}</p>
-                    <p><strong>Business Model:</strong> {s.businessModel}</p>
-                    <p><strong>Monetization:</strong> {s.monetization}</p>
-                    <p><strong>Roadmap:</strong> {s.roadmap}</p>
-                    <p><strong>Go-To-Market:</strong> {s.goToMarket}</p>
-                    <p><strong>KPIs:</strong> {s.kpis}</p>
-                    <p><strong>Recommendation:</strong> {s.recommendation}</p>
-                    <div className="mt-2">
-                      <button
-                        onClick={() => handleEdit(s.id)}
-                        className="bg-yellow-500 text-white px-2 py-1 mr-2 rounded"
-                      >
-                        Edit
-                      </button>
-                      <button
-                        onClick={() => handleDelete(s.id)}
-                        className="bg-red-600 text-white px-2 py-1 rounded"
-                      >
-                        Delete
-                      </button>
+                <h3 className="text-xl font-bold">{mission}</h3>
+                {groupedData[mission]
+                  .filter((s) => s != null)
+                  .map((s) => (
+                    <div key={s.id} className="ml-4 mt-2 border-l pl-4">
+                      <p>
+                        <strong>Name:</strong> {s.name}
+                      </p>
+                      <p>
+                        <strong>Vision:</strong> {s.vision}
+                      </p>
+                      <p>
+                        <strong>Target Audience:</strong> {s.target_audience}
+                      </p>
+                      <p>
+                        <strong>Customer Problem:</strong> {s.customer_problem}
+                      </p>
+                      <p>
+                        <strong>Competitors:</strong> {s.competitors}
+                      </p>
+                      <p>
+                        <strong>Proposed Solution:</strong> {s.proposed_solution}
+                      </p>
+                      <p>
+                        <strong>Positioning:</strong> {s.positioning}
+                      </p>
+                      <p>
+                        <strong>Business Model:</strong> {s.business_model}
+                      </p>
+                      <p>
+                        <strong>Monetization:</strong> {s.monetization}
+                      </p>
+                      <p>
+                        <strong>Roadmap:</strong> {s.roadmap}
+                      </p>
+                      <p>
+                        <strong>Go-To-Market:</strong> {s.go_to_market}
+                      </p>
+                      <p>
+                        <strong>KPIs:</strong> {s.kpis}
+                      </p>
+                      <p>
+                        <strong>Recommendation:</strong> {s.recommendation}
+                      </p>
+                      <div className="mt-2">
+                        <button onClick={() => handleEdit(s)} className="bg-yellow-500 text-white px-2 py-1 mr-2 rounded">
+                          Edit
+                        </button>
+                        <button onClick={() => handleDelete(s.id)} className="bg-red-600 text-white px-2 py-1 rounded">
+                          Delete
+                        </button>
+                      </div>
+                    
                     </div>
-                  </div>
-                ))}
+                   
+                  ))}
               </div>
             ))
           )}
@@ -458,4 +560,4 @@ const ProductStrategyTracker = () => {
   );
 };
 
-export default ProductStrategyTracker;
+export default ProductStrategy;

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, useMemo } from "react";
-import { supabase } from "../../supabaseClient";
-import CohortStickinessFeature from '../CohortStickinessFeature'
+import { supabase } from "../supabaseClient";
+import CohortStickinessFeature from './CohortStickinessFeature'
 
 
 import { Line } from "react-chartjs-2";

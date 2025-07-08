@@ -1,10 +1,10 @@
-import React, { useState } from "react";
-import DailystandupFeature from './DailystandupFeature'
 
-
-
+import React, { useState, useEffect } from "react";
+import DailystandupFeature from "./DailystandupFeature";
+import { supabase } from "../supabaseClient";
 
 export default function CollaborativeStandup() {
+  // State for current (unsaved) session entries
   const [standups, setStandups] = useState([]);
   const [newStandup, setNewStandup] = useState({
     person: "",
@@ -16,14 +16,66 @@ export default function CollaborativeStandup() {
   // Object to store inline edits: { [entryId]: { ...editedValues } }
   const [editEntries, setEditEntries] = useState({});
 
+  // User and session states
+  const [, setUserEmail] = useState("");
+  const [userId, setUserId] = useState(null);
+  const [sessionName, setSessionName] = useState("");
+  const [sessions, setSessions] = useState([]); // list of saved sessions
+
+  // Retrieve user email from localStorage and fetch user id from Supabase
+  useEffect(() => {
+    const email = localStorage.getItem("userEmail");
+    if (email) {
+      setUserEmail(email);
+      console.debug("User email found in localStorage:", email);
+      const fetchUserId = async () => {
+        const { data, error } = await supabase
+          .from("users")
+          .select("id")
+          .eq("email", email)
+          .single();
+        if (error) {
+          console.error("Error fetching user id:", error);
+        } else if (data) {
+          setUserId(data.id);
+        }
+      };
+      fetchUserId();
+    } else {
+      console.debug("No user email found in localStorage.");
+    }
+  }, []);
+
+  // Fetch saved sessions for the logged-in user
+  useEffect(() => {
+    const fetchSessions = async () => {
+      if (userId) {
+        const { data, error } = await supabase
+          .from("daily_standup_sessions")
+          .select("*")
+          .eq("user_id", userId);
+        if (error) {
+          console.error("Error fetching sessions:", error);
+        } else {
+          setSessions(data);
+        }
+      }
+    };
+    fetchSessions();
+  }, [userId]);
+
   // Handle changes for the new entry form
   const handleNewChange = (field, value) => {
     setNewStandup((prev) => ({ ...prev, [field]: value }));
   };
 
-  // Add a new standup entry
+  // Add a new standup entry to the current session (local state)
   const handleAddNewEntry = (e) => {
     e.preventDefault();
+    if (!newStandup.person.trim() || !newStandup.update.trim()) {
+      alert("Please fill in the required fields.");
+      return;
+    }
     const entry = {
       ...newStandup,
       id: crypto.randomUUID(),
@@ -76,13 +128,13 @@ export default function CollaborativeStandup() {
     cancelEditing(id);
   };
 
-  // Delete an entry
+  // Delete an entry from the current session
   const handleDelete = (id) => {
     setStandups((prev) => prev.filter((entry) => entry.id !== id));
     cancelEditing(id);
   };
 
-  // Calculate dashboard counts based on non-empty fields
+  // Dashboard counts based on current session entries
   const successCount = standups.filter(
     (entry) => entry.successes && entry.successes.trim() !== ""
   ).length;
@@ -93,10 +145,87 @@ export default function CollaborativeStandup() {
     (entry) => entry.blockers && entry.blockers.trim() !== ""
   ).length;
 
+  // Save the current session (all current entries) as a unique session in the database
+  // Map "update" (UI) to DB field "today_focus"
+  const handleSaveSession = async () => {
+    if (!sessionName.trim()) {
+      alert("Please provide a session name.");
+      return;
+    }
+    if (!userId) {
+      alert("User not identified.");
+      return;
+    }
+    const dbEntries = standups.map((entry) => ({
+      person: entry.person,
+      today_focus: entry.update,
+      successes: entry.successes,
+      challenges: entry.challenges,
+      blockers: entry.blockers,
+      timestamp: entry.timestamp,
+    }));
+    const sessionData = {
+      user_id: userId,
+      session_name: sessionName,
+      entries: dbEntries,
+    };
+    const { error } = await supabase
+      .from("daily_standup_sessions")
+      .insert([sessionData]);
+    if (error) {
+      console.error("Error saving session:", error);
+      alert("Error saving session. Please try again.");
+    } else {
+      alert("Session saved successfully!");
+      setStandups([]);
+      setSessionName("");
+      // Refresh the sessions list
+      const { data: sessionsData, error: sessionsError } = await supabase
+        .from("daily_standup_sessions")
+        .select("*")
+        .eq("user_id", userId);
+      if (sessionsError) {
+        console.error("Error fetching sessions:", sessionsError);
+      } else {
+        setSessions(sessionsData);
+      }
+    }
+  };
+
+  // Delete an entire saved session from the database
+  const handleDeleteSession = async (id) => {
+    if (window.confirm("Are you sure you want to delete this session?")) {
+      const { error } = await supabase
+        .from("daily_standup_sessions")
+        .delete()
+        .eq("id", id);
+      if (error) {
+        console.error("Error deleting session:", error);
+        alert("Error deleting session. Please try again.");
+      } else {
+        // Refresh sessions list
+        const { data: sessionsData, error: sessionsError } = await supabase
+          .from("daily_standup_sessions")
+          .select("*")
+          .eq("user_id", userId);
+        if (sessionsError) {
+          console.error("Error fetching sessions:", sessionsError);
+        } else {
+          setSessions(sessionsData);
+        }
+      }
+    }
+  };
+
+  // Print current session
+  const handlePrint = () => {
+    window.print();
+  };
+
   return (
     <div className="max-w-6xl mx-auto p-6 space-y-8 mt-16">
       {/* Header */}
-      <DailystandupFeature/>
+      <DailystandupFeature />
       <header className="bg-blue-50 p-4 rounded-lg text-center">
         <h1 className="text-2xl font-bold">Daily Standup Dashboard</h1>
       </header>
@@ -178,7 +307,34 @@ export default function CollaborativeStandup() {
         </button>
       </form>
 
-      {/* Dashboard Display Board */}
+      {/* Save Session Form */}
+      <div className="bg-white p-6 rounded-lg shadow-md space-y-4">
+        <h2 className="text-xl font-semibold">Save Current Session</h2>
+        <input
+          type="text"
+          value={sessionName}
+          onChange={(e) => setSessionName(e.target.value)}
+          placeholder="Session Name"
+          className="border p-2 rounded w-full"
+          required
+        />
+        <div className="flex gap-4">
+          <button
+            onClick={handleSaveSession}
+            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+          >
+            Save Session
+          </button>
+          <button
+            onClick={handlePrint}
+            className="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700"
+          >
+            Print Session
+          </button>
+        </div>
+      </div>
+
+      {/* Dashboard Display Board for current session */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div className="bg-green-200 p-4 rounded-lg text-center">
           <h2 className="text-xl font-bold text-green-800">Successes</h2>
@@ -194,7 +350,7 @@ export default function CollaborativeStandup() {
         </div>
       </div>
 
-      {/* Standup Entries Table */}
+      {/* Standup Entries Table for current session */}
       <div className="overflow-x-auto">
         <table className="min-w-full table-auto border-collapse">
           <thead>
@@ -246,11 +402,7 @@ export default function CollaborativeStandup() {
                       <textarea
                         value={editEntries[entry.id].successes}
                         onChange={(e) =>
-                          handleEditChange(
-                            entry.id,
-                            "successes",
-                            e.target.value
-                          )
+                          handleEditChange(entry.id, "successes", e.target.value)
                         }
                         className="w-full p-1 border rounded"
                       />
@@ -263,11 +415,7 @@ export default function CollaborativeStandup() {
                       <textarea
                         value={editEntries[entry.id].challenges}
                         onChange={(e) =>
-                          handleEditChange(
-                            entry.id,
-                            "challenges",
-                            e.target.value
-                          )
+                          handleEditChange(entry.id, "challenges", e.target.value)
                         }
                         className="w-full p-1 border rounded"
                       />
@@ -280,11 +428,7 @@ export default function CollaborativeStandup() {
                       <textarea
                         value={editEntries[entry.id].blockers}
                         onChange={(e) =>
-                          handleEditChange(
-                            entry.id,
-                            "blockers",
-                            e.target.value
-                          )
+                          handleEditChange(entry.id, "blockers", e.target.value)
                         }
                         className="w-full p-1 border rounded"
                       />
@@ -333,6 +477,79 @@ export default function CollaborativeStandup() {
             })}
           </tbody>
         </table>
+      </div>
+
+      {/* Saved Sessions List */}
+      <div className="mt-8">
+        <h2 className="text-2xl font-bold mb-4">Saved Sessions</h2>
+        {sessions.length === 0 ? (
+          <p>No saved sessions found.</p>
+        ) : (
+          <ul className="space-y-4">
+            {sessions.map((session) => (
+              <li key={session.id} className="border p-4 rounded">
+                <h3 className="font-bold text-lg">{session.session_name}</h3>
+                <p className="text-sm text-gray-600">
+                  Created: {new Date(session.created_at).toLocaleString()}
+                </p>
+                {/* Display the table content of the session */}
+                {session.entries && session.entries.length > 0 && (
+                  <div className="overflow-x-auto mt-2">
+                    <table className="min-w-full table-auto border-collapse text-sm">
+                      <thead>
+                        <tr className="bg-gray-200">
+                          <th className="px-4 py-2 border">Team Member</th>
+                          <th className="px-4 py-2 border">Focus</th>
+                          <th className="px-4 py-2 border">Successes</th>
+                          <th className="px-4 py-2 border">Challenges</th>
+                          <th className="px-4 py-2 border">Blockers</th>
+                          <th className="px-4 py-2 border">Timestamp</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {session.entries.map((entry) => (
+                          <tr key={entry.id} className="hover:bg-gray-100">
+                            <td className="px-4 py-2 border">{entry.person}</td>
+                            <td className="px-4 py-2 border">{entry.today_focus}</td>
+                            <td className="px-4 py-2 border">{entry.successes}</td>
+                            <td className="px-4 py-2 border">{entry.challenges}</td>
+                            <td className="px-4 py-2 border">{entry.blockers}</td>
+                            <td className="px-4 py-2 border text-xs">
+                              {new Date(entry.timestamp).toLocaleTimeString()}
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
+                <div className="flex gap-2 mt-2">
+                  <button
+                    onClick={() => {
+                      // Load session entries into the current editor for editing.
+                      // Map DB field "today_focus" to "update" for the UI.
+                      const mappedEntries = session.entries.map((entry) => ({
+                        ...entry,
+                        update: entry.today_focus,
+                      }));
+                      setStandups(mappedEntries);
+                      setSessionName(session.session_name);
+                    }}
+                    className="bg-blue-500 text-white px-3 py-1 rounded"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    onClick={() => handleDeleteSession(session.id)}
+                    className="bg-red-500 text-white px-3 py-1 rounded"
+                  >
+                    Delete
+                  </button>
+                </div>
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
     </div>
   );

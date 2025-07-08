@@ -1,131 +1,207 @@
-
-
-
-
-import React, { useState } from 'react';
-import PRDFeature from './PRDFeature';
-
+import React, { useState, useEffect , useCallback} from "react";
+import { supabase } from "../supabaseClient";
+import PRDFeature from "./PRDFeature";
+import PRDdocument from  './PRDdocument'
 
 const PRDDocument = () => {
-  // Define the initial state for a PRD document following the Facebook PRD format.
+  // State for user information
+  const [, setUserEmail] = useState("");
+  const [userId, setUserId] = useState(null);
+
+  // Initial state for the PRD document form fields
   const initialPRD = {
     // 1. Overview
-    overview_productName: '',
-    overview_author: '',
-    overview_date: '',
-    overview_status: '',
-    overview_version: '',
+    overview_productname: "",
+    overview_author: "",
+    overview_date: "",
+    overview_status: "",
+    overview_version: "",
     // 2. Executive Summary
-    executive_problemStatement: '',
-    executive_goals: '',
-    executive_scope: '',
+    executive_problemstatement: "",
+    executive_goals: "",
+    executive_scope: "",
     // 3. Target Audience
-    audience_primary: '',
-    audience_secondary: '',
-    audience_personas: '',
+    audience_primary: "",
+    audience_secondary: "",
+    audience_personas: "",
     // 4. Use Cases
-    useCases: '',
+    usecases: "",
     // 5. Features & Requirements
-    features_core: '',
-    features_prioritization: '',
-    features_technical: '',
-    features_uiux: '',
+    features_core: "",
+    features_prioritization: "",
+    features_technical: "",
+    features_uiux: "",
     // 6. Timeline & Milestones
-    timeline_launch: '',
-    timeline_phases: '',
-    timeline_milestones: '',
+    timeline_launch: "",
+    timeline_phases: "",
+    timeline_milestones: "",
     // 7. Metrics for Success
-    metrics_kpis: '',
-    metrics_tracking: '',
+    metrics_kpis: "",
+    metrics_tracking: "",
     // 8. Dependencies
-    dependencies_technical: '',
-    dependencies_business: '',
+    dependencies_technical: "",
+    dependencies_business: "",
     // 9. Risks & Mitigation
-    risks_factors: '',
-    risks_mitigation: '',
+    risks_factors: "",
+    risks_mitigation: "",
     // 10. Stakeholders
-    stakeholders_internal: '',
-    stakeholders_external: '',
+    stakeholders_internal: "",
+    stakeholders_external: "",
     // 11. Budget & Resources
-    budget: '',
-    resources: '',
+    budget: "",
+    resources: "",
     // 12. Post-Launch Plan
-    post_launch_monitoring: '',
-    post_launch_maintenance: '',
+    post_launch_monitoring: "",
+    post_launch_maintenance: "",
   };
 
-  // States to hold the list of documented PRDs, the form data, and editing state.
-  const [prdList, setPrdList] = useState([]);
+  
+
+
+  // State to hold form data, the list of PRDs, and editing status
   const [formData, setFormData] = useState(initialPRD);
+  const [prdList, setPrdList] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
   const [editingId, setEditingId] = useState(null);
+  useEffect(() => {
+    const email = localStorage.getItem("userEmail");
+    if (email) {
+      setUserEmail(email);
+      console.debug("User email found in localStorage:", email);
+      const fetchUserId = async () => {
+        const { data, error } = await supabase
+          .from("users")
+          .select("id")
+          .eq("email", email)
+          .single();
+        if (error) {
+          console.error("Error fetching user id:", error);
+        } else if (data) {
+          setUserId(data.id);
+        }
+      };
+      fetchUserId();
+    } else {
+      console.debug("No user email found in localStorage.");
+    }
+  }, []);
 
-  // Handle input changes for all form fields.
+  // Wrap fetchPRDs in useCallback so it can be used safely as a dependency
+  const fetchPRDs = useCallback(async () => {
+    if (!userId) return;
+    const { data, error } = await supabase
+      .from("prd_documents")
+      .select("*")
+      .eq("user_id", userId);
+    if (error) {
+      console.error("Error fetching PRDs:", error);
+    } else {
+      setPrdList(data);
+    }
+  }, [userId]);
+
+  // When userId is set, fetch that user's PRD documents
+  useEffect(() => {
+    if (userId) {
+      fetchPRDs();
+    }
+  }, [userId, fetchPRDs]);
+
+  // Handle all input changes
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  // Handle form submission for both creating a new PRD and updating an existing one.
-  const handleSubmit = (e) => {
+  // Handle form submission for both creating and updating a PRD
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!userId) {
+      console.error("User ID not set, cannot submit PRD");
+      return;
+    }
     if (isEditing) {
-      // Update an existing PRD.
-      setPrdList((prev) =>
-        prev.map((prd) =>
-          prd.id === editingId ? { ...formData, id: editingId } : prd
-        )
-      );
+      // Update an existing PRD record
+      const { data, error } = await supabase
+        .from("prd_documents")
+        .update({ ...formData })
+        .eq("id", editingId);
+      if (error) {
+        console.error("Error updating PRD:", error);
+      } else {
+        console.debug("PRD updated successfully:", data);
+        fetchPRDs();
+      }
       setIsEditing(false);
       setEditingId(null);
     } else {
-      // Add a new PRD (using Date.now() for a unique id).
-      setPrdList((prev) => [...prev, { ...formData, id: Date.now() }]);
+      // Create a new PRD record
+      const { data, error } = await supabase
+        .from("prd_documents")
+        .insert([{ user_id: userId, ...formData }]);
+      if (error) {
+        console.error("Error creating PRD:", error);
+      } else {
+        console.debug("PRD created successfully:", data);
+        fetchPRDs();
+      }
     }
-    // Reset the form.
     setFormData(initialPRD);
   };
 
-  // Populate the form for editing a PRD.
+  // Populate the form for editing an existing PRD
   const handleEdit = (prd) => {
     setFormData(prd);
     setIsEditing(true);
     setEditingId(prd.id);
   };
 
-  // Delete a PRD.
-  const handleDelete = (id) => {
-    setPrdList((prev) => prev.filter((prd) => prd.id !== id));
+  // Delete a PRD record
+  const handleDelete = async (id) => {
+    const { error } = await supabase
+      .from("prd_documents")
+      .delete()
+      .eq("id", id);
+    if (error) {
+      console.error("Error deleting PRD:", error);
+    } else {
+      console.debug("PRD deleted successfully");
+      fetchPRDs();
+    }
   };
 
-  // Print the entire page.
+
+
+  // Print the page
   const handlePrint = () => {
     window.print();
   };
 
   return (
-    <div className="container mx-auto p-4" id="printableArea mt-8">
-     <PRDFeature/>
+    <div className="container mx-auto p-4" id="printableArea">
+      <PRDFeature />
 
       {/* Form to add/update a PRD */}
       <form onSubmit={handleSubmit} className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-6">
         {/* 1. Overview */}
         <h2 className="text-2xl font-bold mb-4">1. Overview</h2>
         <div className="mb-4">
-          <label htmlFor="overview_productName" className="block text-gray-700 font-bold mb-2">
+          <label htmlFor="overview_productname" className="block text-gray-700 font-bold mb-2">
             Product Name
           </label>
           <input
             type="text"
-            id="overview_productName"
-            name="overview_productName"
-            value={formData.overview_productName}
+            id="overview_productname"
+            name="overview_productname"
+            value={formData.overview_productname}
             onChange={handleInputChange}
             placeholder="Enter the product or feature name"
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700"
             required
           />
-          <small className="text-gray-500">The name of the product or feature being developed.</small>
+          <small className="text-gray-500">
+            The name of the product or feature being developed.
+          </small>
         </div>
         <div className="mb-4 grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
@@ -142,7 +218,9 @@ const PRDDocument = () => {
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700"
               required
             />
-            <small className="text-gray-500">The person responsible for writing this PRD.</small>
+            <small className="text-gray-500">
+              The person responsible for writing this PRD.
+            </small>
           </div>
           <div>
             <label htmlFor="overview_date" className="block text-gray-700 font-bold mb-2">
@@ -198,13 +276,13 @@ const PRDDocument = () => {
         {/* 2. Executive Summary */}
         <h2 className="text-2xl font-bold mb-4">2. Executive Summary</h2>
         <div className="mb-4">
-          <label htmlFor="executive_problemStatement" className="block text-gray-700 font-bold mb-2">
+          <label htmlFor="executive_problemstatement" className="block text-gray-700 font-bold mb-2">
             Problem Statement
           </label>
           <textarea
-            id="executive_problemStatement"
-            name="executive_problemStatement"
-            value={formData.executive_problemStatement}
+            id="executive_problemstatement"
+            name="executive_problemstatement"
+            value={formData.executive_problemstatement}
             onChange={handleInputChange}
             placeholder="Describe the problem being solved"
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700"
@@ -306,13 +384,13 @@ const PRDDocument = () => {
         {/* 4. Use Cases */}
         <h2 className="text-2xl font-bold mb-4">4. Use Cases</h2>
         <div className="mb-4">
-          <label htmlFor="useCases" className="block text-gray-700 font-bold mb-2">
+          <label htmlFor="usecases" className="block text-gray-700 font-bold mb-2">
             Use Cases
           </label>
           <textarea
-            id="useCases"
-            name="useCases"
-            value={formData.useCases}
+            id="usecases"
+            name="usecases"
+            value={formData.usecases}
             onChange={handleInputChange}
             placeholder="List key scenarios or user stories"
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700"
@@ -691,7 +769,7 @@ const PRDDocument = () => {
             type="submit"
             className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none"
           >
-            {isEditing ? 'Update PRD' : 'Add PRD'}
+            {isEditing ? "Update PRD" : "Add PRD"}
           </button>
           {isEditing && (
             <button
@@ -709,60 +787,62 @@ const PRDDocument = () => {
         </div>
       </form>
 
-      {/* Display Documented PRDs in a table */}
+      {/* Display Documented PRDs in separate responsive tables */}
       <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-6 overflow-x-auto">
         <h2 className="text-2xl font-bold mb-4">Documented PRDs</h2>
         {prdList.length === 0 ? (
           <p className="text-gray-600">No PRDs documented yet.</p>
         ) : (
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Product Name
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Author
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Date
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Status
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Actions
-                </th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {prdList.map((prd) => (
-                <tr key={prd.id}>
-                  <td className="px-6 py-4 whitespace-nowrap">{prd.overview_productName}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">{prd.overview_author}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">{prd.overview_date}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">{prd.overview_status}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <button
-                      onClick={() => handleEdit(prd)}
-                      className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-3 rounded mr-2"
-                    >
-                      Edit
-                    </button>
-                    <button
-                      onClick={() => handleDelete(prd.id)}
-                      className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-3 rounded"
-                    >
-                      Delete
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <div className="space-y-8">
+            {prdList.map((prd) => (
+              <table key={prd.id} className="min-w-full divide-y divide-gray-200">
+                <thead className="bg-gray-50">
+                  <tr>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Product Name
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Author
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Date
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Status
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Actions
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="bg-white divide-y divide-gray-200">
+                  <tr>
+                    <td className="px-6 py-4 whitespace-nowrap">{prd.overview_productname}</td>
+                    <td className="px-6 py-4 whitespace-nowrap">{prd.overview_author}</td>
+                    <td className="px-6 py-4 whitespace-nowrap">{prd.overview_date}</td>
+                    <td className="px-6 py-4 whitespace-nowrap">{prd.overview_status}</td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <button
+                        onClick={() => handleEdit(prd)}
+                        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-3 rounded mr-2"
+                      >
+                        Edit
+                      </button>
+                      <button
+                        onClick={() => handleDelete(prd.id)}
+                        className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-3 rounded"
+                      >
+                        Delete
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            ))}
+          </div>
         )}
       </div>
-
+      <PRDdocument/>
       {/* Print Button */}
       <div className="text-center">
         <button
@@ -777,15 +857,3 @@ const PRDDocument = () => {
 };
 
 export default PRDDocument;
-
-
-
-
-
-
-
-
-
-
-
-

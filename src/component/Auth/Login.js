@@ -123,7 +123,7 @@ const LoginComponent = () => {
 
   return (
     <div className="relative">
-      <div className="max-w-md mx-auto p-4 border bg-yellow-600 rounded shadow mt-44">
+      <div className="max-w-md mx-auto p-4 border bg-yellow-600 rounded shadow mt-44 mb-10">
         <h2 className="text-2xl font-bold mb-4 text-gray-100">Login</h2>
 
         {/* Inline message displays */}

@@ -178,16 +178,20 @@ const RegistrationComponent = () => {
         
         {/* Role */}
         <div className="mb-4 " >
-          <label htmlFor="role" className="block mb-1 text-gray-100 font-bold">Role</label>
+          <label htmlFor="role" className="block mb-1 text-gray-100 font-bold">Role/Learning Track</label>
           <select
             id="role"
             value={role}
             onChange={(e) => setRole(e.target.value)}
             className="w-full p-2 border rounded"
           >
+            <option value="PM Fundamental">PM Fundamental</option>
+            <option value="Growth PM">Growth PM</option>
+            <option value="Technical PM">Technical PM</option>
             <option value="Developers">Developers</option>
             <option value="Project Manager">Project Manager</option>
             <option value="Product Manager">Product Manager</option>
+           
             <option value="Others">Others</option>
           </select>
         </div>

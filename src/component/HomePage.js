@@ -3,25 +3,24 @@ import LandingPageFeatures from './LandingPageFeatures'
 import  ReviewForm from './Premiums/ReviewForm'
 import ChatWindow from "./Chatdashboard/ChatWindow";
 import UseCaseCarousel from './UseCaseCarousel'
-//import SEOComponent from "./SEOComponent";
-//import Standup from './Standup'
 import AppLauncher from './AppLauncher'
+import CohortStarts from './CohortStarts'
 import { FaCheckCircle, FaBrain, FaListAlt, FaRegLightbulb, FaDollarSign, FaCogs } from "react-icons/fa";
 
 function HomePage() {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 p-6 text-gray-800 mt-20">
+      <CohortStarts/>
       <div className="text-center max-w-3xl bg-white p-8 rounded-lg shadow-xl">
         <h1 className="text-4xl font-bold text-yellow-600">Sprintify</h1>
         <p className="mt-4 text-lg text-gray-700">
         The go-to tool for Agile teams to simulate product development, optimize workflows, 
         and deliver high-quality products faster.</p>
-        <Link to="/allapps">
+        <Link to="/register">
           <button className="mt-6 px-6 py-3 bg-yellow-600 text-white text-lg rounded-lg shadow-md hover:bg-yellow-700 transition">
             Try Sprintify
           </button>
         </Link>
-        
       </div>
       <UseCaseCarousel/>
       <LandingPageFeatures/>

@@ -1,8 +1,8 @@
 
 
 import React, { useState, useEffect, useCallback, useMemo } from "react";
-import { supabase } from "../../supabaseClient";
-import PrioritizationFeature from '../PrioritizationFeature'
+import { supabase } from "../supabaseClient";
+import PrioritizationFeature from './PrioritizationFeature'
 
 // You can import additional UI components if needed
 // import PrioritizationFeature from './PrioritizationFeature';

@@ -1,109 +1,202 @@
-
-
-import React, { useState } from 'react';
-import MarketResearchFeatures from './MarketResearchFeatures';
-
-
+import React, { useState, useEffect, useCallback } from "react";
+import { supabase } from "../supabaseClient";
+import MarketResearchFeatures from "./MarketResearchFeatures";
 
 const MarketResearchDoc = () => {
-  // Define the initial structure of a market research document.
-  const initialResearch = {
-    // 1. Overview
-    overview_title: '',
-    overview_author: '',
-    overview_date: '',
-    overview_status: '',
-    overview_version: '',
-    // 2. Market Overview
-    market_description: '',
-    market_size: '',
-    demographics: '',
-    market_segments: '',
-    growth_projections: '',
-    // 3. Research Tools & Methods
-    research_tools: '',
-    research_methods: '',
-    data_sources: '',
-    // 4. Gap Analysis
-    gap_analysis: '',
-    gap_recommendations: '',
-    // 5. Key Trends
-    key_trends: '',
-    trends_sources: '',
-    // 6. SWOT Analysis
-    swot_strengths: '',
-    swot_weaknesses: '',
-    swot_opportunities: '',
-    swot_threats: '',
-    // 7. Competitor Analysis
-    competitor_analysis: '',
-    competitor_profiles: '',
-    // 8. Final Recommendations
-    final_recommendations: '',
-    next_steps: ''
-  };
+  // State to hold the logged-in user’s email and id
 
-  // State to store the list of market research documents.
+  const [userId, setUserId] = useState(null);
+
+  // State for the research docs list and for toggling expanded view of each doc
   const [researchList, setResearchList] = useState([]);
-  // State for the current form data.
+  const [expandedDocs, setExpandedDocs] = useState({});
+
+  // Form state for creating/updating a research doc
+  const initialResearch = {
+    overview_title: "",
+    overview_author: "",
+    overview_date: "",
+    overview_status: "",
+    overview_version: "",
+    market_description: "",
+    market_size: "",
+    demographics: "",
+    market_segments: "",
+    growth_projections: "",
+    research_tools: "",
+    research_methods: "",
+    data_sources: "",
+    gap_analysis: "",
+    gap_recommendations: "",
+    key_trends: "",
+    trends_sources: "",
+    swot_strengths: "",
+    swot_weaknesses: "",
+    swot_opportunities: "",
+    swot_threats: "",
+    competitor_analysis: "",
+    competitor_profiles: "",
+    final_recommendations: "",
+    next_steps: ""
+  };
   const [formData, setFormData] = useState(initialResearch);
-  // Editing state management.
   const [isEditing, setIsEditing] = useState(false);
   const [editingId, setEditingId] = useState(null);
 
-  // Handle change for all input fields.
+  // Retrieve user email from localStorage and then fetch user id from Supabase
+  useEffect(() => {
+    const email = localStorage.getItem("userEmail");
+    if (email) {
+      console.debug("User email found in localStorage:", email);
+      const fetchUserId = async () => {
+        const { data, error } = await supabase
+          .from("users")
+          .select("id")
+          .eq("email", email)
+          .single();
+        if (error) {
+          console.error("Error fetching user id:", error);
+        } else if (data) {
+          setUserId(data.id);
+        }
+      };
+      fetchUserId();
+    } else {
+      console.debug("No user email found in localStorage.");
+    }
+  }, []);
+
+  // Wrap fetchResearchDocs in useCallback so that its identity is stable
+  const fetchResearchDocs = useCallback(async () => {
+    if (!userId) return;
+    const { data, error } = await supabase
+      .from("market_research_docs")
+      .select("*")
+      .eq("user_id", userId);
+    if (error) {
+      console.error("Error fetching research docs:", error);
+    } else {
+      setResearchList(data);
+    }
+  }, [userId]);
+
+  // Once userId is available, fetch all research docs for that user
+  useEffect(() => {
+    if (userId) {
+      fetchResearchDocs();
+    }
+  }, [userId, fetchResearchDocs]);
+
+  // Update form state for each change
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  // Handle submission for both creating a new document and updating an existing one.
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (isEditing) {
-      // Update existing document.
-      setResearchList(prev => 
-        prev.map(doc => doc.id === editingId ? { ...formData, id: editingId } : doc)
-      );
-      setIsEditing(false);
-      setEditingId(null);
-    } else {
-      // Create a new document (using Date.now() as a unique id).
-      const newDoc = { ...formData, id: Date.now() };
-      setResearchList(prev => [...prev, newDoc]);
-    }
-    // Reset the form after submission.
+  // Reset the form to its initial state
+  const resetForm = () => {
     setFormData(initialResearch);
   };
 
-  // Load an existing document into the form for editing.
+  // Handle form submission for create and update operations
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!userId) {
+      console.error("User not identified. Cannot submit research document.");
+      return;
+    }
+    if (isEditing) {
+      // UPDATE operation: update existing document in the database
+      const { data, error } = await supabase
+        .from("market_research_docs")
+        .update({ ...formData })
+        .eq("id", editingId);
+      if (error) {
+        console.error("Error updating research doc:", error);
+      } else {
+        console.log("Research doc updated:", data);
+        fetchResearchDocs();
+        setIsEditing(false);
+        setEditingId(null);
+        resetForm();
+      }
+    } else {
+      // CREATE operation: insert a new research document for the user
+      const newDoc = { ...formData, user_id: userId };
+      const { data, error } = await supabase
+        .from("market_research_docs")
+        .insert([newDoc]);
+      if (error) {
+        console.error("Error creating research doc:", error);
+      } else {
+        console.log("Research doc created:", data);
+        fetchResearchDocs();
+        resetForm();
+      }
+    }
+  };
+
+  // Load a document into the form for editing
   const handleEdit = (doc) => {
     setFormData(doc);
     setIsEditing(true);
     setEditingId(doc.id);
   };
 
-  // Remove a document from the list.
-  const handleDelete = (id) => {
-    setResearchList(prev => prev.filter(doc => doc.id !== id));
+  // Delete a document from the database
+  const handleDelete = async (id) => {
+    const { error } = await supabase
+      .from("market_research_docs")
+      .delete()
+      .eq("id", id);
+    if (error) {
+      console.error("Error deleting research doc:", error);
+    } else {
+      console.log("Research doc deleted");
+      fetchResearchDocs();
+    }
   };
 
-  // Print the entire page.
+  // Toggle the expanded (detailed) view of a document in the list
+  const handleToggle = (id) => {
+    setExpandedDocs((prev) => ({
+      ...prev,
+      [id]: !prev[id]
+    }));
+  };
+
+  // Cancel editing mode and reset the form
+  const handleCancelEdit = () => {
+    setIsEditing(false);
+    setEditingId(null);
+    resetForm();
+  };
+
+  // Optional: Print the page
   const handlePrint = () => {
     window.print();
   };
 
   return (
     <div className="container mx-auto p-4" id="printableArea">
-        <MarketResearchFeatures/>
-      <h1 className="text-3xl font-bold text-center mb-6">Market Research Documentation</h1>
+      
+      <MarketResearchFeatures />
+      <h1 className="text-3xl font-bold text-center mb-6">
+        Market Research Documentation
+      </h1>
 
       {/* Form to Create/Update a Market Research Document */}
-      <form onSubmit={handleSubmit} className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-6">
+      <form
+        onSubmit={handleSubmit}
+        className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-6"
+      >
         {/* 1. Overview */}
         <h2 className="text-2xl font-bold mb-4">1. Overview</h2>
         <div className="mb-4">
-          <label htmlFor="overview_title" className="block text-gray-700 font-bold mb-2">
+          <label
+            htmlFor="overview_title"
+            className="block text-gray-700 font-bold mb-2"
+          >
             Research Title
           </label>
           <input
@@ -116,11 +209,16 @@ const MarketResearchDoc = () => {
             className="shadow appearance-none border rounded w-full py-2 px-3"
             required
           />
-          <small className="text-gray-500">A clear, concise title for your market research study.</small>
+          <small className="text-gray-500">
+            A clear, concise title for your market research study.
+          </small>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
           <div>
-            <label htmlFor="overview_author" className="block text-gray-700 font-bold mb-2">
+            <label
+              htmlFor="overview_author"
+              className="block text-gray-700 font-bold mb-2"
+            >
               Author
             </label>
             <input
@@ -133,10 +231,15 @@ const MarketResearchDoc = () => {
               className="shadow appearance-none border rounded w-full py-2 px-3"
               required
             />
-            <small className="text-gray-500">Who is responsible for this research?</small>
+            <small className="text-gray-500">
+              Who is responsible for this research?
+            </small>
           </div>
           <div>
-            <label htmlFor="overview_date" className="block text-gray-700 font-bold mb-2">
+            <label
+              htmlFor="overview_date"
+              className="block text-gray-700 font-bold mb-2"
+            >
               Date
             </label>
             <input
@@ -148,10 +251,15 @@ const MarketResearchDoc = () => {
               className="shadow appearance-none border rounded w-full py-2 px-3"
               required
             />
-            <small className="text-gray-500">When was the research conducted?</small>
+            <small className="text-gray-500">
+              When was the research conducted?
+            </small>
           </div>
           <div>
-            <label htmlFor="overview_status" className="block text-gray-700 font-bold mb-2">
+            <label
+              htmlFor="overview_status"
+              className="block text-gray-700 font-bold mb-2"
+            >
               Status
             </label>
             <input
@@ -164,11 +272,16 @@ const MarketResearchDoc = () => {
               className="shadow appearance-none border rounded w-full py-2 px-3"
               required
             />
-            <small className="text-gray-500">Current status of the documentation.</small>
+            <small className="text-gray-500">
+              Current status of the documentation.
+            </small>
           </div>
         </div>
         <div className="mb-4">
-          <label htmlFor="overview_version" className="block text-gray-700 font-bold mb-2">
+          <label
+            htmlFor="overview_version"
+            className="block text-gray-700 font-bold mb-2"
+          >
             Version
           </label>
           <input
@@ -187,7 +300,10 @@ const MarketResearchDoc = () => {
         {/* 2. Market Overview */}
         <h2 className="text-2xl font-bold mb-4">2. Market Overview</h2>
         <div className="mb-4">
-          <label htmlFor="market_description" className="block text-gray-700 font-bold mb-2">
+          <label
+            htmlFor="market_description"
+            className="block text-gray-700 font-bold mb-2"
+          >
             Market Description
           </label>
           <textarea
@@ -201,12 +317,16 @@ const MarketResearchDoc = () => {
             required
           ></textarea>
           <small className="text-gray-500">
-            Provide an overview of the market, including its scope and characteristics.
+            Provide an overview of the market, including its scope and
+            characteristics.
           </small>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
           <div>
-            <label htmlFor="market_size" className="block text-gray-700 font-bold mb-2">
+            <label
+              htmlFor="market_size"
+              className="block text-gray-700 font-bold mb-2"
+            >
               Market Size
             </label>
             <input
@@ -224,7 +344,10 @@ const MarketResearchDoc = () => {
             </small>
           </div>
           <div>
-            <label htmlFor="demographics" className="block text-gray-700 font-bold mb-2">
+            <label
+              htmlFor="demographics"
+              className="block text-gray-700 font-bold mb-2"
+            >
               Demographics
             </label>
             <input
@@ -244,7 +367,10 @@ const MarketResearchDoc = () => {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
           <div>
-            <label htmlFor="market_segments" className="block text-gray-700 font-bold mb-2">
+            <label
+              htmlFor="market_segments"
+              className="block text-gray-700 font-bold mb-2"
+            >
               Market Segments
             </label>
             <input
@@ -262,7 +388,10 @@ const MarketResearchDoc = () => {
             </small>
           </div>
           <div>
-            <label htmlFor="growth_projections" className="block text-gray-700 font-bold mb-2">
+            <label
+              htmlFor="growth_projections"
+              className="block text-gray-700 font-bold mb-2"
+            >
               Growth Projections
             </label>
             <input
@@ -284,7 +413,10 @@ const MarketResearchDoc = () => {
         {/* 3. Research Tools & Methods */}
         <h2 className="text-2xl font-bold mb-4">3. Research Tools & Methods</h2>
         <div className="mb-4">
-          <label htmlFor="research_tools" className="block text-gray-700 font-bold mb-2">
+          <label
+            htmlFor="research_tools"
+            className="block text-gray-700 font-bold mb-2"
+          >
             Research Tools
           </label>
           <input
@@ -302,7 +434,10 @@ const MarketResearchDoc = () => {
           </small>
         </div>
         <div className="mb-4">
-          <label htmlFor="research_methods" className="block text-gray-700 font-bold mb-2">
+          <label
+            htmlFor="research_methods"
+            className="block text-gray-700 font-bold mb-2"
+          >
             Research Methods
           </label>
           <input
@@ -320,7 +455,10 @@ const MarketResearchDoc = () => {
           </small>
         </div>
         <div className="mb-4">
-          <label htmlFor="data_sources" className="block text-gray-700 font-bold mb-2">
+          <label
+            htmlFor="data_sources"
+            className="block text-gray-700 font-bold mb-2"
+          >
             Data Sources
           </label>
           <textarea
@@ -341,7 +479,10 @@ const MarketResearchDoc = () => {
         {/* 4. Gap Analysis */}
         <h2 className="text-2xl font-bold mb-4">4. Gap Analysis</h2>
         <div className="mb-4">
-          <label htmlFor="gap_analysis" className="block text-gray-700 font-bold mb-2">
+          <label
+            htmlFor="gap_analysis"
+            className="block text-gray-700 font-bold mb-2"
+          >
             Gap Analysis
           </label>
           <textarea
@@ -359,7 +500,10 @@ const MarketResearchDoc = () => {
           </small>
         </div>
         <div className="mb-4">
-          <label htmlFor="gap_recommendations" className="block text-gray-700 font-bold mb-2">
+          <label
+            htmlFor="gap_recommendations"
+            className="block text-gray-700 font-bold mb-2"
+          >
             Recommendations
           </label>
           <textarea
@@ -380,7 +524,10 @@ const MarketResearchDoc = () => {
         {/* 5. Key Trends */}
         <h2 className="text-2xl font-bold mb-4">5. Key Trends</h2>
         <div className="mb-4">
-          <label htmlFor="key_trends" className="block text-gray-700 font-bold mb-2">
+          <label
+            htmlFor="key_trends"
+            className="block text-gray-700 font-bold mb-2"
+          >
             Key Trends
           </label>
           <textarea
@@ -398,7 +545,10 @@ const MarketResearchDoc = () => {
           </small>
         </div>
         <div className="mb-4">
-          <label htmlFor="trends_sources" className="block text-gray-700 font-bold mb-2">
+          <label
+            htmlFor="trends_sources"
+            className="block text-gray-700 font-bold mb-2"
+          >
             Trend Sources
           </label>
           <textarea
@@ -420,7 +570,10 @@ const MarketResearchDoc = () => {
         <h2 className="text-2xl font-bold mb-4">6. SWOT Analysis</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
           <div>
-            <label htmlFor="swot_strengths" className="block text-gray-700 font-bold mb-2">
+            <label
+              htmlFor="swot_strengths"
+              className="block text-gray-700 font-bold mb-2"
+            >
               Strengths
             </label>
             <textarea
@@ -438,7 +591,10 @@ const MarketResearchDoc = () => {
             </small>
           </div>
           <div>
-            <label htmlFor="swot_weaknesses" className="block text-gray-700 font-bold mb-2">
+            <label
+              htmlFor="swot_weaknesses"
+              className="block text-gray-700 font-bold mb-2"
+            >
               Weaknesses
             </label>
             <textarea
@@ -456,7 +612,10 @@ const MarketResearchDoc = () => {
             </small>
           </div>
           <div>
-            <label htmlFor="swot_opportunities" className="block text-gray-700 font-bold mb-2">
+            <label
+              htmlFor="swot_opportunities"
+              className="block text-gray-700 font-bold mb-2"
+            >
               Opportunities
             </label>
             <textarea
@@ -474,7 +633,10 @@ const MarketResearchDoc = () => {
             </small>
           </div>
           <div>
-            <label htmlFor="swot_threats" className="block text-gray-700 font-bold mb-2">
+            <label
+              htmlFor="swot_threats"
+              className="block text-gray-700 font-bold mb-2"
+            >
               Threats
             </label>
             <textarea
@@ -496,7 +658,10 @@ const MarketResearchDoc = () => {
         {/* 7. Competitor Analysis */}
         <h2 className="text-2xl font-bold mb-4">7. Competitor Analysis</h2>
         <div className="mb-4">
-          <label htmlFor="competitor_analysis" className="block text-gray-700 font-bold mb-2">
+          <label
+            htmlFor="competitor_analysis"
+            className="block text-gray-700 font-bold mb-2"
+          >
             Competitor Overview
           </label>
           <textarea
@@ -514,7 +679,10 @@ const MarketResearchDoc = () => {
           </small>
         </div>
         <div className="mb-4">
-          <label htmlFor="competitor_profiles" className="block text-gray-700 font-bold mb-2">
+          <label
+            htmlFor="competitor_profiles"
+            className="block text-gray-700 font-bold mb-2"
+          >
             Competitor Profiles
           </label>
           <textarea
@@ -535,7 +703,10 @@ const MarketResearchDoc = () => {
         {/* 8. Final Recommendations */}
         <h2 className="text-2xl font-bold mb-4">8. Final Recommendations</h2>
         <div className="mb-4">
-          <label htmlFor="final_recommendations" className="block text-gray-700 font-bold mb-2">
+          <label
+            htmlFor="final_recommendations"
+            className="block text-gray-700 font-bold mb-2"
+          >
             Recommendations
           </label>
           <textarea
@@ -553,7 +724,10 @@ const MarketResearchDoc = () => {
           </small>
         </div>
         <div className="mb-4">
-          <label htmlFor="next_steps" className="block text-gray-700 font-bold mb-2">
+          <label
+            htmlFor="next_steps"
+            className="block text-gray-700 font-bold mb-2"
+          >
             Next Steps
           </label>
           <textarea
@@ -577,16 +751,12 @@ const MarketResearchDoc = () => {
             type="submit"
             className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none"
           >
-            {isEditing ? 'Update Research' : 'Add Research'}
+            {isEditing ? "Update Research" : "Add Research"}
           </button>
           {isEditing && (
             <button
               type="button"
-              onClick={() => {
-                setIsEditing(false);
-                setFormData(initialResearch);
-                setEditingId(null);
-              }}
+              onClick={handleCancelEdit}
               className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none"
             >
               Cancel
@@ -595,59 +765,129 @@ const MarketResearchDoc = () => {
         </div>
       </form>
 
-      {/* Display the List of Market Research Documents */}
-      <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-6 overflow-x-auto">
-        <h2 className="text-2xl font-bold mb-4">Documented Market Research</h2>
-        {researchList.length === 0 ? (
-          <p className="text-gray-600">No market research documents added yet.</p>
+      {/* List of Market Research Documents */}
+     <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-6 overflow-x-auto">
+  <h2 className="text-2xl font-bold mb-4">
+    Your Market Research Documents
+  </h2>
+  {researchList.length === 0 ? (
+    <p className="text-gray-600">
+      No market research documents added yet.
+    </p>
         ) : (
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
-              <tr>
-                <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Title
-                </th>
-                <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Author
-                </th>
-                <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Date
-                </th>
-                <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Status
-                </th>
-                <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Actions
-                </th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {researchList.map((doc) => (
-                <tr key={doc.id}>
-                  <td className="px-4 py-2 whitespace-nowrap">{doc.overview_title}</td>
-                  <td className="px-4 py-2 whitespace-nowrap">{doc.overview_author}</td>
-                  <td className="px-4 py-2 whitespace-nowrap">{doc.overview_date}</td>
-                  <td className="px-4 py-2 whitespace-nowrap">{doc.overview_status}</td>
-                  <td className="px-4 py-2 whitespace-nowrap">
-                    <button
-                      onClick={() => handleEdit(doc)}
-                      className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-3 rounded mr-2"
-                    >
-                      Edit
-                    </button>
-                    <button
-                      onClick={() => handleDelete(doc.id)}
-                      className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-3 rounded"
-                    >
-                      Delete
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <div  >
+            
+            {researchList.map((doc) => (
+              <div key={doc.id} className="border rounded mb-4 p-4">
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center">
+     
+                  <div>
+                    <h3 className="text-xl font-bold">{doc.overview_title}</h3>
+                    <p className="text-gray-600">
+                      {doc.overview_author} - {doc.overview_date}
+                    </p>
+                  </div>
+                  <div className="flex flex-wrap gap-2 sm:flex-nowrap">
+  <button
+    onClick={() => handleToggle(doc.id)}
+    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full sm:w-auto"
+  >
+    {expandedDocs[doc.id] ? "Hide " : "Show"}
+  </button>
+  <button
+    onClick={() => handleEdit(doc)}
+    className="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded w-full sm:w-auto"
+  >
+    Edit
+  </button>
+  <button
+    onClick={() => handleDelete(doc.id)}
+    className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded w-full sm:w-auto"
+  >
+    Delete
+  </button>
+</div>
+
+                </div>
+                {expandedDocs[doc.id] && (
+           <div className="mt-4">
+           <h2 className="text-2xl font-bold mb-4">Market Research Details</h2>
+             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              
+            <p>
+              <strong>Status:</strong> {doc.overview_status}
+            </p>
+            <p>
+              <strong>Version:</strong> {doc.overview_version}
+            </p>
+            <p>
+              <strong>Market Description:</strong> {doc.market_description}
+            </p>
+            <p>
+              <strong>Market Size:</strong> {doc.market_size}
+            </p>
+            <p>
+              <strong>Demographics:</strong> {doc.demographics}
+            </p>
+            <p>
+              <strong>Market Segments:</strong> {doc.market_segments}
+            </p>
+            <p>
+              <strong>Growth Projections:</strong> {doc.growth_projections}
+            </p>
+            <p>
+              <strong>Research Tools:</strong> {doc.research_tools}
+            </p>
+            <p>
+              <strong>Research Methods:</strong> {doc.research_methods}
+            </p>
+            <p>
+              <strong>Data Sources:</strong> {doc.data_sources}
+            </p>
+            <p>
+              <strong>Gap Analysis:</strong> {doc.gap_analysis}
+            </p>
+            <p>
+              <strong>Recommendations:</strong> {doc.gap_recommendations}
+            </p>
+            <p>
+              <strong>Key Trends:</strong> {doc.key_trends}
+            </p>
+            <p>
+              <strong>Trend Sources:</strong> {doc.trends_sources}
+            </p>
+            <p>
+              <strong>SWOT Strengths:</strong> {doc.swot_strengths}
+            </p>
+            <p>
+              <strong>SWOT Weaknesses:</strong> {doc.swot_weaknesses}
+            </p>
+            <p>
+              <strong>SWOT Opportunities:</strong> {doc.swot_opportunities}
+            </p>
+            <p>
+              <strong>SWOT Threats:</strong> {doc.swot_threats}
+            </p>
+            <p>
+              <strong>Competitor Analysis:</strong> {doc.competitor_analysis}
+            </p>
+            <p>
+              <strong>Competitor Profiles:</strong> {doc.competitor_profiles}
+            </p>
+            <p>
+              <strong>Final Recommendations:</strong> {doc.final_recommendations}
+            </p>
+            <p>
+              <strong>Next Steps:</strong> {doc.next_steps}
+            </p>
+          </div>
+          </div>
+                )}
+              </div>
+            ))}
+          </div>
         )}
-      </div>
+        
 
       {/* Print Button */}
       <div className="text-center mb-6">
@@ -659,8 +899,58 @@ const MarketResearchDoc = () => {
         </button>
       </div>
     </div>
+    </div>
   );
 };
 
 export default MarketResearchDoc;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

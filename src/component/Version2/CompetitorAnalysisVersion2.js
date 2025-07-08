@@ -1,8 +1,8 @@
 
 import React, { useState, useEffect } from 'react';
-import { supabase } from '../../supabaseClient';
+import { supabase } from '../supabaseClient';
 import { Bar } from 'react-chartjs-2';
-import CompetitiveAnalysisFeature from '../CompetitiveAnalysisFeature'
+import CompetitiveAnalysisFeature from './CompetitiveAnalysisFeature'
 
 
 import {
