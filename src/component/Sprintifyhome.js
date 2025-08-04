@@ -5,6 +5,7 @@ import Enroll from './Enroll'
 import LandingPageFeatures from './LandingPageFeatures';
 import SprintCohort from './SprintCohort';
 import CohortStarts from './CohortStarts'
+import StudentsProjects from './StudentsProjects'
 
 const sectionVariants = {
   hidden: { opacity: 0, y: 40 },
@@ -36,7 +37,7 @@ export default function LandingPage() {
 
   return (
     <div className="w-full flex flex-col font-sans mt-10">
- 
+    
       {/* Hero Section */}
    <motion.section
    
@@ -53,6 +54,7 @@ export default function LandingPage() {
           
    
             <CohortStarts/>
+            
           <motion.h2
             className="text-4xl md:text-6xl font-extrabold text-amber-800 mb-6"
             variants={cardVariants}
@@ -101,6 +103,8 @@ export default function LandingPage() {
           />
         </motion.div>
       </motion.section>
+        <StudentsProjects/>
+ 
          <SprintCohort/>
       <OurValue/>
 

@@ -224,7 +224,7 @@ export default function SprintCohortPromo() {
     <div className="w-full min-h-screen flex flex-col items-center justify-center p-0 sm:p-6 mt-12">
       <div className="w-full grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 bg-white rounded-lg shadow-xl p-0 sm:p-6">
         <div className="space-y-6">
-          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-blue-800 text-center mt-12">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-blue-800 text-center">
             🚀 Kickstart Your Product Management Career!
           </h1>
           <p className="text-base sm:text-lg text-gray-700 text-center">
