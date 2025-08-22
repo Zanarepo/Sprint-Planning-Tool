@@ -57,6 +57,40 @@ import ResetPassword from './component/ResetPassword'
 //import Syllabus from './component/Syllabus'
 import Sprintifyhome from './component/Sprintifyhome'
 import SprintNavbar from './component/SprintNavbar'
+import Certificate from "./component/Certificate";
+import CertificateViews from "./component/CertificateViews";
+
+
+//Growth Product Manager
+
+import GrowthDashboard from './component/GrowthPM/Growth1/GrowthDashboard'
+import Alldashboard from './component/GrowthPM/Alldashboard'
+import GrowthHome from './component/GrowthPM/Growth2/GrowthHome';
+import Viralitydashboard from './component/GrowthPM/Growth3/Viralitydashboard'
+import AutomationDashbaord from './component/GrowthPM/Growth5/AutomationDashbaord';
+import CollaboDb from './component/GrowthPM/Growth4/CollaboDb';
+import Monitizationdashboard from './component/GrowthPM/Growth6/Monitizationdashboard';
+import LocalizationDashboard from './component/GrowthPM/Growth7/LocalizationDashboard';
+import MarketingDashboard from './component/GrowthPM/Growth9/MarketingDashboard';
+import Marketdashboard from './component/GrowthPM/Growth8/Marketdashboard';
+import Simulation from './component/GrowthPM/Growth10/Simulation';
+import SeperationofUsers from './component/GrowthPM/Growth11/SeperationofUsers';
+
+
+//Intermediate
+import IntermediateDashboard from './component/IntroIntermPM/Intermediate/IntermediateDashboard';
+import IntroDashboard from './component/IntroIntermPM/Intro/IntroDashboard';
+import SimulationModule from './component/IntroIntermPM/Intro/SimulationModule';
+
+
+
+//TPM
+import TPMHome from './component/Technical/TPMHome';
+import TPM from './component/Technical/TPM';
+import TPMdashboard2 from './component/Technical/LessonTwo/TPMdashboard2';
+import TPMDashboard3 from './component/Technical/Version Control/TPMDashboard3';
+import CoursesDashboard from "./component/CoursesDashboard";
+
 
 
 
@@ -131,15 +165,51 @@ const App = () => {
             
 
 
+
             {/* premium routes duplicates */}
-            <Route path="/Standup2" element={<Standup />} />
-            <Route path="/estimator2" element={<SprintEstimator />} />
-            <Route path="/userresearch2" element={<UserResearchDashboard />} />
-            <Route path="/brainstorm2" element={<Simulate />} />
-            <Route path="/allapps2" element={<AllinOne />} />
-            <Route path="/sprints2" element={<SprintSimulator />} />
-            <Route path="/sprints2" element={<SprintSimulator />} />
-          
+        <Route path="/Standup2" element={<Standup />} />
+        <Route path="/estimator2" element={<SprintEstimator />} />
+        <Route path="/userresearch2" element={<UserResearchDashboard />} />
+        <Route path="/brainstorm2" element={<Simulate />} />
+        <Route path="/allapps2" element={<AllinOne />} />
+        <Route path="/sprints2" element={<SprintSimulator />} />
+        <Route path="/sprints2" element={<SprintSimulator />} />
+       
+        <Route path="/growth" element={<GrowthDashboard />} />
+        <Route path="/growthdashboard" element={<GrowthHome/>} />
+        <Route path="/alldashboard" element={<Alldashboard />} />
+        <Route path="/viraldashboard" element={<Viralitydashboard/>} />
+        <Route path="/automationdashboard" element={<AutomationDashbaord/>} />  
+        <Route path="/moneydashboard" element={<Monitizationdashboard/>} />  
+        <Route path="/localizationdashboard" element={<LocalizationDashboard/>} />
+        <Route path="/marketdashboard" element={<Marketdashboard/>} />
+  
+        <Route path="/marketingdashboard" element={<MarketingDashboard/>} />
+        <Route path="/Collabodashboard" element={<CollaboDb/>} /> 
+        <Route path="/sim" element={<Simulation/>} />
+       <Route path="/seperate" element={<SeperationofUsers/>} />
+        <Route path="/pmdashboard" element={<CoursesDashboard/>} />  --- New line added for
+        
+
+
+       
+
+
+          { /* Intermediate*/}
+
+ <Route path="/intermediate" element={< IntermediateDashboard/>} />
+  <Route path="/introduction" element={<IntroDashboard />} />
+  <Route path="/introsimulations" element={<SimulationModule />} />
+
+{ /*TPM*/}
+<Route path="/tpmdashboard" element={<TPMHome />} />
+  <Route path="/technical" element={<TPM />} />
+   <Route path="/tpm2" element={<TPMdashboard2 />} />
+   <Route path="/tpm3" element={<TPMDashboard3 />} />
+
+   
+
+
 
             <Route path="/burndown2" element={<BurnDownChart />} />
             <Route path="/activeusers2" element={<ActiveUsersComponent />} />
@@ -169,7 +239,11 @@ const App = () => {
             <Route path="/compare2" element={<FeatureComparisonMatrix />} />
             <Route path="/gtm" element={<GTM />} />
              <Route path="/" element={<Sprintifyhome/>} />
-            
+          <Route path="/certificate" element={<Certificate/>} />
+          <Route path="/certificate/:id" element={<CertificateViews />} />
+          </Routes>
+            <Routes>
+         
             
             
           {/* Dashboard*/}
@@ -185,7 +259,7 @@ const App = () => {
           <Route path="/regdashboard" element={<RegisteredDashboards />} />
           <Route element={<RegisteredDashboards />}>
           <Route path="/tools" element={<Tools />} />
-         
+          
             </Route>
           </Routes>
 
@@ -222,8 +296,33 @@ const App = () => {
               <Route path="/regdashboard" element={<RegisteredDashboards />} />
               <Route path="/tools" element={<Tools />} />
               <Route path="/gtm" element={<GTM />} />
-              
+            
+                
+        <Route path="/growthdashboard" element={<GrowthHome/>} />
+        <Route path="/alldashboard" element={<Alldashboard />} />
+        <Route path="/viraldashboard" element={<Viralitydashboard/>} />
+        <Route path="/automationdashboard" element={<AutomationDashbaord/>} />  
+        <Route path="/moneydashboard" element={<Monitizationdashboard/>} />  
+        <Route path="/localizationdashboard" element={<LocalizationDashboard/>} />
+        <Route path="/marketdashboard" element={<Marketdashboard/>} />
+  
+        <Route path="/marketingdashboard" element={<MarketingDashboard/>} />
+        <Route path="/Collabodashboard" element={<CollaboDb/>} /> 
+        <Route path="/sim" element={<Simulation/>} />
+       <Route path="/seperate" element={<SeperationofUsers/>} />
 
+
+
+{ /* Intermediate & Intro*/}
+
+              { /*TPM*/}
+     <Route path="/introsimulations" element={<SimulationModule />} />        
+ <Route path="/intermediate" element={< IntermediateDashboard/>} />
+  <Route path="/introduction" element={<IntroDashboard />} />
+ <Route path="/technical" element={<TPM />} /> 
+ <Route path="/growth" element={<GrowthDashboard />} /> 
+
+ <Route path="/pmdashboard" element={<CoursesDashboard/>} />  --- New line added for
 
               <Route path="/checklist2" element={<ProductLaunchChecklist />} />
               <Route path="/bug2" element={<BugTrackingTool />} />
@@ -240,7 +339,13 @@ const App = () => {
               <Route path="/usernotify" element={<UsersNotifications />} />
               <Route path="/compare2" element={<FeatureComparisonMatrix />} />
               <Route path="/uat" element={<UATForms />} />
-               <Route path="/" element={<Sprintifyhome/>} />
+              <Route path="/" element={<Sprintifyhome/>} />
+
+
+              {/*GrwothPM*/}
+             
+
+
 
             </Route>
           </Routes>

@@ -121,47 +121,51 @@ const LoginComponent = () => {
     }
   };
 
-  return (
-    <div className="relative">
-      <div className="max-w-md mx-auto p-4 border bg-yellow-600 rounded shadow mt-44 mb-10">
-        <h2 className="text-2xl font-bold mb-4 text-gray-100">Login</h2>
+ return (
+  <div className="relative">
+    <div className="max-w-md mx-auto p-4 border bg-yellow-600 rounded shadow mt-20 mb-10 mt-24">
+      <h2 className="text-2xl font-bold mb-4 text-gray-100">Login</h2>
 
-        {/* Inline message displays */}
-        {errorMessage && (
-          <div className="mb-4 p-2 bg-red-100 text-red-700 rounded">
-            {errorMessage}
-          </div>
-        )}
-        {successMessage && (
-          <div className="mb-4 p-2 bg-green-100 text-green-700 rounded">
-            {successMessage}
-          </div>
-        )}
+      {/* Inline message displays */}
+      {errorMessage && (
+        <div className="mb-4 p-2 bg-red-100 text-red-700 rounded">
+          {errorMessage}
+        </div>
+      )}
+      {successMessage && (
+        <div className="mb-4 p-2 bg-green-100 text-green-700 rounded">
+          {successMessage}
+        </div>
+      )}
 
-        <form onSubmit={handleSubmit}>
-          {/* Email Field */}
-          <div className="mb-4">
-            <label htmlFor="email" className="block mb-1 text-gray-100 font-bold">
-              Email
-            </label>
-            <input
-              id="email"
-              type="email"
-              placeholder="Enter your email address"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full p-2 border rounded"
-            />
-          </div>
+      <form onSubmit={handleSubmit}>
+        {/* Email Field */}
+        <div className="mb-4 bg">
+          <label htmlFor="email" className="block mb-1 text-yellow-600  font-bold">
+            Email
+          </label>
+          <input
+            id="email"
+            type="email"
+            placeholder="Enter your email address"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="w-full p-2 border rounded"
+          />
+        </div>
 
-          {/* Password Field with Toggle */}
-          <div className="mb-2 relative">
-            <label htmlFor="password" className="block mb-1 text-gray-100 font-bold">
-              Password
-            </label>
+        {/* Password Field with Toggle */}
+        <div className="mb-2">
+          <label
+            htmlFor="password"
+            className="block mb-1 text-yellow-600 font-bold"
+          >
+            Password
+          </label>
+          <div className="relative">
             <input
               id="password"
-              type={showPassword ? 'text' : 'password'}
+              type={showPassword ? "text" : "password"}
               placeholder="Enter your password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
@@ -170,29 +174,33 @@ const LoginComponent = () => {
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute inset-y-0 right-0 flex items-center px-3 text-sm text-gray-600"
+              className="absolute right-2 top-1/2 -translate-y-1/2 px-2 py-1 text-xs sm:text-sm text-yellow-600 bg-gray-100 rounded hover:bg-gray-100"
             >
-              {showPassword ? 'Hide' : 'Show'}
+              {showPassword ? "Hide" : "Show"}
             </button>
           </div>
+        </div>
 
-          {/* Forgot Password Link */}
-          <div className="mb-4 text-right">
-            <Link to="/forgotpassword" className="text-blue-200 hover:text-blue-100 underline text-sm">
-              Forgot Password?
-            </Link>
-          </div>
-
-          {/* Submit Button */}
-          <button
-            type="submit"
-            disabled={isSubmitting}
-            className="w-full bg-yellow-800 text-white p-2 rounded hover:bg-yellow-700"
+        {/* Forgot Password Link */}
+        <div className="mb-4 text-right">
+          <Link
+            to="/forgotpassword"
+            className="text-yellow-500 hover:text-yellow-600 underline text-sm"
           >
-            {isSubmitting ? 'Logging in...' : 'Login'}
-          </button>
-        </form>
-      </div>
+            Forgot Password?
+          </Link>
+        </div>
+
+        {/* Submit Button */}
+        <button
+          type="submit"
+          disabled={isSubmitting}
+          className="w-full bg-yellow-800 text-white p-2 rounded hover:bg-yellow-700"
+        >
+          {isSubmitting ? "Logging in..." : "Login"}
+        </button>
+      </form>
+    </div>
 
       {/* Role Selection Modal */}
       {showRoleModal && (

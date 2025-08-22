@@ -1,0 +1,91 @@
+/* App.css */
+.App {
+    text-align: center;
+    font-family: Arial, sans-serif;
+    padding: 20px;
+  }
+  
+  .explanations {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 20px;
+  }
+  
+  .explanation {
+    width: 30%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: #fafafa;
+  }
+  
+  .explanation .icon {
+    font-size: 30px;
+    margin-bottom: 5px;
+  }
+  
+  .flow-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+  }
+  
+  .panel {
+    border: 1px solid #ccc;
+    padding: 10px;
+    width: 25%;
+    height: 400px;
+    overflow-y: auto;
+    background-color: #f9f9f9;
+    border-radius: 4px;
+  }
+  
+  .panel h2 {
+    font-size: 1.2em;
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .panel h2 .panel-icon {
+    margin-right: 8px;
+  }
+  
+  .panel ul {
+    list-style-type: none;
+    padding: 0;
+    text-align: left;
+  }
+  
+  .panel li {
+    margin: 8px 0;
+    padding: 4px;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+  }
+  
+  /* Color coding for each panel */
+  .networking {
+    border-color: #3498db;
+    background-color: #ecf5fc;
+  }
+  
+  .servers {
+    border-color: #27ae60;
+    background-color: #eafaf1;
+  }
+  
+  .storage {
+    border-color: #9b59b6;
+    background-color: #f4eafc;
+  }
+  
+  /* Arrow styling */
+  .arrow {
+    margin: 0 10px;
+    color: #888;
+  }
+  

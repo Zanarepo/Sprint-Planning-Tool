@@ -108,15 +108,12 @@ const RegistrationComponent = () => {
       setIsSubmitting(false);
     }
   };
-
-  return (
-    <div className="flex justify-center items-center min-h-screen mt-2 mb-24">
-  <div className="w-full md:w-2/3 p-4 bg-yellow-600 border rounded shadow mt-24 md:mt-32 text-center">
-    {/* Logon form content goes here */}
-
-
-      <h2 className="text-2xl font-bold mb-4 text-gray-100 ">Register</h2>
+return (
+  <div className="flex justify-center items-center min-h-screen  p-4 mt-24">
+    <div className="w-full md:w-2/3 p-6 bg-yellow-600 border rounded-lg shadow-lg text-center">
       
+      <h2 className="text-2xl font-bold mb-4 text-white">Register</h2>
+
       {/* Inline message displays */}
       {errorMessage && (
         <div className="mb-4 p-2 bg-red-100 text-red-700 rounded">{errorMessage}</div>
@@ -124,11 +121,13 @@ const RegistrationComponent = () => {
       {successMessage && (
         <div className="mb-4 p-2 bg-green-100 text-green-700 rounded">{successMessage}</div>
       )}
-      
-      <form onSubmit={handleSubmit}>
+
+      <form onSubmit={handleSubmit} className="space-y-4">
         {/* Full Name */}
-        <div className="mb-4">
-          <label htmlFor="fullName" className="block mb-1 text-white font-bold">Full Name</label>
+        <div>
+          <label htmlFor="fullName" className="block mb-1 text-yellow-600 font-bold">
+            Full Name
+          </label>
           <input
             id="fullName"
             type="text"
@@ -138,10 +137,12 @@ const RegistrationComponent = () => {
             className="w-full p-2 border rounded"
           />
         </div>
-        
+
         {/* Email */}
-        <div className="mb-4">
-          <label htmlFor="email" className="block mb-1 text-gray-100 font-bold">Email</label>
+        <div>
+          <label htmlFor="email" className="block mb-1 text-yellow-600 font-bold">
+            Email
+          </label>
           <input
             id="email"
             type="email"
@@ -151,13 +152,15 @@ const RegistrationComponent = () => {
             className="w-full p-2 border rounded"
           />
         </div>
-        
+
         {/* Password with toggle */}
-        <div className="mb-4 relative">
-          <label htmlFor="password" className="block mb-1 text-gray-100 font-bold">Password</label>
+        <div className="relative">
+          <label htmlFor="password" className="block mb-1 text-yellow-600 font-bold">
+            Password
+          </label>
           <input
             id="password"
-            type={showPassword ? 'text' : 'password'}
+            type={showPassword ? "text" : "password"}
             placeholder="Enter a secure password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
@@ -166,61 +169,58 @@ const RegistrationComponent = () => {
           <button
             type="button"
             onClick={() => setShowPassword(!showPassword)}
-            className="absolute inset-y-0 right-0 flex items-center px-3 text-sm text-gray-600"
+            className="absolute top-1/2 right-2 -translate-y-1/2 bg-gray-200 px-2 py-1 text-xs rounded"
           >
-            {showPassword ? 'Hide' : 'Show'}
+            {showPassword ? "Hide" : "Show"}
           </button>
-            <small className="block mt-1 text-gray-100 ">
+          <small className="block mt-1 text-yellow-600">
             Password must be at least 6 characters long and include a mix of letters and numbers.
           </small>
-
         </div>
-        
+
         {/* Role */}
-        <div className="mb-4 " >
-          <label htmlFor="role" className="block mb-1 text-gray-100 font-bold">Role/Learning Track</label>
+        <div>
+          <label htmlFor="role" className="block mb-1 text-yellow-600 font-bold">
+            Role/Learning Track
+          </label>
           <select
             id="role"
             value={role}
             onChange={(e) => setRole(e.target.value)}
-            className="w-full p-2 border rounded"
+            className="w-full p-2 border rounded text-yellow-600"
           >
-            <option value="PM Fundamental">PM Fundamental</option>
-            <option value="Growth PM">Growth PM</option>
-            <option value="Technical PM">Technical PM</option>
-            <option value="Developers">Developers</option>
-            <option value="Project Manager">Project Manager</option>
-            <option value="Product Manager">Product Manager</option>
-           
+            <option value="Introduction to Product Management">Introduction to Product Management</option>
+            <option value="Intermediate Product Management">Intermediate Product Management</option>
+            <option value="Growth Product Management">Growth Product Management</option>
+            <option value="Technical Product Management">Technical Product Management</option>
             <option value="Others">Others</option>
           </select>
         </div>
-        
+
         {/* Terms and Agreement */}
-        <div className="mb-4">
-          <label className="inline-flex items-center">
-            <input
-              type="checkbox"
-              checked={termsAccepted}
-              onChange={(e) => setTermsAccepted(e.target.checked)}
-              className="form-checkbox"
-            />
-            <span className="ml-2 text-gray-100">I agree to the Terms and Conditions</span>
-          </label>
+        <div className="flex items-center">
+          <input
+            type="checkbox"
+            checked={termsAccepted}
+            onChange={(e) => setTermsAccepted(e.target.checked)}
+            className="form-checkbox"
+          />
+          <span className="ml-2 text-yellow-600">I agree to the Terms and Conditions</span>
         </div>
-        
+
         {/* Submit Button */}
         <button
           type="submit"
           disabled={isSubmitting}
           className="w-full bg-yellow-800 text-white p-2 rounded hover:bg-yellow-700"
         >
-          {isSubmitting ? 'Registering...' : 'Register'}
+          {isSubmitting ? "Registering..." : "Register"}
         </button>
       </form>
     </div>
-    </div>
-  );
+  </div>
+);
+
 };
 
 export default RegistrationComponent;

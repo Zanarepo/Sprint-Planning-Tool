@@ -9,15 +9,20 @@ import {
   FaStar, 
   FaBars, 
   FaTachometerAlt ,
-  FaTimes 
+  FaTimes,
+  FaAward,
+  FaLightbulb,
+  
 } from 'react-icons/fa';
 import Welcome from './Welcome';
 import ReviewForm from './ReviewForm'
 import Tools from '../Tools'
 import ChatWindow from "../Chatdashboard/ChatWindow";
+import Profile from '../Profile';
+import CoursesDashboard from '../CoursesDashboard';
 
 const Dashboard = () => {
-  const [activeTab, setActiveTab] = useState('Welcome');
+  const [activeTab, setActiveTab] = useState('coursesdashboard');
   const [darkMode, setDarkMode] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
@@ -64,13 +69,26 @@ const Dashboard = () => {
             {/* Settings content */}
           </div>
         );
-      case 'notifications':
+      case 'coursesdashboard':
+        return (
+          <div className="w-full bg-white dark:bg-gray-700 rounded-lg shadow">
+            <CoursesDashboard/>
+          </div>
+        );
+
+        case 'profile':
+        return (
+          <div className="w-full bg-white dark:bg-gray-700 rounded-lg shadow">
+            <Profile />
+          </div>
+
+        );
+ case 'notifications':
         return (
           <div className="w-full bg-white dark:bg-gray-700 rounded-lg shadow">
             
           </div>
         );
-
      
       default:
         return (
@@ -137,14 +155,30 @@ const Dashboard = () => {
                   <FaCreditCard className="text-yellow-800 dark:text-gray-300 mr-3" />
                   <span className="text-yellow-800 dark:text-gray-300">Payments</span>
                 </li>
-              
-                <li 
+               <li 
+                  onClick={() => handleNavClick('coursesdashboard')}
+                  className={`flex items-center p-2 rounded cursor-pointer hover:bg-gray-200 dark:hover:bg-yellow-800 transition ${activeTab === 'coursesdashboard' ? 'bg-gray-300 dark:bg-yellow-800' : ''}`}
+                >
+                  <FaLightbulb className="text-yellow-800 dark:text-gray-300 mr-3" />
+                  <span className="text-yellow-800 dark:text-gray-300">Courses</span>
+                </li>
+               
+  <li 
+                  onClick={() => handleNavClick('profile')}
+                  className={`flex items-center p-2 rounded cursor-pointer hover:bg-gray-200 dark:hover:bg-yellow-800 transition ${activeTab === 'profile' ? 'bg-gray-300 dark:bg-yellow-800' : ''}`}
+                >
+                  <FaAward className="text-yellow-800 dark:text-gray-300 mr-3" />
+                  <span className="text-yellow-800 dark:text-gray-300">Certificate</span>
+                </li>
+
+ <li 
                   onClick={() => handleNavClick('notifications')}
                   className={`flex items-center p-2 rounded cursor-pointer hover:bg-gray-200 dark:hover:bg-yellow-800 transition ${activeTab === 'notifications' ? 'bg-gray-300 dark:bg-yellow-800' : ''}`}
                 >
                   <FaBell className="text-yellow-800 dark:text-gray-300 mr-3" />
                   <span className="text-yellow-800 dark:text-gray-300">Notifications</span>
                 </li>
+
 {/* Dark/Light Mode Toggle 
                 <li 
                   onClick={() => handleNavClick('settings')}

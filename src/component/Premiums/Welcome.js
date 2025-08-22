@@ -9,6 +9,8 @@ function HomePage() {
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 dark:bg-gray-700 p-6 text-gray-800 dark:text-gray-100 ">
       <DashboardFeaturs />
       <ChatWindow />
+
+      {/* Centered content with a max width */}
       <div className="text-center max-w-3xl bg-white dark:bg-gray-800 p-8 rounded-lg shadow-xl my-6">
         <LayoutDashboard size={80} className="mx-auto text-yellow-800 dark:text-yellow-800 mb-4" />
         <h1 className="text-4xl font-bold text-yellow-800 dark:text-yellow-800">
