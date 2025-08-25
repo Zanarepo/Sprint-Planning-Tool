@@ -90,6 +90,7 @@ import TPM from './component/Technical/TPM';
 import TPMdashboard2 from './component/Technical/LessonTwo/TPMdashboard2';
 import TPMDashboard3 from './component/Technical/Version Control/TPMDashboard3';
 import CoursesDashboard from "./component/CoursesDashboard";
+import MicroServices from "./component/Technical/MicroServices/MicroServices";
 
 
 
@@ -206,6 +207,7 @@ const App = () => {
   <Route path="/technical" element={<TPM />} />
    <Route path="/tpm2" element={<TPMdashboard2 />} />
    <Route path="/tpm3" element={<TPMDashboard3 />} />
+    <Route path="/microservices" element={<MicroServices />} />
 
    
 
