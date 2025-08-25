@@ -23,6 +23,7 @@ import DatabaseIndexing from './LessonTwo/DatabaseIndexing';
 import DatabaseOptimization from './LessonTwo/DatabaseOptimization';
 import GithubSection from './Version Control/Github';
 import MicroservicesSection from './Version Control/Microservices';
+import MicroServices from './MicroServices/MicroServices'
 import SecuritySection from './Version Control/Security';
 import LoadBalancingComponent from './Version Control/LoadBalancingComponent';
 import DataPipeline from './Version Control/DataPipeline';
@@ -96,6 +97,17 @@ const TechnicalDashboard = () => {
       outcome: 'Apply Porter’s Five Forces for strategic PM decisions.',
       sectionName: 'Porters',
     },
+ {
+      section: 'Core Technical Concepts',
+      icon: '📊',
+      iconColor: 'text-yellow-600',
+      title: 'System Architecture',
+      description: ' ',
+      outcome: 'Apply Porter’s Five Forces for strategic PM decisions.',
+      sectionName: 'sysarchitect',
+    },
+
+    
     {
       section: 'Core Technical Concepts',
       icon: '🧠',
@@ -450,7 +462,9 @@ const TechnicalDashboard = () => {
             {activeSection === 'loadbalancing' && <LoadBalancingComponent />}
             {activeSection === 'datapipeline' && <DataPipeline />}
             {activeSection === 'bearchitecture' && <BEArchitecture/>}
+            {activeSection === 'sysarchitect' && <MicroServices/>}
              {activeSection === 'QA' && <QASection />}
+             
             <div className="mt-6">
            
             </div>
