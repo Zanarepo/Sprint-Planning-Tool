@@ -28,6 +28,17 @@ import SecuritySection from './Version Control/Security';
 import LoadBalancingComponent from './Version Control/LoadBalancingComponent';
 import DataPipeline from './Version Control/DataPipeline';
 import BEArchitecture from './Version Control/BEArchitecture';
+import APIGateway2 from './MicroServices/APIGateway2'
+import  AuthConcepts from './MicroServices/AuthConcepts'
+import DataProtection from './MicroServices/DataProtection'
+import Wikis from './MicroServices/Wikis'
+import TechnicalDebts from './MicroServices/TechnicalDebts'
+import TradeoffVersion2 from './MicroServices/TradeoffVersion2';
+import PartneringWithTeams from './MicroServices/PartneringWithTeams'
+import MVC from './MicroServices/MVC'
+import  ProcessMappings from './MicroServices/ProcessMappings'
+import Systemdesigns from './MicroServices/Systemdesigns'
+import SoftwareTesting from './MicroServices/SoftwareTesting'
 
 
 
@@ -52,6 +63,7 @@ const TechnicalDashboard = () => {
       outcome: 'Learn UI/UX principles and frontend development basics.',
       sectionName: 'Frontend',
     },
+   
     {
       section: 'Core Technical Concepts',
       icon: '⚙️',
@@ -98,14 +110,76 @@ const TechnicalDashboard = () => {
       sectionName: 'Porters',
     },
  {
-      section: 'Core Technical Concepts',
+      section: 'TPM Concepts',
       icon: '📊',
       iconColor: 'text-yellow-600',
-      title: 'System Architecture',
-      description: ' ',
-      outcome: 'Apply Porter’s Five Forces for strategic PM decisions.',
+      title: 'Microservice & Monolith',
+      description: ' Understand Microservices and Monolithic architectures for product decisions.',
+      outcome: ' Understand Microservices and Monolithic architectures for product decisions.',
       sectionName: 'sysarchitect',
     },
+    {
+      section: 'TPM Concepts',
+      icon: '🧪',
+      iconColor: 'text-red-600',
+      title: 'Software Testing',
+      description: ' Explore various software testing methodologies, including unit testing, integration testing, system testing, and user acceptance testing (UAT). Understand how to link test cases to Product Requirement Documents (PRDs) to ensure comprehensive coverage of requirements.',
+      outcome: 'Master software testing techniques linked to PRDs.',
+      sectionName: 'swt',
+    },
+
+   {
+      section: 'TPM Concepts',
+      icon: '📐',
+      iconColor: 'text-yellow-600',
+      title: 'System Designs & Architceture',
+      description: ' Learn System Designs for effective Product Deleivery',
+      outcome: '',
+      sectionName: 'systemdesigns',
+    },
+
+
+ {
+      section: 'TPM Concepts',
+      icon: '📊',
+      iconColor: 'text-yellow-600',
+      title: 'API Gateway',
+      description: ' An API Gateway is a server that acts as an API front-end, receiving API requests, enforcing throttling and security policies, passing requests to the back-end service, and then passing the response back to the requester.',
+      outcome: '',
+      sectionName: 'apigateway2',
+    },
+   
+     {
+      section: 'TPM Concepts',
+      icon: '🗺️',
+      iconColor: 'text-purple-600',
+      title: 'Process Mappings',
+      description: 'Process mapping is a visual representation of the workflow within a system. It helps identify inefficiencies, redundancies, and areas for improvement.',
+      outcome: 'Master process mapping for workflow optimization.',
+      sectionName: 'processmappings',
+    },
+
+ {
+      section: 'TPM Concepts',
+      icon: '📊',
+      iconColor: 'text-yellow-600',
+      title: 'Security Concepts Software Devt',
+      description: ' Learn Security Concepts for effective Product Deleivery',
+     sectionName: 'securityconcepts',
+    },
+
+
+     {
+      section: 'TPM Concepts',
+      icon: '📊',
+      iconColor: 'text-yellow-600',
+      title: 'Data Protection',
+      description: ' Learn Data Protection for effective Product Deleivery',
+      outcome: '',
+      sectionName: 'dataprotection',
+    },
+
+    
 
     
     {
@@ -119,12 +193,12 @@ const TechnicalDashboard = () => {
     },
     // Section 2: Product Management Practices
     {
-      section: 'Product Management Practices',
+      section: 'Core Technical Concepts',
       icon: '⚖️',
       iconColor: 'text-blue-600',
       title: 'Trade-offs',
-      description: 'Understanding trade-offs as a PM to balance scope, time, and resources effectively.',
-      outcome: 'Master decision-making with trade-offs.',
+      description: 'Master trade-off analysis for balanced product decisions.',
+      outcome: 'Master trade-off analysis for balanced product decisions.',
       sectionName: 'Tradeoffs',
     },
     {
@@ -210,6 +284,58 @@ const TechnicalDashboard = () => {
       outcome: 'Learn normalization for efficient databases.',
       sectionName: 'DatabaseNormalization',
     },
+
+
+    {
+      section: 'TPM Concepts',
+      icon: '🔄',
+      iconColor: 'text-blue-600',
+      title: 'Technical Debts',
+      description: ' Learn Technical Debts for effective Product Deleivery',
+      outcome: 'Learn Techincal Debt for effective Product Deleivery',
+      sectionName: 'TechnicalDebts',
+    },
+  {
+    section: 'TPM Concepts',
+    icon: '⚙️',
+    iconColor: 'text-green-600',
+    title: 'MVC',
+    description: 'Understanding MVC helps PMs bridge business needs and technical execution. It shows how user actions map to backend processes and data, clarifying dependencies and risks.',
+    outcome: 'Understand MVC for effective product management.',
+    sectionName: 'mvc',
+  },
+
+ {
+      section: 'TPM Concepts',
+      icon: '🖥️',
+      iconColor: 'text-gray-600',
+      title: 'Prouct Dev Wikis',
+      description: ' Learn how to create and maintain effective product development wikis to enhance team collaboration and knowledge sharing.',
+      outcome: '',
+      sectionName: 'wikis',
+    },
+
+      {
+      section: 'TPM Concepts',
+      icon: '⚡',
+      iconColor: 'text-blue-600',
+      title: 'Trade-offs ',
+      description: 'Master trade-off analysis for balanced product decisions.',
+      outcome: '',
+      sectionName: 'tradeoffs2',
+    },
+
+ {
+      section: 'TPM Concepts',
+      icon: '⚡',
+      iconColor: 'text-blue-600',
+      title: 'Cross-functional Teams ',
+      description: ' Learn best practices for partnering with cross-functional teams including engineering, design, marketing, and sales to drive product success.',
+      outcome: '',
+      sectionName: 'partner',
+    },
+
+    
     {
       section: 'Product Management Practices',
       icon: '🔍',
@@ -219,15 +345,13 @@ const TechnicalDashboard = () => {
       outcome: 'Optimize queries with indexing.',
       sectionName: 'DatabaseIndexing',
     },
-    {
-      section: 'Product Management Practices',
-      icon: '⚡',
-      iconColor: 'text-blue-600',
-      title: 'Database Optimization',
-      description: 'Discover strategies to improve database performance, including query tuning, schema design, and resource management for efficient operations.',
-      outcome: 'Enhance database performance.',
-      sectionName: 'DatabaseOptimization',
-    },
+
+
+
+    
+  
+
+      
     // Section 3: System Scalability & Collaboration
     {
       section: 'System Scalability & Collaboration',
@@ -283,6 +407,9 @@ const TechnicalDashboard = () => {
       outcome: 'Design robust backend architectures.',
       sectionName: 'bearchitecture',
     },
+
+
+
   ];
 
   useEffect(() => {
@@ -313,6 +440,13 @@ const TechnicalDashboard = () => {
 
  
   const sections = [
+
+    {
+      id: 'CoreConcepts',
+      title: 'TPM Concepts',
+      description: 'Understand scalable system architectures and collaborative tools like Github, microservices, and load balancing.',
+    },
+
     {
       id: 'coreTechnical',
       title: 'Core Technical Concepts',
@@ -328,6 +462,9 @@ const TechnicalDashboard = () => {
       title: 'System Scalability & Collaboration',
       description: 'Understand scalable system architectures and collaborative tools like Github, microservices, and load balancing.',
     },
+
+
+     
   ];
 
   return (
@@ -424,7 +561,7 @@ const TechnicalDashboard = () => {
       {/* Content Display */}
       {activeSection && (
         <section className="m-4 max-w-7xl mx-auto flex-1">
-          <div className="bg-yellow-50 p-4 sm:p-6 rounded-lg shadow-md border border-yellow-300">
+          <div className="bg-white p-4 sm:p-6 rounded-lg shadow-md border border-yellow-300">
             <div className="flex items-center mb-4">
               <span className={`text-4xl ${cardData.find((c) => c.sectionName === activeSection).iconColor} mr-3`}>
                 {cardData.find((c) => c.sectionName === activeSection).icon}
@@ -463,7 +600,21 @@ const TechnicalDashboard = () => {
             {activeSection === 'datapipeline' && <DataPipeline />}
             {activeSection === 'bearchitecture' && <BEArchitecture/>}
             {activeSection === 'sysarchitect' && <MicroServices/>}
-             {activeSection === 'QA' && <QASection />}
+            {activeSection === 'apigateway2' && <APIGateway2/>}
+            {activeSection === 'securityconcepts' && <AuthConcepts/>}
+            {activeSection === 'dataprotection' && <DataProtection/>}
+            {activeSection === 'wikis' && <Wikis/>}
+            {activeSection === 'tradeoffs2' && <TradeoffVersion2/>}
+            {activeSection === 'TechnicalDebts' && <TechnicalDebts/>}
+            {activeSection === 'partner' && < PartneringWithTeams/>}
+            {activeSection === 'mvc' && < MVC/>}
+            {activeSection === 'processmappings' && <ProcessMappings/>}
+            {activeSection === 'systemdesigns' && <Systemdesigns/>}
+             {activeSection === 'swt' && <SoftwareTesting/>}
+            {/* Add more sections as needed */}
+           
+            
+            {activeSection === 'QA' && <QASection />}
              
             <div className="mt-6">
            

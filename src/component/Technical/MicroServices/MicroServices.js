@@ -3,8 +3,10 @@ import { ChevronDownIcon, ChevronUpIcon, CheckCircleIcon, XCircleIcon, UserIcon,
 import APIgateways from './APIgateways';
 import MSandMono from './MSandMono'
 import ClientRequestFlow from './ClientRequestFlow'
-import SystemDesign from './SystemDesign';
 import InstagramVisualizer from './InstagramVisualizer';
+//import LeadTime from './LeadTime'
+
+
 // Tile component for content sections
 const Tile = ({ title, icon, children, useCase, tools, example }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -656,13 +658,13 @@ const MicroservicesApp = () => {
     <ClientRequestFlow />
   </div>
 
-  <div className="w-full bg-white flex flex-col lg:flex-row gap-4 p-6">
-    <SystemDesign />
-  </div>
+  
 
   <div className="w-full bg-white flex flex-col lg:flex-row gap-4 p-6">
     <InstagramVisualizer />
+  
   </div>
+    
 </div>
       </div>
     </div>

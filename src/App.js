@@ -91,6 +91,10 @@ import TPMdashboard2 from './component/Technical/LessonTwo/TPMdashboard2';
 import TPMDashboard3 from './component/Technical/Version Control/TPMDashboard3';
 import CoursesDashboard from "./component/CoursesDashboard";
 import MicroServices from "./component/Technical/MicroServices/MicroServices";
+import APIGateway2 from './component/Technical/MicroServices/APIGateway2'
+import AuthConcepts from './component/Technical/MicroServices/AuthConcepts'
+import APIContracts from './component/Technical/MicroServices/APIContracts'
+import ProcessMappings from './component/Technical/MicroServices/ProcessMappings'
 
 
 
@@ -191,7 +195,8 @@ const App = () => {
        <Route path="/seperate" element={<SeperationofUsers/>} />
         <Route path="/pmdashboard" element={<CoursesDashboard/>} />  --- New line added for
         
-
+ <Route path="/apicontracts" element={<APIContracts/>} />
+ <Route path="/process" element={<ProcessMappings/>} />
 
        
 
@@ -208,6 +213,10 @@ const App = () => {
    <Route path="/tpm2" element={<TPMdashboard2 />} />
    <Route path="/tpm3" element={<TPMDashboard3 />} />
     <Route path="/microservices" element={<MicroServices />} />
+      <Route path="/apigate" element={<APIGateway2 />} />
+      <Route path="/auths" element={<AuthConcepts/>} />
+      
+
 
    
 
@@ -312,6 +321,8 @@ const App = () => {
         <Route path="/Collabodashboard" element={<CollaboDb/>} /> 
         <Route path="/sim" element={<Simulation/>} />
        <Route path="/seperate" element={<SeperationofUsers/>} />
+       
+
 
 
 
@@ -322,7 +333,10 @@ const App = () => {
  <Route path="/intermediate" element={< IntermediateDashboard/>} />
   <Route path="/introduction" element={<IntroDashboard />} />
  <Route path="/technical" element={<TPM />} /> 
+  <Route path="/auths" element={<AuthConcepts/>} />
  <Route path="/growth" element={<GrowthDashboard />} /> 
+        <Route path="/apicontracts" element={<APIContracts/>} />
+        <Route path="/process" element={<ProcessMappings/>} />
 
  <Route path="/pmdashboard" element={<CoursesDashboard/>} />  --- New line added for
 
