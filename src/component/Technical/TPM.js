@@ -39,6 +39,7 @@ import MVC from './MicroServices/MVC'
 import  ProcessMappings from './MicroServices/ProcessMappings'
 import Systemdesigns from './MicroServices/Systemdesigns'
 import SoftwareTesting from './MicroServices/SoftwareTesting'
+import CICD from './MicroServices/CICD';
 
 
 
@@ -118,6 +119,8 @@ const TechnicalDashboard = () => {
       outcome: ' Understand Microservices and Monolithic architectures for product decisions.',
       sectionName: 'sysarchitect',
     },
+
+
     {
       section: 'TPM Concepts',
       icon: '🧪',
@@ -127,6 +130,16 @@ const TechnicalDashboard = () => {
       outcome: 'Master software testing techniques linked to PRDs.',
       sectionName: 'swt',
     },
+    {
+      section: 'TPM Concepts',
+      icon: '🔄',
+      iconColor: 'text-blue-600',
+      title: 'CI/CD',
+      description: ' Learn Continuous Integration and Continuous Deployment (CI/CD) practices to streamline development and release processes.',
+      outcome: 'Implement CI/CD for efficient product delivery.',
+      sectionName: 'cicd',
+    },
+    
 
    {
       section: 'TPM Concepts',
@@ -611,6 +624,7 @@ const TechnicalDashboard = () => {
             {activeSection === 'processmappings' && <ProcessMappings/>}
             {activeSection === 'systemdesigns' && <Systemdesigns/>}
              {activeSection === 'swt' && <SoftwareTesting/>}
+            {activeSection === 'cicd' && <CICD/>}
             {/* Add more sections as needed */}
            
             
