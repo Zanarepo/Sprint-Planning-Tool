@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+
 import SprintSimulator from "./component/SprintSimulator";
 import HomePage from "./component/HomePage";
 import RegisteredHomePage from "./component/Premiums/RegisteredHomePage";
@@ -61,6 +62,7 @@ import Certificate from "./component/Certificate";
 import CertificateViews from "./component/CertificateViews";
 
 
+
 //Growth Product Manager
 
 import GrowthDashboard from './component/GrowthPM/Growth1/GrowthDashboard'
@@ -95,6 +97,11 @@ import APIGateway2 from './component/Technical/MicroServices/APIGateway2'
 import AuthConcepts from './component/Technical/MicroServices/AuthConcepts'
 import APIContracts from './component/Technical/MicroServices/APIContracts'
 import ProcessMappings from './component/Technical/MicroServices/ProcessMappings'
+import { GrowthBookProvider } from "@growthbook/growthbook-react";
+import {growthbook} from "./Growthbook";
+import MyComponent from "./MyComponent"; 
+
+
 
 
 
@@ -112,8 +119,18 @@ import ProcessMappings from './component/Technical/MicroServices/ProcessMappings
 
 
 const App = () => {
+ useEffect(() => {
+    growthbook.init({ streaming: true });
+  }, []);
+
+
+
   return (
     <Router>
+       <GrowthBookProvider growthbook={growthbook}>
+      <MyComponent />
+ 
+  
       <div className="flex flex-col min-h-screen">
         {/* Primary navbar for all users */}
 
@@ -167,6 +184,8 @@ const App = () => {
             <Route path="/compare2" element={<FeatureComparisonMatrix />} />
             <Route path="/usernotify" element={<UsersNotifications />} /> 
             <Route path="/votings" element={<votings/>} />
+
+
             
 
 
@@ -215,8 +234,7 @@ const App = () => {
     <Route path="/microservices" element={<MicroServices />} />
       <Route path="/apigate" element={<APIGateway2 />} />
       <Route path="/auths" element={<AuthConcepts/>} />
-      
-
+         
 
    
 
@@ -308,7 +326,7 @@ const App = () => {
               <Route path="/tools" element={<Tools />} />
               <Route path="/gtm" element={<GTM />} />
             
-                
+                <Route path="/tpmdashboard" element={<TPMHome />} />
         <Route path="/growthdashboard" element={<GrowthHome/>} />
         <Route path="/alldashboard" element={<Alldashboard />} />
         <Route path="/viraldashboard" element={<Viralitydashboard/>} />
@@ -399,6 +417,7 @@ const App = () => {
         </div>
         <Footer />
       </div>
+        </GrowthBookProvider>
     </Router>
   );
 };

@@ -5,6 +5,7 @@
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",
     "@dnd-kit/sortable": "^10.0.0",
+    "@growthbook/growthbook-react": "^1.6.1",
     "@heroicons/react": "^2.2.0",
     "@mui/icons-material": "^6.4.3",
     "@mui/material": "^6.4.3",

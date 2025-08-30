@@ -47,6 +47,19 @@
     </script>
     <!-- End Google Tag Manager -->
 
+<script>
+  if (window.gtag) {
+    gtag('event', 'page_view', {
+      ui_variant: window.UI_VARIANT
+    });
+  }
+
+  if (window.fbq) {
+    fbq('track', 'PageView', {
+      ui_variant: window.UI_VARIANT
+    });
+  }
+</script>
 
 <!-- Meta Pixel Code -->
 <script>
