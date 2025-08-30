@@ -100,6 +100,7 @@ import ProcessMappings from './component/Technical/MicroServices/ProcessMappings
 import { GrowthBookProvider } from "@growthbook/growthbook-react";
 import {growthbook} from "./Growthbook";
 import MyComponent from "./MyComponent"; 
+import Workout from "./component/GrowthPM/Workout";
 
 
 
@@ -216,7 +217,7 @@ const App = () => {
         
  <Route path="/apicontracts" element={<APIContracts/>} />
  <Route path="/process" element={<ProcessMappings/>} />
-
+ <Route path="/workout" element={<Workout/>} />
        
 
 
@@ -355,6 +356,7 @@ const App = () => {
  <Route path="/growth" element={<GrowthDashboard />} /> 
         <Route path="/apicontracts" element={<APIContracts/>} />
         <Route path="/process" element={<ProcessMappings/>} />
+        <Route path="/workout" element={<Workout/>} />
 
  <Route path="/pmdashboard" element={<CoursesDashboard/>} />  --- New line added for
 
