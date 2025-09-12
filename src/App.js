@@ -86,6 +86,7 @@ import SimulationModule from './component/IntroIntermPM/Intro/SimulationModule';
 
 
 
+
 //TPM
 import TPMHome from './component/Technical/TPMHome';
 import TPM from './component/Technical/TPM';
@@ -103,7 +104,8 @@ import MyComponent from "./MyComponent";
 import Workout from "./component/GrowthPM/Workout";
 
 
-
+//Case Study
+import CaseStudy from './component/GrowthPM/CaseStudy/CaseStudy'
 
 
 
@@ -213,7 +215,9 @@ const App = () => {
         <Route path="/Collabodashboard" element={<CollaboDb/>} /> 
         <Route path="/sim" element={<Simulation/>} />
        <Route path="/seperate" element={<SeperationofUsers/>} />
-        <Route path="/pmdashboard" element={<CoursesDashboard/>} />  --- New line added for
+        <Route path="/pmdashboard" element={<CoursesDashboard/>} /> 
+
+          <Route path="/case" element={<CaseStudy/>} /> {/* case studies*/}
         
  <Route path="/apicontracts" element={<APIContracts/>} />
  <Route path="/process" element={<ProcessMappings/>} />
@@ -236,7 +240,8 @@ const App = () => {
       <Route path="/apigate" element={<APIGateway2 />} />
       <Route path="/auths" element={<AuthConcepts/>} />
          
-
+   { /* Intermediate*/}
+   <Route path="/case" element={<CaseStudy/>} />
    
 
 

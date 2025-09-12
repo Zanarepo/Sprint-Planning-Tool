@@ -4,7 +4,7 @@ export default function MarqueeBanner() {
   return (
     <div className="w-full  text-amber-800 overflow-hidden py-2 relative">
       <div className="marquee whitespace-nowrap font-medium text-sm sm:text-base">
-        <span className="mx-4">📢 Our Inaugural Sprints Cohort Starts August 14th. Do not sleep on this</span>
+        <span className="mx-4">📢 Our 2nd Sprints Cohort Starts 30th September. Do not sleep on this</span>
       </div>
 
       <style>

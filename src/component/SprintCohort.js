@@ -228,11 +228,11 @@ export default function SprintCohortPromo() {
             🚀 Kickstart Your Product Management Career!
           </h1>
           <p className="text-base sm:text-lg text-gray-700 text-center">
-            Our <strong>Sprint Cohort</strong> begins <strong>August 14, 2025</strong>! Join this 6-week hands-on program to become a standout product manager.
+            Our <strong className="text-yellow-700">Sprint Cohort</strong> begins <strong className="text-yellow-700">September 30th, 2025</strong>! Join this 6-week hands-on program to become a standout product manager.
           </p>
           <div className="relative overflow-hidden bg-blue-100 rounded-lg p-2">
             <div className="animate-scrollLeft whitespace-nowrap text-base sm:text-lg font-semibold text-blue-800">
-              Starts August 14, 2025 • 6-Week Program • Starts August 14, 2025 • 6-Week Program
+           Starts September 30th, 2025 • 6-Week Program
             </div>
           </div>
           <div>
