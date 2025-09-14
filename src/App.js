@@ -60,6 +60,7 @@ import Sprintifyhome from './component/Sprintifyhome'
 import SprintNavbar from './component/SprintNavbar'
 import Certificate from "./component/Certificate";
 import CertificateViews from "./component/CertificateViews";
+import Projections from "./component/FinancialProjections/Projections";
 
 
 
@@ -222,6 +223,7 @@ const App = () => {
  <Route path="/apicontracts" element={<APIContracts/>} />
  <Route path="/process" element={<ProcessMappings/>} />
  <Route path="/workout" element={<Workout/>} />
+   <Route path="/models" element={<Projections/>} />
        
 
 
@@ -362,7 +364,7 @@ const App = () => {
         <Route path="/apicontracts" element={<APIContracts/>} />
         <Route path="/process" element={<ProcessMappings/>} />
         <Route path="/workout" element={<Workout/>} />
-
+  <Route path="/models" element={<Projections/>} />
  <Route path="/pmdashboard" element={<CoursesDashboard/>} />  --- New line added for
 
               <Route path="/checklist2" element={<ProductLaunchChecklist />} />
