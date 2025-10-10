@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import DatabaseSection from './DatabaseSection';
+import DbJoins from './DbJoins';
 import FrontendSection from './FrontendSection';
 import BackendSection from './BackendSection';
 import APISection from './APISection';
@@ -92,6 +93,22 @@ const TechnicalDashboard = () => {
       outcome: 'Learn database structures and data-driven feature design.',
       sectionName: 'Database',
     },
+
+    {
+      section: 'Core Technical Concepts',
+      icon: '🗄️',
+      iconColor: 'text-red-600',
+      title: 'SQL Joins',
+      description: 'Understanding SQL Joins is crucial for product managers to effectively manage and analyze relational data, enabling informed decision-making and feature development.',
+      outcome: 'Master SQL Joins for effective data management and analysis.',
+      sectionName: 'DbJoins',
+    },
+
+
+
+
+
+
     {
       section: 'Core Technical Concepts',
       icon: '📝',
@@ -204,6 +221,10 @@ const TechnicalDashboard = () => {
       outcome: 'Master brainstorming techniques for innovative product ideas.',
       sectionName: 'Brainstorming',
     },
+
+
+
+
     // Section 2: Product Management Practices
     {
       section: 'Core Technical Concepts',
@@ -624,7 +645,10 @@ const TechnicalDashboard = () => {
             {activeSection === 'processmappings' && <ProcessMappings/>}
             {activeSection === 'systemdesigns' && <Systemdesigns/>}
              {activeSection === 'swt' && <SoftwareTesting/>}
+
             {activeSection === 'cicd' && <CICD/>}
+            {activeSection === 'DbJoins' && <DbJoins/>}
+
             {/* Add more sections as needed */}
            
             

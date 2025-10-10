@@ -8,6 +8,7 @@ import Nosqldatabase from './Nosqldatabase'; // Assuming Nosqldatabase is in the
 import SQLTutorial from './SQLTutorial'; // Assuming SQLTutorial is in the same directory
 import SQLForeignKeyTutorial from './SQLForeignKeyTutorial'; // Assuming SQLForeignKeyTutorial is in the same directory
 
+
 const DatabaseSection = () => {
   const [isVisible, setIsVisible] = useState(false);
 
@@ -133,6 +134,8 @@ const DatabaseSection = () => {
       <SQLTutorial /> {/* Include the SQLTutorial component here */} <br/>
 
       <SQLForeignKeyTutorial/> 
+      <br/>
+   
     </div>
   );
 };
