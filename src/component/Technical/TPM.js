@@ -43,6 +43,7 @@ import SoftwareTesting from './MicroServices/SoftwareTesting'
 import CICD from './MicroServices/CICD';
 
 import StrategyDashboard from './StrategyDashboard';
+import TeamTask from './TeamTask';
 
 
 
@@ -456,7 +457,16 @@ const TechnicalDashboard = () => {
       sectionName: 'bearchitecture',
     },
 
-
+// section for Team & Task Management
+    {
+      section: 'Team & Task Management',
+      icon: '👥', 
+      iconColor: 'text-green-600',
+      title: 'Team & Task Management',
+      description: 'Explore effective team and task management strategies to enhance productivity and collaboration within product teams.',
+      outcome: 'Enhance team productivity and collaboration.',
+      sectionName: 'TeamTask',
+    },
 
   ];
 
@@ -511,7 +521,12 @@ const TechnicalDashboard = () => {
       description: 'Understand scalable system architectures and collaborative tools like Github, microservices, and load balancing.',
     },
 
+{
+      id: 'TeamTask',
 
+      title: 'Team & Task Management',
+      description: 'Explore effective team and task management strategies to enhance productivity and collaboration within product teams.',
+    },
      
   ];
 
@@ -659,6 +674,7 @@ const TechnicalDashboard = () => {
             {activeSection === 'processmappings' && <ProcessMappings/>}
             {activeSection === 'systemdesigns' && <Systemdesigns/>}
              {activeSection === 'swt' && <SoftwareTesting/>}
+             {activeSection === 'TeamTask' && <TeamTask/>}
           
 
             {activeSection === 'cicd' && <CICD/>}

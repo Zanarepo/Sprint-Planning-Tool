@@ -1,13 +1,15 @@
 import React, { useState } from "react";
 import SprintPRD from "./SprintPRD";
 import StrategyDoc from "./StrategyDoc";
+import TeamTask from "./TeamTask";
 
 export default function Dashboard() {
   const [activeTab, setActiveTab] = useState("strategy");
 
   const tabs = [
-     { id: "strategy", label: "🧠 Strategy Doc" },
-    { id: "prd", label: "📘 Sprint PRD" },
+     { id: "strategy", label: "🧠 Product Strategy" },
+    { id: "prd", label: "📘 PRD" },
+    { id: "teamtask", label: "👥 Team Task Mgmt" },
    
   ];
 
@@ -41,6 +43,7 @@ export default function Dashboard() {
         <div className="bg-white rounded-2xl shadow-sm p-4 sm:p-6 w-full max-w-[1200px] mx-auto">
           {activeTab === "prd" && <SprintPRD />}
           {activeTab === "strategy" && <StrategyDoc />}
+        {activeTab === "teamtask" && <TeamTask />}
         </div>
       </main>
 
