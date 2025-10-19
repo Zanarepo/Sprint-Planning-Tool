@@ -121,7 +121,6 @@ import CaseStudy from './component/GrowthPM/CaseStudy/CaseStudy'
 
 
 
-
 const App = () => {
  useEffect(() => {
     growthbook.init({ streaming: true });
