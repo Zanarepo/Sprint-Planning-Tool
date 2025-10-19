@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import SprintPRD from "./SprintPRD";
 import {
 
   FileText,
@@ -344,10 +343,7 @@ export default function ProductStrategy() {
           <li>Introduce bikes & EV scooters</li>
           <li>Potential acquisition by Uber/Bolt or IPO (5–7 years)</li>
         </ul>
-      </Section>
-        <div className="mt-8">
-        <SprintPRD />
-      </div>
+        </Section>
     </div>
   );
 }
