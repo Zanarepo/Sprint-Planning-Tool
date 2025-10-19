@@ -506,6 +506,13 @@ const TechnicalDashboard = () => {
     },
 
     {
+      id: 'TeamTask',
+
+      title: 'Team & Task Management',
+      description: 'Explore effective team and task management strategies to enhance productivity and collaboration within product teams.',
+    },
+
+    {
       id: 'coreTechnical',
       title: 'Core Technical Concepts',
       description: 'Master essential technical concepts for product management, including frontend, backend, APIs, databases, and strategic frameworks.',
@@ -521,12 +528,7 @@ const TechnicalDashboard = () => {
       description: 'Understand scalable system architectures and collaborative tools like Github, microservices, and load balancing.',
     },
 
-{
-      id: 'TeamTask',
 
-      title: 'Team & Task Management',
-      description: 'Explore effective team and task management strategies to enhance productivity and collaboration within product teams.',
-    },
      
   ];
 
