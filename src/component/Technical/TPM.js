@@ -42,6 +42,8 @@ import Systemdesigns from './MicroServices/Systemdesigns'
 import SoftwareTesting from './MicroServices/SoftwareTesting'
 import CICD from './MicroServices/CICD';
 
+import StrategyDashboard from './StrategyDashboard';
+
 
 
 const TechnicalDashboard = () => {
@@ -207,6 +209,18 @@ const TechnicalDashboard = () => {
       description: ' Learn Data Protection for effective Product Deleivery',
       outcome: '',
       sectionName: 'dataprotection',
+    },
+
+
+
+    {
+      section: 'TPM Concepts',
+      icon: '📄',
+      iconColor: 'text-gray-600',
+      title: 'Strategy Documentation',
+      description: ' Learn how to create and maintain effective strategy documentation to enhance team collaboration and knowledge sharing.',
+      outcome: '',
+      sectionName: 'strategydashboard',
     },
 
     
@@ -645,9 +659,11 @@ const TechnicalDashboard = () => {
             {activeSection === 'processmappings' && <ProcessMappings/>}
             {activeSection === 'systemdesigns' && <Systemdesigns/>}
              {activeSection === 'swt' && <SoftwareTesting/>}
+          
 
             {activeSection === 'cicd' && <CICD/>}
             {activeSection === 'DbJoins' && <DbJoins/>}
+            {activeSection === 'strategydashboard' && <StrategyDashboard/>}
 
             {/* Add more sections as needed */}
            
