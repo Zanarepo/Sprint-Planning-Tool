@@ -16,11 +16,15 @@ export default function ProductBrainstorming() {
   const [editingFeatureIndex, setEditingFeatureIndex] = useState(null);
   const [editingUvpIndex, setEditingUvpIndex] = useState(null);
 
+  
+
   // User and session states
   const [userId, setUserId] = useState(null);
   const [sessions, setSessions] = useState([]);
   const [editingSessionId, setEditingSessionId] = useState(null);
   const [editingSessionData, setEditingSessionData] = useState(null);
+
+  
 
   // Retrieve user id from localStorage email, then fetch sessions accordingly
   useEffect(() => {

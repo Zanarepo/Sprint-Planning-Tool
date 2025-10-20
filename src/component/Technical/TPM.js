@@ -44,6 +44,7 @@ import CICD from './MicroServices/CICD';
 
 import StrategyDashboard from './StrategyDashboard';
 import TeamTask from './TeamTask';
+import StrategyCrud from './StrategyCrud';
 
 
 
@@ -141,6 +142,31 @@ const TechnicalDashboard = () => {
     },
 
 
+
+        {
+      section: 'TPM Concepts',
+      icon: '📄',
+      iconColor: 'text-gray-600',
+      title: 'Strategy Documentation',
+      description: ' Learn how to create and maintain effective strategy documentation to enhance team collaboration and knowledge sharing.',
+      outcome: '',
+      sectionName: 'strategydashboard',
+    },
+
+    
+    {
+      section: 'TPM Concepts',
+      icon: '🗄️' ,
+      iconColor: 'text-red-600',
+      title: 'Product Strategy CRUD',
+      description: 'Create and store your product strategy ',
+      outcome: 'Master CRUD operations for strategy documents.',
+      sectionName: 'strategycrud',
+    },
+
+
+
+
     {
       section: 'TPM Concepts',
       icon: '🧪',
@@ -214,17 +240,7 @@ const TechnicalDashboard = () => {
 
 
 
-    {
-      section: 'TPM Concepts',
-      icon: '📄',
-      iconColor: 'text-gray-600',
-      title: 'Strategy Documentation',
-      description: ' Learn how to create and maintain effective strategy documentation to enhance team collaboration and knowledge sharing.',
-      outcome: '',
-      sectionName: 'strategydashboard',
-    },
 
-    
 
     
     {
@@ -677,6 +693,7 @@ const TechnicalDashboard = () => {
             {activeSection === 'systemdesigns' && <Systemdesigns/>}
              {activeSection === 'swt' && <SoftwareTesting/>}
              {activeSection === 'TeamTask' && <TeamTask/>}
+            {activeSection === 'strategycrud' && <StrategyCrud/>}
           
 
             {activeSection === 'cicd' && <CICD/>}

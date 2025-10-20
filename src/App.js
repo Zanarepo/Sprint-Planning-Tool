@@ -103,6 +103,7 @@ import { GrowthBookProvider } from "@growthbook/growthbook-react";
 import {growthbook} from "./Growthbook";
 import MyComponent from "./MyComponent"; 
 import Workout from "./component/GrowthPM/Workout";
+//import StrategyCrud from "./component/Technical/StrategyCrud";
 
 
 //Case Study
@@ -217,7 +218,7 @@ const App = () => {
        <Route path="/seperate" element={<SeperationofUsers/>} />
         <Route path="/pmdashboard" element={<CoursesDashboard/>} /> 
 
-          <Route path="/case" element={<CaseStudy/>} /> {/* case studies*/}
+
         
  <Route path="/apicontracts" element={<APIContracts/>} />
  <Route path="/process" element={<ProcessMappings/>} />
@@ -240,6 +241,7 @@ const App = () => {
     <Route path="/microservices" element={<MicroServices />} />
       <Route path="/apigate" element={<APIGateway2 />} />
       <Route path="/auths" element={<AuthConcepts/>} />
+      
          
    { /* Intermediate*/}
    <Route path="/case" element={<CaseStudy/>} />
@@ -332,6 +334,7 @@ const App = () => {
               <Route path="/regdashboard" element={<RegisteredDashboards />} />
               <Route path="/tools" element={<Tools />} />
               <Route path="/gtm" element={<GTM />} />
+              
             
                 <Route path="/tpmdashboard" element={<TPMHome />} />
         <Route path="/growthdashboard" element={<GrowthHome/>} />

@@ -434,7 +434,7 @@ useEffect(() => {
             setTotalStoryPointsInput("");
             setTotalStoriesInput("");
           }}
-          className="flex items-center gap-2 text-blue-600 hover:text-blue-800 bg-blue-600 text-white px-4 py-2 rounded mb-4 mt-12"
+          className="flex items-center gap-2 text-blue-600 hover:text-blue-800 bg-blue-600 px-4 py-2 rounded mb-4 mt-12"
         >
           {showProfileForm ? <XCircle size={20} /> : <PlusCircle size={20} />}
           {showProfileForm ? "Cancel" : "Profile"}
